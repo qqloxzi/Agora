@@ -1,0 +1,54 @@
+# GitHub Action for deploying an Astro site to Hostinger via FTP
+
+name: Build and Deploy Astro Site
+
+# Triggers the workflow on push events to the "main" branch
+on:
+  push:
+    branches:
+      - main  # Or 'master', depending on your default branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Use the latest version of Ubuntu
+
+    steps:
+      # 1. Check out your repository's code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Specify the Node.js version your project uses
+          cache: 'npm' # Enable caching for npm dependencies
+
+      # 3. Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # 4. Build your Astro site
+      #    This runs the "build" script in your package.json
+      - name: Build Site
+        run: npm run build
+        # This command creates the 'dist' folder by default
+
+      # 5. Deploy the built site (contents of 'dist') to Hostinger via FTP
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          # Use the GitHub Secrets you created in Step 2
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          
+          # This is the folder created by 'npm run build'
+          local-dir: ./dist/ 
+          
+          # This is the destination folder on your Hostinger server
+          remote-dir: /public_html/
+          
+          # Optional: Cleans out the destination directory before uploading
+          # Use with caution: this will delete all files in /public_html
+          # dangerous: true
