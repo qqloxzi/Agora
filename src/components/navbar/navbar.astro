@@ -6,35 +6,29 @@ import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 
 const menuitems = [
   {
-    title: "Features",
+    title: "Agora",
     path: "#",
     children: [
-      { title: "Action", path: "/" },
-      { title: "Another action", path: "#" },
-      { title: "Dropdown Submenu", path: "#" },
-      { title: "404 Page", path: "/404" },
+      { title: "Etkinlikler", path: "/" },
+      { title: "Mevzuat", path: "#" },
+      { title: "......", path: "#" },
     ],
   },
   {
-    title: "Pricing",
+    title: "Kurslar",
     path: "/pricing",
   },
   {
-    title: "About",
+    title: "Hakkımızda",
     path: "/about",
   },
   {
-    title: "Blog",
+    title: "Kütüphane",
     path: "/blog",
   },
   {
-    title: "Contact",
+    title: "İletişim",
     path: "/contact",
-  },
-  {
-    title: "Pro Version",
-    badge: true,
-    path: "https://astroship-pro.web3templates.com/",
   },
 ];
 ---
@@ -71,11 +65,7 @@ const menuitems = [
                       href={item.path}
                       class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
                       <span> {item.title}</span>
-                      {item.badge && (
-                        <span class="ml-1 px-2 py-0.5 text-[10px] animate-pulse font-semibold uppercase text-white bg-indigo-600 rounded-full">
-                          New
-                        </span>
-                      )}
+                      
                     </a>
                   </li>
                 )}
@@ -91,8 +81,8 @@ const menuitems = [
     </Astronav>
     <div>
       <div class="hidden lg:flex items-center gap-4">
-        <a href="#">Log in</a>
-        <Link href="#" size="md">Sign up</Link>
+        <a href="#"> Giriş</a>
+        <Link href="#" size="md">Kaydol</Link>
       </div>
     </div>
   </header>
