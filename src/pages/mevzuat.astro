@@ -1,0 +1,222 @@
+---
+
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+
+
+const pageTitle = "Online lig mevzuatı";
+const pageDesc = "Agora Go Akademisi online ligi katılım kuralları, lig yapısı ve etik kurallar.";
+
+---
+
+<Layout title={pageTitle}>
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">{pageTitle}</Fragment>
+      <Fragment slot="desc">{pageDesc}</Fragment>
+    </Sectionhead>
+
+    <article class="mx-auto max-w-4xl mt-16 text-slate-700 leading-relaxed">
+      
+      <div class="mb-10 rounded-lg bg-slate-50 p-6 text-lg text-slate-800">
+        <p class="mb-2">
+          <strong>Düzenleyen Kuruluş:</strong> Agora Go Akademisi
+        </p>
+        <p class="mb-2">
+          <strong>Sorumlu Kişi:</strong> Oğuz Erdoğan
+        </p>
+        <p class="mb-2">
+          <strong>Platformlar:</strong> KGS ve OGS
+        </p>
+        <p class="mb-2">
+          <strong>Zaman Formatı:</strong> 30 dakika ana süre + 3 × 30 saniye Japon byoyomi
+        </p>
+        <p>
+          <strong>Katılım Ücreti:</strong> 2000 TL
+        </p>
+      </div>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        1. Amaç ve Kapsam
+      </h2>
+      <p class="mb-4">
+        Bu mevzuat, Agora tarafından düzenlenen Online Go Ligi’nin işleyişini, oyuncu haklarını ve sorumluluklarını, eşleşme ve puanlama sistemini, lig yapısını ve genel etik kuralları belirlemek amacıyla hazırlanmıştır.
+      </p>
+      <p class="mb-4">
+        Bu lig, Türkiye'deki Go oyuncularının gelişimini desteklemek, düzenli ve seviyeye uygun maç deneyimi sunmak ve oyuncular arasında yapıcı bir rekabet ortamı oluşturmak amacıyla gerçekleştirilir.
+      </p>
+      <p class="mb-4">
+        Aynı zamanda lig aracılığıyla toplanan katılım ücretleri, eğitmenlerin emeğine maddi katkı sağlamak amacıyla kullanılır; böylece oyuncular yalnızca kendileri için değil, topluluğun bilgi birikimine de katkıda bulunmuş olurlar.
+      </p>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        2. Lig Yapısı ve Format
+      </h2>
+      <p class="mb-4">
+        Turnuva lig sistemi ile yürütülecek olup toplam 4 ayrı lig oluşturulacaktır:
+      </p>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">
+          <strong>1–4 Kyu Ligi</strong><br />
+          Eğitmen: Tuğkan Eren (4D)
+        </li>
+        <li class="mb-2">
+          <strong>5–9 Kyu Ligi</strong><br />
+          Eğitmen: Oğuz Erdoğan (1D)
+        </li>
+        <li class="mb-2">
+          <strong>10–14 Kyu Ligi</strong><br />
+          Eğitmen: Ali Ksrakaya (5kyu)
+        </li>
+      </ul>
+      <p class="mb-4">
+        Her lig, minimum 8 oyuncu ile açılabilir. Yeterli sayıya ulaşamayan lig açılmaz ve katılım ücretleri eksiksiz iade edilir.
+      </p>
+      <p class="mb-4">
+        Her ligde tüm oyuncular birbirleriyle karşılaşır.
+      </p>
+      <p class="mb-4">
+        Tamamlanan her maç sonucunda puanlama aşağıdaki gibidir:
+      </p>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">Galibiyet: 1 puan</li>
+        <li class="mb-2">Mağlubiyet: 0 puan</li>
+      </ul>
+
+      <h3 class="text-2xl font-semibold text-gray-800 mt-10 mb-3">
+        Eğitmen Görevleri
+      </h3>
+      <p class="mb-4">
+        Her eğitmen, kendi ligine ait haftalık maçlardan 3 tanesini inceleyerek stratejik ve öğretici yorumlar yapacaktır.
+      </p>
+      <p class="mb-4">
+        İncelenecek oyunlar, ilgili ligdeki oyuncuların katılımıyla yapılacak haftalık bir anket ile belirlenecektir.
+      </p>
+
+      <h3 class="text-2xl font-semibold text-gray-800 mt-10 mb-3">
+        Haftalık Takvim
+      </h3>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">Eşleştirmeler her pazartesi günü açıklanacaktır.</li>
+        <li class="mb-2">
+          Maçların tamamlanması için son gün cuma olacaktır. (Cuma 23:59'a kadar oynanmayan maçlar hükmen mağlubiyet sayılabilir.)
+        </li>
+      </ul>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        3. Katılım Koşulları
+      </h2>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">Oyuncuların KGS ve/veya OGS üzerinde aktif hesapları bulunmalıdır.</li>
+        <li class="mb-2">Katılım yalnızca kyu seviyesinde olan oyunculara açıktır.</li>
+        <li class="mb-2">
+          Katılım ücreti 200 TL olup yalnızca ilgili lige kesin katılım sağlayan oyunculardan alınır.
+        </li>
+      </ul>
+      <p class="mb-4">
+        Toplanan ücretler tamamen eğitmenlere katkı olarak yönlendirilecektir.
+      </p>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        4. Zamanlama ve Eşleşmeler
+      </h2>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">Lig maçlarının tümü online olarak oynanacaktır.</li>
+        <li class="mb-2">
+          Her maç, 30 dakika ana süre + 3×30 saniye Japon byoyomi zaman formatıyla oynanır.
+        </li>
+        <li class="mb-2">
+          Eşleşmeler haftalık olarak ilan edilir ve belirtilen süre içinde oynanması beklenir.
+        </li>
+        <li class="mb-2">
+          Tarafların anlaşamaması durumunda turnuva sorumlusu maçın ertelenip ertelenmeyeceğine karar verir.
+        </li>
+      </ul>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        5. Maç Kuralları
+      </h2>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">
+          Taş rengi seçimi: Taş rengi otomatik olarak sistem tarafından belirlenecek ve oyunculara bildirilecektir. Oyuncular taş rengi üzerinde anlaşmak zorunda değildir.
+        </li>
+        <li class="mb-2">
+          Oyun Platformu: Oyuncular ister KGS, ister OGS üzerinden maçlarını gerçekleştirebilir.
+        </li>
+        <li class="mb-2">
+          Oyun ispatı için maç linki gönderilmelidir (örneğin: KGS game archive, OGS match linki).
+        </li>
+        <li class="mb-2">Süre aşımı, oyunu kaybetme anlamına gelir.</li>
+      </ul>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        6. Etik Kurallar ve İhlaller
+      </h2>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">
+          Yapay zeka kullanımı, dış yardım veya analiz araçları kesinlikle yasaktır.
+        </li>
+        <li class="mb-2">
+          Etik dışı davranışlar (küfür, hakaret, rakibi baskı altına alma vs.) ligden diskalifiye edilme sebebidir.
+        </li>
+        <li class="mb-2">
+          Şüpheli durumlarda oyuncular ekran görüntüsü veya maç kaydı ile itirazda bulunabilir.
+        </li>
+        <li class="mb-2">
+          Kararlar, Turnuva Hakem Kurulu'nun nihai kararıyla belirlenir.
+        </li>
+      </ul>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        7. Ödüller ve Teşvik
+      </h2>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">
+          Her ligin 1. oyuncusu, bir sonraki GOİZM turnuvasına ücretsiz katılım hakkı kazanacaktır.
+        </li>
+        <li class="mb-2">
+          Dereceye giren oyuncular sosyal medya duyurularıyla onurlandırılır.
+        </li>
+      </ul>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        8. İletişim ve Organizasyon
+      </h2>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">
+          Eşleşme duyuruları ve iletişim, turnuva WhatsApp grubu veya Goizm web sitesi üzerinden yapılacaktır.
+        </li>
+        <li class="mb-2">
+          Turnuva sürecinde oyunculara teknik ve zamanlama desteği sağlanacaktır.
+        </li>
+        <li class="mb-2">
+          Oyuncular, gelişmeleri https://goizm.org.tr üzerinden takip edebilirler.
+        </li>
+      </ul>
+
+      <h2 class="text-3xl font-bold text-gray-800 mt-12 mb-4 pb-2 border-b border-gray-200">
+        9. Diğer Hükümler
+      </h2>
+      <ul class="list-disc pl-8 mb-4">
+        <li class="mb-2">
+          Bu mevzuatta belirtilmeyen tüm konularda karar yetkisi turnuva sorumlusuna ve hakem kuruluna aittir.
+        </li>
+        <li class="mb-2">
+          Lig başlamadan önce tüm oyuncular bu mevzuatı kabul etmiş sayılır.
+        </li>
+        <li class="mb-2">
+          Mevzuatta ihtiyaç halinde güncelleme yapılabilir, değişiklikler oyunculara duyurulacaktır.
+        </li>
+      </ul>
+
+      <h3 class="text-2xl font-semibold text-gray-800 mt-10 mb-3">
+        Son Başvuru:
+      </h3>
+      <p class="text-lg font-medium text-gray-900">
+        <strong>24 Ekim 2025</strong>
+      </p>
+
+    </article>
+  </Container>
+</Layout>
