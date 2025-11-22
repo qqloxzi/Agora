@@ -3,7 +3,7 @@ draft: false
 title: "Go'ya başlarken"
 snippet: "Oözetmözetözet"
 image: {
-    src: "/logo1.png",
+    src: "/gostone.png",
     alt: "go"
 }
 publishDate: "2025-11-08"

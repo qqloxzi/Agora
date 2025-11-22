@@ -1,6 +1,6 @@
 ---
 import { Picture } from "astro:assets";
-import logo1 from "assets/logo1.png";
+import gostone from "assets/gostone.png";
 import Link from "@components/ui/link.astro";
 import { Icon } from "astro-icon/components";
 ---
@@ -9,7 +9,7 @@ import { Icon } from "astro-icon/components";
   class="grid lg:grid-cols-2 place-items-center pt-16 pb-8 md:pt-12 md:pb-24">
   <div class="py-6 md:order-1 hidden md:block">
     <Picture
-      src={logo1}
+      src={gostone}
       alt="Astronaut in the air"
       widths={[200, 400, 600]}
       sizes="(max-width: 800px) 100vw, 620px"
@@ -23,7 +23,10 @@ import { Icon } from "astro-icon/components";
       Agora, Türkiye'nin online go eğitim platformu.
     </h1>
     <p class="text-lg mt-4 text-slate-600 max-w-xl">
-      6 haftalık kurslar, interaktif dersler ve profesyonel rehberlik ile go oyununda ustalaşın.
+      6 haftalık ligler, interaktif dersler ve bireysel oyun analizler ile Go'da ilerleyebilirsiniz.
+    </p>
+     <p class="text-lg mt-4 text-slate-600 max-w-xl">
+      Aşağıdaki linkten Agora Go Akademisi'nin OGS grubuna katılabilirsiniz.
     </p>
     <div class="mt-6 flex flex-col sm:flex-row gap-3">
       <Link
@@ -32,7 +35,7 @@ import { Icon } from "astro-icon/components";
         target="_blank"
         class="flex gap-1 items-center justify-center"
         rel="noopener">
-        <Icon class="text-white w-5 h-5" name="bx:bxs-cloud-download" />
+        <Icon class="text-white w-5 h-5" name="bx:bxs-trophy" />
 
          OGS
       </Link>

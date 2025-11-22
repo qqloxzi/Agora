@@ -1,0 +1,185 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Container from "@components/container.astro";
+import Sectionhead from "@components/sectionhead.astro";
+
+const leagues = [
+  {
+    id: 1,
+    name: "Savaşçı Ligi",
+    sub: "14-10 Kyu",
+    status: "Kayıtlar Açık", 
+    participants: [
+      "P1", "P2", "P3", "P4", "P5", "P6", "P7"
+    ],
+    
+    standings: [
+      { rank: 1, name: "P1", played: 0, points: 0 },
+      { rank: 2, name: "P2", played: 0, points: 0 },
+      { rank: 3, name: "P3", played: 0, points: 0 },
+      { rank: 4, name: "P4", played: 0, points: 0 },
+      { rank: 5, name: "P5", played: 0, points: 0 },
+      { rank: 6, name: "P6", played: 0, points: 0 },
+      { rank: 7, name: "P7", played: 0, points: 0 },
+    ],
+
+    fixtures: [
+      { week: "1. Hafta", matches: ["P1 vs P2", "P3 vs P4", "P5 vs P6"] },
+      { week: "2. Hafta", matches: ["P7 vs P1", "P2 vs P3", "P4 vs P5"] },
+      { week: "3. Hafta", matches: ["P6 vs P7", "P1 vs P3", "P2 vs P4"] },
+      { week: "4. Hafta", matches: ["P5 vs P1", "P6 vs P2", "P7 vs P3"] },
+    ]
+  },
+  {
+    id: 2,
+    name: "Tesuji Ligi",
+    sub: "9-5 Kyu",
+    status: "Kayıtlar Açık",
+    participants: [
+      "P1", "P2", "P3", "P4", "P5", "P6"
+    ],
+    standings: [
+      { rank: 1, name: "P1", played: 0, points: 0 },
+      { rank: 2, name: "P2", played: 0, points: 0 },
+      { rank: 3, name: "P3", played: 0, points: 0 },
+      { rank: 4, name: "P4", played: 0, points: 0 },
+      { rank: 5, name: "P5", played: 0, points: 0 },
+      { rank: 6, name: "P6", played: 0, points: 0 },
+    ],
+    fixtures: [
+      { week: "1. Hafta", matches: ["P1 vs P6", "P2 vs P5", "P3 vs P4"] },
+      { week: "2. Hafta", matches: ["P6 vs P4", "P5 vs P3", "P1 vs P2"] },
+      { week: "3. Hafta", matches: ["P2 vs P6", "P3 vs P1", "P4 vs P5"] },
+      { week: "4. Hafta", matches: ["P6 vs P5", "P1 vs P4", "P2 vs P3"] },
+    ]
+  },
+  {
+    id: 3,
+    name: "Do-jo Ligi",
+    sub: "4-1 Kyu",
+    status: "Kayıtlar Açık",
+    participants: [
+      "P1", "P2", "P3", "P4", "P5"
+    ],
+    standings: [
+      { rank: 1, name: "P1", played: 0, points: 0 },
+      { rank: 2, name: "P2", played: 0, points: 0 },
+      { rank: 3, name: "P3", played: 0, points: 0 },
+      { rank: 4, name: "P4", played: 0, points: 0 },
+      { rank: 5, name: "P5", played: 0, points: 0 },
+    ],
+    fixtures: [
+      { week: "1. Hafta", matches: ["P1 vs P5", "P2 vs P4"] },
+      { week: "2. Hafta", matches: ["P5 vs P3", "P1 vs P2"] },
+      { week: "3. Hafta", matches: ["P3 vs P1", "P4 vs P5"] },
+      { week: "4. Hafta", matches: ["P2 vs P3", "P4 vs P1"] },
+    ]
+  },
+];
+---
+
+<Layout title="Ligler">
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">Ligler ve Oyuncular</Fragment>
+      <Fragment slot="desc">
+        Seviyenize uygun lige katılın, sıralamayı ve haftalık maç programını takip edin.
+      </Fragment>
+    </Sectionhead>
+
+    <div class="mt-8 text-center bg-slate-900 p-8 rounded-lg max-w-4xl mx-auto shadow-lg mb-16">
+      <h2 class="text-2xl font-bold text-white mb-2">1. Sezon Başlıyor!</h2>
+      <p class="text-indigo-200">Tüm liglerdeki maçlar ve puan durumları haftalık olarak güncellenmektedir.</p>
+    </div>
+
+    <div class="flex flex-col gap-12 mx-auto max-w-screen-xl">
+      {leagues.map((item) => (
+        <div class="relative w-full bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-slate-900 dark:border-gray-700 overflow-hidden">
+            
+            <div class="absolute top-0 right-0 bg-indigo-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-lg uppercase tracking-wider z-10">
+                {item.status}
+            </div>
+
+            <div class="p-8">
+                <div class="flex items-baseline gap-4 mb-8 border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">{item.name}</h3>
+                    <span class="text-lg text-indigo-600 font-medium bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-md">{item.sub}</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 divide-y lg:divide-y-0 lg:divide-x divide-gray-100 dark:divide-gray-800">
+                    
+                    <div class="pt-4 lg:pt-0">
+                        <div class="flex items-center gap-2 font-bold text-gray-900 dark:text-white mb-4 text-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            Katılımcılar
+                        </div>
+                        <ul class="grid grid-cols-2 lg:grid-cols-1 gap-2">
+                            {item.participants.map((p) => (
+                                <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-2 hover:bg-gray-50 dark:hover:bg-slate-800 rounded transition-colors">
+                                    <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                                    {p}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div class="pt-8 lg:pt-0 lg:pl-12">
+                        <div class="flex items-center gap-2 font-bold text-gray-900 dark:text-white mb-4 text-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                            Puan Durumu
+                        </div>
+                        <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+                            <table class="min-w-full text-sm text-left">
+                                <thead class="bg-gray-50 dark:bg-slate-800 text-xs text-gray-500 uppercase font-semibold">
+                                    <tr>
+                                        <th class="px-3 py-2 text-center w-10">#</th>
+                                        <th class="px-3 py-2">Oyuncu</th>
+                                        <th class="px-3 py-2 text-center w-12">P</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                                    {item.standings && item.standings.map((s) => (
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-slate-800/50">
+                                            <td class="px-3 py-2 text-center font-medium text-gray-400">{s.rank}</td>
+                                            <td class="px-3 py-2 font-medium text-gray-800 dark:text-gray-300">{s.name}</td>
+                                            <td class="px-3 py-2 text-center font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-900/20">{s.points}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 lg:pt-0 lg:pl-12">
+                        <div class="flex items-center gap-2 font-bold text-gray-900 dark:text-white mb-4 text-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            Haftalık Fikstür
+                        </div>
+                        <div class="space-y-4">
+                            {item.fixtures && item.fixtures.length > 0 ? (
+                                item.fixtures.map((fix) => (
+                                    <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-3">
+                                        <div class="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">
+                                            {fix.week}
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            {fix.matches.map((match) => (
+                                                <div class="text-sm text-gray-700 dark:text-gray-300 font-medium pl-2 border-l-2 border-gray-300 dark:border-gray-600">
+                                                    {match}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div class="text-gray-400 text-sm italic">Fikstür henüz belli değil.</div>
+                            )}
+                        </div>
+                    </div>
+
+                </div> </div>
+        </div>
+      ))}
+    </div>
+  </Container>
+</Layout>
