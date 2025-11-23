@@ -1,0 +1,74 @@
+---
+import Container from "./container.astro";
+
+const faqs = [
+  {
+    question: "Go oyununu hiç bilmiyorum, dersler benim için uygun mu?",
+    answer: "Henüz başlangıç seviyesinde kurslarımız başlamadı, en kısa zamanda bu kursları da sunacağız.",
+  },
+  {
+    question: "Liglere katılmak için hangi seviyede olmalıyım?",
+    answer: "Liglerimiz seviyelere göre ayrılmıştır (Savaşçı, Tesuji, Do-jo). 14 Kyu'dan Dan seviyesine kadar her oyuncu için uygun bir ligimiz mevcuttur. Seviyenizi bilmiyorsanız, kayıt öncesi seviye belirleme maçı yapabiliriz.",
+  },
+  {
+    question: "Dersler canlı mı yoksa video kaydı mı?",
+    answer: "Derslerimiz Google Meet üzerinden canlı ve interaktif olarak yapılmaktadır. Ancak kaçırdığınız dersleri daha sonra izleyebilmeniz için kayıt altına alıp Yotube kanalımzıa yüklüyoruz.",
+  },
+  {
+    question: "Ödeme ve abonelik sistemi nasıl çalışıyor?",
+    answer: "6 haftalık kurs planı ile çalışıyoruz. Dolayısıyla satın aldığınız hizmet 6 haftalık eğitim ve mentörlüğü kapsar.",
+  },
+    {
+        question: "Bireysel oyun analizleri nasıl yapılıyor?",
+        answer: "Her oyuncu o hafta oynadığı oyunun analizini eğitmenle birlikte belirlenen günde herkes ile birlikte dinleyebilir.",
+    },
+];
+---
+
+<Container>
+  <div class="max-w-3xl mx-auto mt-16 mb-16">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-black">
+        Sıkça Sorulan Sorular
+      </h2>
+      <p class="mt-4 text-lg text-black-600 dark:text-slate-400">
+        Merak ettiğiniz konular hakkında hızlı cevaplar.
+      </p>
+    </div>
+
+    <div class="grid gap-4">
+      {faqs.map((item) => (
+        <details class="group bg-slate-100 dark:bg-slate-800 rounded-lg p-4 [&_summary::-webkit-details-marker]:hidden 
+    open:bg-slate-50 dark:open:bg-slate-700 
+    open:shadow-sm transition-colors duration-300">
+          
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <h3 class="font-medium text-slate-900 dark:text-white pr-4">
+              {item.question}
+            </h3>
+            
+            <span class="transition group-open:rotate-180">
+              <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24" class="text-slate-400 group-open:text-indigo-600">
+                <path d="M6 9l6 6 6-6"></path>
+              </svg>
+            </span>
+          </summary>
+
+          <div class="text-slate-600 dark:text-slate-300 mt-3 leading-relaxed text-sm animate-fade-in">
+            {item.answer}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</Container>
+
+<style>
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
