@@ -9,16 +9,16 @@ const pricing = [
     name: "Savaşçı Ruhu",
     price: "1000 TL", 
     originalPrice: "2000 TL", 
-    popular: false,
+    popular: true,
     features: [
       "14-10 kyu seviyeleri için",
-      "7 kişi Kontenjan",
+      "6 kişi Kontenjan",
       "6 haftalık eğitim programı",
       "Eğitmen: Ali Karakaya",
     ],
     button: {
-      text: "Bize Ulaşın",
-      link: "/contact",
+      text: "Mağaza",
+      link: "https://www.shopier.com/Agoragoakademisi/41454015",
     },
   },
   {
@@ -28,29 +28,29 @@ const pricing = [
     popular: true,
     features: [
       "9-5 kyu seviyeleri için",
-      "7 kişi Kontenjan",
+      "6 kişi Kontenjan",
       "6 haftalık eğitim programı",
       "Eğitmen: Oğuz Erdoğan",
     ],
     button: {
-      text: "Bize Ulaşın",
-      link: "/contact",
+      text: "Mağaza",
+      link: "https://www.shopier.com/Agoragoakademisi/41454015",
     },
   },
   {
     name: "Do-jo",
     price: "2000 TL",
     originalPrice: "6000 TL",
-    popular: false,
+    popular: true,
     features: [
       "4-1 kyu seviyeleri için",
-      "7 kişi Kontenjan",
+      "6 kişi Kontenjan",
       "6 haftalık eğitim programı",
       "Eğitmen: Tuğkan Eren",
     ],
     button: {
-      text: "Bize Ulaşın",
-      link: "/contact",
+      text: "Mağaza",
+      link: "https://www.shopier.com/Agoragoakademisi/41454129",
     },
   },
 ];
@@ -61,7 +61,7 @@ const pricing = [
     <Sectionhead>
       <Fragment slot="title">Kurs Planları</Fragment>
       <Fragment slot="desc">
-        Lise ve üniversite öğrencilerine yönelik özel fiyatlandırma için lütfen bizimle iletişime geçiniz.
+        Go Akademisi'nin açılışına özel, kurs plalarında büyük imkanlar. Her bir kurs için 6 Kişilik kontenjan ve 20 Aralığa kadar kayıt süresi:
       </Fragment>
     </Sectionhead>
 
@@ -89,8 +89,23 @@ const pricing = [
         </div>
       </div>
     </div>
+
     <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-screen-lg mt-12">
       {pricing.map((item) => <PricingCard plan={item} />)}
+    </div>
+
+  <div class="mt-16 text-center">
+      <p class="text-lg text-black mb-8">
+        Lise ve üniversite öğrencilerine yönelik özel imkanlar için lütfen bizimle iletişime geçiniz. 
+      </p>
+      <a 
+        href="/contact" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        class="inline-block w-full md:w-auto px-12 py-4 text-lg text-white bg-gray-900 hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-xl transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1"
+      >
+        İletişime Geç
+      </a>
     </div>
   </Container>
 </Layout>
@@ -104,6 +119,7 @@ const pricing = [
 
     if (distance < 0) {
       clearInterval(timer);
+      // @ts-ignore
       document.getElementById("countdown").innerHTML = "<span class='text-red-500'>Süre Doldu!</span>";
       return;
     }
@@ -113,9 +129,13 @@ const pricing = [
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
+    // @ts-ignore
     document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+    // @ts-ignore
     document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+    // @ts-ignore
     document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+    // @ts-ignore
     document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
   }, 1000);
 </script>
