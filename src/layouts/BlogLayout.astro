@@ -1,6 +1,7 @@
 ---
 import Container from "@components/container.astro";
-import { getFormattedDate } from "@utils/all";
+// getFormattedDate fonksiyonuna artık ihtiyacımız yok ama hata vermemesi için silmedim, istersen silebilirsin.
+import { getFormattedDate } from "@utils/all"; 
 import Layout from "./Layout.astro";
 
 const { frontmatter } = Astro.props;
@@ -21,9 +22,15 @@ const { frontmatter } = Astro.props;
           {frontmatter.author}
         </span>
         <span class="text-gray-400">•</span>
+        
         <time class="text-gray-400" datetime={frontmatter.publishDate}>
-          {getFormattedDate(frontmatter.publishDate)}
+          {new Date(frontmatter.publishDate).toLocaleDateString("tr-TR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </time>
+        
         <span class="text-gray-400 hidden md:block">•</span>
         <div class="w-full md:w-auto flex flex-wrap gap-3">
           {
@@ -38,11 +45,12 @@ const { frontmatter } = Astro.props;
     <div class="mx-auto prose prose-lg mt-6">
       <slot />
     </div>
+    
     <div class="text-center mt-8">
       <a
         href="/blog"
         class="bg-gray-100 px-5 py-3 rounded-md hover:bg-gray-200 transition"
-        >← Back to Blog</a
+        >← Blog'a Dön</a
       >
     </div>
   </Container>
