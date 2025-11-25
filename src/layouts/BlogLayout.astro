@@ -1,10 +1,15 @@
 ---
 import Container from "@components/container.astro";
-// getFormattedDate fonksiyonuna artık ihtiyacımız yok ama hata vermemesi için silmedim, istersen silebilirsin.
-import { getFormattedDate } from "@utils/all"; 
 import Layout from "./Layout.astro";
 
 const { frontmatter } = Astro.props;
+
+// Tarihi güvenli bir şekilde Türkçe'ye çeviren yardımcı değişken
+const formattedDate = new Date(frontmatter.publishDate).toLocaleDateString("tr-TR", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 ---
 
 <Layout title={frontmatter.title}>
@@ -24,11 +29,7 @@ const { frontmatter } = Astro.props;
         <span class="text-gray-400">•</span>
         
         <time class="text-gray-400" datetime={frontmatter.publishDate}>
-          {new Date(frontmatter.publishDate).toLocaleDateString("tr-TR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          {formattedDate}
         </time>
         
         <span class="text-gray-400 hidden md:block">•</span>
@@ -50,7 +51,7 @@ const { frontmatter } = Astro.props;
       <a
         href="/blog"
         class="bg-gray-100 px-5 py-3 rounded-md hover:bg-gray-200 transition"
-        >← Blog'a Dön</a
+        >← Kütüphaneye dön</a
       >
     </div>
   </Container>

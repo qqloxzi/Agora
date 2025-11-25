@@ -32,11 +32,17 @@ const { Content } = await entry.render();
           {entry.data.author}
         </span>
         <span class="text-gray-400">•</span>
+        
         <time
           class="text-gray-400"
           datetime={entry.data.publishDate.toISOString()}>
-          {entry.data.publishDate.toDateString()}
+          {entry.data.publishDate.toLocaleDateString("tr-TR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </time>
+
         <span class="text-gray-400 hidden md:block">•</span>
         <div class="w-full md:w-auto flex flex-wrap gap-3">
           {
@@ -51,11 +57,12 @@ const { Content } = await entry.render();
     <div class="mx-auto prose prose-lg mt-6 max-w-3xl">
       <Content />
     </div>
+    
     <div class="text-center mt-8">
       <a
         href="/blog"
         class="bg-gray-100 px-5 py-3 rounded-md hover:bg-gray-200 transition"
-        >← Back to Blog</a
+        >← Kütüphaneye dön</a
       >
     </div>
   </Container>
