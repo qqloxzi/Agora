@@ -7,7 +7,7 @@
     <div class="text-slate-600 text-sm md:text-base">
       <p>
         Sizlere daha iyi hizmet sunabilmek için sitemizde çerezler (cookies) kullanıyoruz. 
-        Detaylı bilgi için <a href="/yasal/gizlilik-ve-cerez" class="text-black font-semibold underline hover:text-slate-700">Gizlilik ve Çerez Politikamızı</a> inceleyebilirsiniz.
+        Detaylı bilgi için <a href="/KVKK" class="text-black font-semibold underline hover:text-slate-700">Gizlilik ve Çerez Politikamızı</a> inceleyebilirsiniz.
       </p>
     </div>
 
@@ -34,30 +34,29 @@
 </div>
 
 <script>
-  // Tarayıcı yüklendiğinde çalışacak kod
+  
   document.addEventListener('DOMContentLoaded', () => {
     const banner = document.getElementById('cookie-banner');
     const acceptBtn = document.getElementById('accept-cookies');
     const closeBtn = document.getElementById('close-cookie-banner');
     
-    // Kullanıcı daha önce kabul etti mi kontrol et
+    
     const cookieAccepted = localStorage.getItem('cookieConsent');
 
-    // Eğer kabul edilmemişse banner'ı göster
+    
     if (!cookieAccepted && banner) {
       banner.classList.remove('hidden');
-      // Küçük bir gecikme ile animasyonu tetikle (yukarı kaydır)
       setTimeout(() => {
         banner.classList.remove('translate-y-full');
       }, 100);
     }
 
-    // Kabul Et butonuna basınca
+  
     if (acceptBtn && banner) {
       acceptBtn.addEventListener('click', () => {
-        // Tarayıcı hafızasına kaydet
+    
         localStorage.setItem('cookieConsent', 'true');
-        // Banner'ı gizle
+        
         banner.classList.add('translate-y-full');
         setTimeout(() => {
             banner.classList.add('hidden');
@@ -65,7 +64,6 @@
       });
     }
 
-    // Kapat butonuna basınca (Hafızaya kaydetmeden sadece o anlık kapatır)
     if (closeBtn && banner) {
       closeBtn.addEventListener('click', () => {
         banner.classList.add('translate-y-full');
