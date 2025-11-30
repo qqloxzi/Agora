@@ -111,11 +111,11 @@ const pricing = [
 
     <div class="mt-6 text-center">
       <p class="inline-block text-sm md:text-base font-medium text-slate-700 bg-slate-100 dark:text-slate-300 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-full">
-        Her lig için maksimum 6 kişi — Kontenjan dolduğunda kayıtlar kapanır.
+        Her lig için maksimum 8 kişi — Kontenjan dolduğunda kayıtlar kapanır.
       </p>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-10 mx-auto max-w-screen-lg mt-8">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-screen-xl mt-8">
       {pricing.map((item) => <PricingCard plan={item} />)}
     </div>
 
