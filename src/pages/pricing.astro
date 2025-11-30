@@ -56,6 +56,22 @@ const pricing = [
       link: "https://www.shopier.com/Agoragoakademisi/41454129",
     },
   },
+  {
+    name: "Başlangıç",
+    price: "Ücretsiz",
+    popular: false,
+    features: [
+      "Online 2 oturum",
+      "Konejan: Formu dolduran  ilk 8 kişi",
+      "xxx",
+      "Interaktif eğitim",
+      "Eğitmen:Oğuz Erdoğan",
+    ],
+    button: {
+      text: "Kayıt Ol",
+      link: "#",
+    },
+  },
 ];
 ---
 
@@ -99,7 +115,7 @@ const pricing = [
       </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-screen-lg mt-8">
+    <div class="grid md:grid-cols-2 gap-10 mx-auto max-w-screen-lg mt-8">
       {pricing.map((item) => <PricingCard plan={item} />)}
     </div>
 
