@@ -6,12 +6,12 @@ import PricingCard from "@components/pricing.astro";
 
 const pricing = [
   {
-    name: "Savaşçı Ruhu",
+    name: "Başlangıç Ligi",
     price: "1000 TL", 
-    originalPrice: "2000 TL", 
+    originalPrice: "---- TL", 
     popular: true,
     features: [
-      "14-10 kyu seviyeleri için",
+      "17-12 kyu seviyeleri için",
       "Online lig katılımı",
       "Her hafta bireysel oyun analizi",
       "Ders kayıtlarına erişim",
@@ -23,12 +23,12 @@ const pricing = [
     },
   },
   {
-    name: "Tesuji",
+    name: "Gelişim Ligi",
     price: "1500 TL",
-    originalPrice: "4000 TL",
+    originalPrice: "---- TL",
     popular: true,
     features: [
-      "9-5 kyu seviyeleri için",
+      "11-6 kyu seviyeleri için",
      "Online lig katılımı",
       "Her hafta bireysel oyun analizi",
       "Ders kayıtlarına erişim",
@@ -40,12 +40,12 @@ const pricing = [
     },
   },
   {
-    name: "Do-jo",
+    name: "Usta Ligi",
     price: "2000 TL",
-    originalPrice: "6000 TL",
+    originalPrice: "---- TL",
     popular: true,
     features: [
-      "4-1 kyu seviyeleri için",
+      "5 kyu ve üstü seviyeler için",
       "Online lig katılımı",
       "Her hafta bireysel oyun analizi",
       "Ders kayıtlarına erişim",
@@ -57,19 +57,20 @@ const pricing = [
     },
   },
   {
-    name: "Başlangıç",
+    name: "----",
     price: "Ücretsiz",
     popular: false,
     features: [
-      "Online 2 oturum",
-      "Konejan: Formu dolduran  ilk 8 kişi",
-      "xxx",
+      "Online oturum",
+      "Temel kavramlar",
+      "Kurallar ve etik",
+      "Go felsefesi",
       "Interaktif eğitim",
       "Eğitmen:Oğuz Erdoğan",
     ],
     button: {
       text: "Kayıt Ol",
-      link: "#",
+      link: "https://forms.gle/SgkPfyd4BNvyWr2g6",
     },
   },
 ];
@@ -80,12 +81,12 @@ const pricing = [
     <Sectionhead>
       <Fragment slot="title">Kurs Planları</Fragment>
       <Fragment slot="desc">
-        Açılışa özel, kurs planlarında büyük imkanlar. Her bir kurs için 6 Kişilik kontenjan ve 20 Aralığa kadar kayıt süresi:
+        Açılışa özel, kurs planlarında büyük imkanlar. Her bir kurs için 8 Kişilik kontenjan ve 31 Aralığa kadar kayıt süresi:
       </Fragment>
     </Sectionhead>
 
     <div class="mt-8 text-center bg-gray-100 dark:bg-gray-800 p-6 rounded-lg max-w-2xl mx-auto border border-indigo-100 dark:border-gray-700">
-      <p class="text-lg font-semibold text-indigo-600 mb-2">Agora'nın açılışına özel:</p>
+      <p class="text-lg font-semibold text-indigo-600 mb-2">Agora Go Akademisi'nin açılışına özel:</p>
       <div class="flex justify-center gap-4 text-2xl font-bold text-gray-800 dark:text-white" id="countdown">
         <div class="flex flex-col items-center">
           <span id="days">00</span>
@@ -119,25 +120,26 @@ const pricing = [
       {pricing.map((item) => <PricingCard plan={item} />)}
     </div>
 
-    <div class="mt-16 text-center">
-      <p class="text-lg text-black mb-8">
-        Lise ve üniversite öğrencilerine yönelik özel imkanlar için lütfen bizimle iletişime geçiniz. 
-      </p>
-      <a 
-        href="/contact" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="inline-block w-full md:w-auto px-12 py-4 text-lg text-white bg-gray-900 hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-xl transition-all duration-300 font-medium shadow-md hover:shadow-lg transform hover:-translate-y-1"
-      >
-        İletişime Geç
-      </a>
-    </div>
+<div class="mt-16 text-center">
+  <p class="text-lg text-black mb-8">
+    Üniversite öğrencilerine yönelik ek %10 indirim. Bizimle
+    <a 
+      href="/contact" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="underline font-bold hover:text-gray-600 transition-colors cursor-pointer"
+    >
+      iletişime
+    </a>
+    geçebilirsiniz.
+  </p>
+</div>
   </Container>
 </Layout>
 
 <script>
   // Hedef tarih
-  const targetDate = new Date("2025-12-19T23:59:59").getTime();
+  const targetDate = new Date("2025-12-31T23:59:59").getTime();
 
   const timer = setInterval(function() {
     const now = new Date().getTime();
