@@ -11,7 +11,7 @@ category: "Rehber"
 author: "Ali Karakaya"
 tags: [Go servers,go applications]
 ---
-
+  
 ## Go Sunucuları
 
 <div style="display: flex; gap: 15px; align-items: flex-start; margin-bottom: 20px;">
@@ -68,6 +68,7 @@ tags: [Go servers,go applications]
   <div style="background-color: #f4f4f4; padding: 15px; border-radius: 8px; flex: 1;">
     <h4 style="margin-top: 0; margin-bottom: 10px;">BadukPop</h4>
     <p>iOS ve Android için mevcut. Botlara karşı oynayabilir, tsumego çözebilir ve temel Go çalışmaları yapabilirsiniz.</p>
+    
   </div>
 </div>
 
