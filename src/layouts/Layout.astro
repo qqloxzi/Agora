@@ -20,8 +20,8 @@ const resolvedImageWithDomain = new URL(
 const { title } = Astro.props;
 
 const makeTitle = title
-  ? title + " | " + "Go Akademisi"
-  : "Go Akademisi - Online Go Eğitim Platformu";
+  ? title + " | " + "Agora Go Akademisi"
+  : "Agora Go Akademisi - Çevrimiçi Go Eğitim Platformu";
 ---
 
 <!DOCTYPE html>
@@ -34,13 +34,13 @@ const makeTitle = title
 
     <SEO
       title={makeTitle}
-      description="Go Akademisi, Türkiye'deki oyuncular için online Go eğitimi sunan bir platformdur. Başlangıç seviyesinden ileri seviyeye kadar çeşitli kurslar ve interaktif öğrenme materyalleri ile Go oyununu öğrenin ve geliştirin."
+      description="Agora Go Akademisi, Türkiye'deki oyuncular için çevrimiçi Go eğitimi sunan bir platformdur. Başlangıç seviyesinden ileri seviyeye kadar çeşitli kurslar ve interaktif öğrenme materyalleri ile Go oyununu öğrenin ve geliştirin."
       canonical={canonicalURL}
       openGraph={{
         basic: {
           url: canonicalURL,
           type: "website",
-          title: `Go Akademisi - Online Go Eğitim Platformu`,
+          title: `Agora Go Akademisi - Çevrimiçi Go Eğitim Platformu`,
           image: resolvedImageWithDomain,
         },
         image: {
