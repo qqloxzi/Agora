@@ -6,7 +6,7 @@ image: {
     src: "/gostone.png",
     alt: "go"
 }
-publishDate: "2025-01-07"
+publishDate: "2025-12-2"
 category: "Rehber"
 author: "Ali Karakaya"
 tags: [Go servers,go applications]

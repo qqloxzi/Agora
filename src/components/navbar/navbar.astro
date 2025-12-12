@@ -1,64 +1,56 @@
 ---
 import Container from "@components/container.astro";
-import Link from "@components/ui/link.astro";
 import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
 
 const menuitems = [
-  {
-    title: "Ligler",
-    path: "/ligler",
-  },
-  {
-    title: "Kurs Planları",
-    path: "/pricing",
-  },
-  {
-    title: "Hakkımızda",
-    path: "/about",
-  },
-  {
-    title: "Kütüphane",
-    path: "/blog",
-  },
-  {
-    title: "İletişim",
-    path: "/contact",
-  },
+  { title: "Ligler", path: "/ligler" },
+  { title: "Kurs Planları", path: "/pricing" },
+  { title: "Hakkımızda", path: "/about" },
+  { title: "Kütüphane", path: "/blog" },
+  { title: "İletişim", path: "/contact" },
 ];
 ---
 
 <Container>
-  <header class="flex flex-col lg:flex-row justify-between items-center my-5">
+  <header class="flex flex-col lg:flex-row justify-center items-center my-5">
     <Astronav>
-      <div class="flex w-full lg:w-auto items-center justify-between">
-        <a href="/" class="text-lg"
-          ><span class="font-bold text-slate-800">Ana Sayfa  </span><span
-            class="text-slate-500"></span
-          >
-        </a>
-        <div class="block lg:hidden">
-          <MenuIcon class="w-4 h-4 text-gray-800" />
-        </div>
-      </div>
-      <MenuItems class="hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0">
-        <ul class="flex flex-col lg:flex-row lg:gap-3">
-          {
-            menuitems.map((item) => (
-              <li>
-                <a
-                  href={item.path}
-                  class="flex lg:px-3 py-2 items-center text-gray-600 hover:text-gray-900">
-                  <span> {item.title}</span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+      
+      <div class="flex w-full lg:w-auto items-center lg:justify-center lg:gap-10">
         
-      </MenuItems>
-    </Astronav>
-    
-    <div class="hidden lg:flex items-center gap-4">
+        <div class="flex items-center justify-between w-full lg:w-auto">
+          <a href="/" class="flex items-center">
+            <img 
+              src="/transparentAgora.svg" 
+              alt="Agora Go Akademisi Logo" 
+              class="w-24 h-auto object-contain" 
+            />
+          </a>
+          <div class="block lg:hidden">
+            <MenuIcon class="w-4 h-4 text-gray-800" />
+          </div>
+        </div>
+
+        <MenuItems class="hidden w-full lg:w-auto mt-2 lg:flex lg:mt-0">
+          <ul class="flex flex-col lg:flex-row lg:gap-6 items-center">
+            {
+              menuitems.map((item) => (
+                <li>
+                  <a
+                    href={item.path}
+                    class="flex py-2 text-gray-600 hover:text-black font-medium transition-colors">
+                    {item.title}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+           <div class="flex flex-col lg:flex-row lg:items-center gap-4 mt-4 lg:mt-0 lg:ml-6">
+            
+            </a>
+          </div>
+        </MenuItems>
+
       </div>
+    </Astronav>
   </header>
 </Container>

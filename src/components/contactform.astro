@@ -81,7 +81,9 @@ import Button from "./ui/button.astro";
   const result = document.getElementById("result");
 
   form.addEventListener("submit", function (e) {
-    e.preventDefault();
+    // 1. BU SATIR YÖNLENDİRMEYİ ENGELLER
+    e.preventDefault(); 
+    
     form.classList.add("was-validated");
     if (!form.checkValidity()) {
       form.querySelectorAll(":invalid")[0].focus();
@@ -91,7 +93,7 @@ import Button from "./ui/button.astro";
     const object = Object.fromEntries(formData);
     const json = JSON.stringify(object);
 
-    result.innerHTML = "Sending...";
+    result.innerHTML = "Gönderiliyor...";
 
     fetch("https://api.web3forms.com/submit", {
       method: "POST",
@@ -105,7 +107,10 @@ import Button from "./ui/button.astro";
         let json = await response.json();
         if (response.status == 200) {
           result.classList.add("text-green-500");
-          result.innerHTML = json.message;
+          
+          // 2. MESAJ BURADAN DEĞİŞTİRİLİR (Tırnaklara dikkat!)
+          result.innerHTML = "Form başarıyla gönderildi! İletişime geçtiğiniz için teşekkürler.";
+          
         } else {
           console.log(response);
           result.classList.add("text-red-500");
@@ -114,7 +119,7 @@ import Button from "./ui/button.astro";
       })
       .catch((error) => {
         console.log(error);
-        result.innerHTML = "Something went wrong!";
+        result.innerHTML = "Bir şeyler yanlış gitti!";
       })
       .then(function () {
         form.reset();

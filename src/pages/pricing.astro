@@ -6,10 +6,10 @@ import PricingCard from "@components/pricing.astro";
 
 const pricing = [
   {
-    name: "Başlangıç Ligi",
+    name: "Temel Taş Ligi",
     price: "1000 TL", 
     originalPrice: "1200 TL", 
-    discount: "%17", // Yeni eklenen satır
+    discount: "%17",
     popular: true,
     features: [
       "17-12 kyu seviyeleri için",
@@ -27,7 +27,7 @@ const pricing = [
     name: "Gelişim Ligi",
     price: "1500 TL",
     originalPrice: "1800 TL",
-    discount: "%17", // Yeni eklenen satır
+    discount: "%17",
     popular: true,
     features: [
       "11-6 kyu seviyeleri için",
@@ -42,10 +42,10 @@ const pricing = [
     },
   },
   {
-    name: "Usta Ligi",
+    name: "Aydınlanma Ligi",
     price: "2000 TL",
     originalPrice: "2400 TL",
-    discount: "%17", // Yeni eklenen satır
+    discount: "%17",
     popular: true,
     features: [
       "5 kyu ve üstü seviyeler için",
@@ -62,6 +62,7 @@ const pricing = [
   {
     name: "Go'ya İlk Adım",
     price: "Ücretsiz",
+    originalPrice: "",
     popular: false,
     features: [
       "Online oturum",
@@ -79,7 +80,7 @@ const pricing = [
 ];
 ---
 
-<Layout title="Pricing">
+<Layout title="Kurs Planları | Agora Go Akademisi">
   <Container>
     <Sectionhead>
       <Fragment slot="title">Kurs Planları</Fragment>
@@ -119,24 +120,24 @@ const pricing = [
       </p>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-screen-xl mt-8">
+    <div id="plan-kutulari" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-screen-xl mt-8">
       {pricing.map((item) => <PricingCard plan={item} />)}
     </div>
 
-<div class="mt-16 text-center">
-  <p class="text-lg text-black mb-8">
-    Üniversite öğrencilerine yönelik ek %10 indirim. Bizimle
-    <a 
-      href="/contact" 
-      target="_blank" 
-      rel="noopener noreferrer"
-      class="underline font-bold hover:text-gray-600 transition-colors cursor-pointer"
-    >
-      iletişime
-    </a>
-    geçebilirsiniz.
-  </p>
-</div>
+    <div class="mt-16 text-center">
+      <p class="text-lg text-black mb-8">
+        Üniversite öğrencilerine yönelik ek %10 indirim. Bizimle
+        <a 
+          href="/contact" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="underline font-bold hover:text-gray-600 transition-colors cursor-pointer"
+        >
+          iletişime
+        </a>
+        geçebilirsiniz.
+      </p>
+    </div>
   </Container>
 </Layout>
 
@@ -170,3 +171,12 @@ const pricing = [
     document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
   }, 1000);
 </script>
+
+<style is:global>
+  /* ID'si plan-kutulari olan div'in içindeki kutular */
+  #plan-kutulari > div {
+    background-color: #ffffff !important; /* İçi BEYAZ */
+    border: 3px solid #172554 !important; /* Kenarı KALIN LACİVERT */
+    color: #000000 !important; /* Yazılar SİYAH (Okunması için) */
+  }
+</style>

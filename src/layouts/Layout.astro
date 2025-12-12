@@ -13,7 +13,7 @@ export interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 
 const resolvedImageWithDomain = new URL(
-  "/ico_logo.ico",
+  "/agora.png",
   Astro.site
 ).toString();
 
@@ -29,7 +29,7 @@ const makeTitle = title
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/jpeg" href="/logo_browser.jpg" />
+    <link rel="icon" type="image/x-icon" href="/ico_logo.ico" />
     <meta name="generator" content={Astro.generator} />
 
     <SEO
@@ -44,12 +44,13 @@ const makeTitle = title
           image: resolvedImageWithDomain,
         },
         image: {
-          alt: "Go Akademisi Ana Sayfa",
+          alt: "Agora Go Akademisi Ana Sayfa",
         },
       }}
     />
   </head>
   <body>
+    <body class="bg-[#DFE1E5]"></body>
     <Navbar />
     <slot />
     <Footer />
