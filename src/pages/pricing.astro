@@ -120,10 +120,12 @@ const pricing = [
       </p>
     </div>
 
-    <div id="plan-kutulari" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-screen-xl mt-8">
+    <div 
+      id="plan-kutulari" 
+      class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-screen-xl mt-8 [&>*]:border-2 [&>*]:border-indigo-950 dark:[&>*]:border-indigo-500"
+    >
       {pricing.map((item) => <PricingCard plan={item} />)}
     </div>
-
     <div class="mt-16 text-center">
       <p class="text-lg text-black mb-8">
         Üniversite öğrencilerine yönelik ek %10 indirim. Bizimle
@@ -157,7 +159,7 @@ const pricing = [
     }
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const hours = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
@@ -173,10 +175,6 @@ const pricing = [
 </script>
 
 <style is:global>
-  /* ID'si plan-kutulari olan div'in içindeki kutular */
-  #plan-kutulari > div {
-    background-color: #ffffff !important; /* İçi BEYAZ */
-    border: 3px solid #172554 !important; /* Kenarı KALIN LACİVERT */
-    color: #000000 !important; /* Yazılar SİYAH (Okunması için) */
-  }
+  
+
 </style>

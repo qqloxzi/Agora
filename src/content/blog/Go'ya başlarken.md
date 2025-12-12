@@ -3,7 +3,7 @@ draft: false
 title: "Go'ya başlarken"
 snippet: "Go oyununa yeni başlayanlar için sunucular, uygulamalar ve kitap önerileri."
 image: {
-    src: "/gostone.png",
+    src: "/Goyabaslarken.jpg",
     alt: "go"
 }
 publishDate: "2025-12-2"
