@@ -1,0 +1,175 @@
+---
+// src/components/MountainRoadmap.astro
+
+const milestones = [
+  { id: 1, x: '78%', y: '88%', title: "Temel Kurallar", desc: "Yolculuğun başlangıcı.", link: "/step-1" },
+  // Old 2 removed previously
+  // Old 3 becomes 2
+  { id: 2, x: '70%', y: '65%', title: "Esir alma teknikleri", desc: "Rakibini yaşatma!", link: "/step-2" },
+  // Old 4 becomes 3
+  { id: 3, x: '52%', y: '55%', title: "Ölüm-Kalım ", desc: "İki göz yapmak ve yapmamak işte bütün mesele bu.", link: "/step-3" },
+  // Old 5 removed
+  // Old 6 becomes 4
+  { id: 4, x: '58%', y: '33%', title: "Joseki", desc: "Nearing the top.", link: "/step-4" },
+  // Old 7 becomes 5
+  { id: 5, x: '49%', y: '24%', title: "Oyun Sonu", desc: "Almost at summit.", link: "/step-5" },
+  // Old 8 becomes 6
+  { id: 6, x: '50%', y: '13%', title: "Alan sayma ve oyunu sonlandırma", desc: "", link: "/step-6" },
+];
+---
+
+<div class="roadmap-container">
+  <svg class="mountain-graphic" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="mountainGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#2c7a85;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1a4f57;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="snowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#dceef0;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    
+    <path d="M400,50 L50,500 L750,500 Z" fill="url(#mountainGrad)" />
+    <path d="M650,500 L800,500 L700,350 Z" fill="#1a4f57" opacity="0.7"/> 
+    <path d="M150,500 L0,500 L100,300 Z" fill="#1a4f57" opacity="0.7"/> 
+    <path d="M400,50 L350,150 L420,180 L450,130 Z" fill="url(#snowGrad)"/>
+    <path d="M700,350 L670,400 L730,400 Z" fill="url(#snowGrad)" opacity="0.8"/>
+
+    <path 
+      d="M624,440 C 550,400, 650,350, 560,325 S 400,275, 440,210 S 400,150, 400,100" 
+      fill="none" 
+      stroke="#C52128" 
+      stroke-width="4" 
+      stroke-dasharray="8,8"
+      stroke-linecap="round"
+    />
+
+    <g transform="translate(400, 55)">
+        <line x1="0" y1="0" x2="0" y2="40" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+        <path d="M0,0 L30,10 L0,20 Z" fill="#C52128"/>
+    </g>
+  </svg>
+
+  <div class="nodes-layer">
+    {milestones.map((item) => (
+      <div class="node-wrapper" style={`left: ${item.x}; top: ${item.y};`}>
+        <a href={item.link} class="node-dot" aria-label={`Go to ${item.title}`}>
+          {item.id}
+        </a>
+        
+        <div class="tooltip" role="tooltip">
+          <h4 class="tooltip-title">{item.title}</h4>
+          <p class="tooltip-desc">{item.desc}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  /* --- Container & Layout --- */
+  .roadmap-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 8 / 5;
+    margin: 40px auto;
+  }
+
+  .mountain-graphic {
+    width: 100%;
+    height: 100%;
+    display: block;
+    filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.2));
+  }
+
+  .nodes-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+
+  /* --- Interactive Nodes --- */
+  .node-wrapper {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    z-index: 10;
+  }
+
+  /* Node styling as clickable link */
+  .node-dot {
+    width: 32px;
+    height: 32px;
+    background-color: #C52128;
+    color: white;
+    font-weight: bold;
+    font-family: sans-serif;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  }
+
+  .node-wrapper:hover .node-dot {
+    transform: scale(1.2);
+    background-color: #a3161c;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+
+  /* --- Tooltips --- */
+  .tooltip {
+    position: absolute;
+    bottom: 130%; 
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: white;
+    color: #333;
+    padding: 12px;
+    border-radius: 8px;
+    width: max-content;
+    max-width: 180px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: none;
+  }
+
+  .tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+  }
+
+  .node-wrapper:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-title {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    color: #C52128;
+  }
+
+  .tooltip-desc {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #555;
+  }
+</style>
