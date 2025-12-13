@@ -1,19 +1,16 @@
 ---
-// src/components/MountainRoadmap.astro
+
 
 const milestones = [
   { id: 1, x: '78%', y: '88%', title: "Temel Kurallar", desc: "Yolculuğun başlangıcı.", link: "/step-1" },
-  // Old 2 removed previously
-  // Old 3 becomes 2
+
   { id: 2, x: '70%', y: '65%', title: "Esir alma teknikleri", desc: "Rakibini yaşatma!", link: "/step-2" },
-  // Old 4 becomes 3
   { id: 3, x: '52%', y: '55%', title: "Ölüm-Kalım ", desc: "İki göz yapmak ve yapmamak işte bütün mesele bu.", link: "/step-3" },
-  // Old 5 removed
-  // Old 6 becomes 4
+
   { id: 4, x: '58%', y: '33%', title: "Joseki", desc: "Nearing the top.", link: "/step-4" },
-  // Old 7 becomes 5
-  { id: 5, x: '49%', y: '24%', title: "Oyun Sonu", desc: "Almost at summit.", link: "/step-5" },
-  // Old 8 becomes 6
+
+  { id: 5, x: '49%', y: '24%', title: "Oyun Sonu", desc: "", link: "/step-5" },
+
   { id: 6, x: '50%', y: '13%', title: "Alan sayma ve oyunu sonlandırma", desc: "", link: "/step-6" },
 ];
 ---
@@ -69,7 +66,7 @@ const milestones = [
 </div>
 
 <style>
-  /* --- Container & Layout --- */
+  
   .roadmap-container {
     position: relative;
     width: 100%;
@@ -92,7 +89,7 @@ const milestones = [
     pointer-events: none;
   }
 
-  /* --- Interactive Nodes --- */
+  
   .node-wrapper {
     position: absolute;
     transform: translate(-50%, -50%);
@@ -100,7 +97,7 @@ const milestones = [
     z-index: 10;
   }
 
-  /* Node styling as clickable link */
+  
   .node-dot {
     width: 32px;
     height: 32px;
@@ -123,7 +120,7 @@ const milestones = [
     box-shadow: 0 4px 8px rgba(0,0,0,0.4);
   }
 
-  /* --- Tooltips --- */
+  
   .tooltip {
     position: absolute;
     bottom: 130%; 

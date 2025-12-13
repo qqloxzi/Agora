@@ -48,9 +48,19 @@ const makeTitle = title
         },
       }}
     />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Agora Go Akademisi",
+      "url": "https://agoragoakademisi.com",
+      "logo": "https://agoragoakademisi.com/agora.png"
+    }
+    </script>
   </head>
-  <body>
-    <body class="bg-[#DFE1E5]"></body>
+  
+  <body class="bg-[#DFE1E5]">
     <Navbar />
     <slot />
     <Footer />
@@ -58,7 +68,6 @@ const makeTitle = title
     <CookieConsent />
 
     <style is:global>
-    
       img {
         content-visibility: auto;
       }
