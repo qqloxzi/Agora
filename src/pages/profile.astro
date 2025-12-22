@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Profilim | Agora Go Akademisi">
+  <div class="profile-container">
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar-circle" id="avatar-placeholder"></div>
+        <h1 id="display-username">Yükleniyor...</h1>
+        <p id="display-email" class="email-text">...</p>
+      </div>
+
+      <div class="profile-info">
+        <div class="info-item">
+          <label>Kullanıcı Adı</label>
+          <span id="info-username">-</span>
+        </div>
+        <div class="info-item">
+          <label>Hesap Tipi</label>
+          <span>Standart Üye</span>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button id="logout-btn" class="btn-danger">Oturumu Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .profile-container { max-width: 500px; margin: 5rem auto; padding: 0 1rem; font-family: 'Inter', sans-serif; }
+    .profile-card { background: white; padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); text-align: center; }
+    
+    .avatar-circle { width: 80px; height: 80px; background: #1e293b; margin: 0 auto 1.5rem; border-radius: 50%; }
+    h1 { font-size: 1.5rem; color: #1e293b; margin-bottom: 0.25rem; }
+    .email-text { color: #64748b; font-size: 0.9rem; margin-bottom: 2rem; }
+
+    .profile-info { text-align: left; background: #f8fafc; padding: 1.5rem; border-radius: 16px; margin-bottom: 2rem; }
+    .info-item { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0; }
+    .info-item:last-child { border: none; }
+    label { font-weight: 600; color: #475569; font-size: 0.9rem; }
+    span { color: #1e293b; font-size: 0.9rem; }
+
+    .btn-danger {
+      width: 100%; padding: 0.85rem; border: none; border-radius: 9999px;
+      background: #ef4444; color: white; font-weight: 600; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-danger:hover { opacity: 0.9; }
+  </style>
+
+  <script>
+    import { supabase } from '../lib/supabase';
+
+    async function initProfile() {
+      // 1. Mevcut kullanıcıyı al
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        window.location.href = '/login';
+        return;
+      }
+
+      // 2. Agorasusers tablosundan verileri çek
+      const { data: profile } = await supabase
+        .from('Agorasusers')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      // 3. Arayüzü güncelle
+      document.getElementById('display-username')!.textContent = profile?.username || 'İsimsiz Oyuncu';
+      document.getElementById('display-email')!.textContent = user.email!;
+      document.getElementById('info-username')!.textContent = profile?.username || '-';
+      document.getElementById('avatar-placeholder')!.textContent = (profile?.username?.[0] || 'A').toUpperCase();
+      document.getElementById('avatar-placeholder')!.style.display = 'flex';
+      document.getElementById('avatar-placeholder')!.style.alignItems = 'center';
+      document.getElementById('avatar-placeholder')!.style.justifyContent = 'center';
+      document.getElementById('avatar-placeholder')!.style.color = 'white';
+      document.getElementById('avatar-placeholder')!.style.fontSize = '2rem';
+    }
+
+    // Çıkış Butonu
+    document.getElementById('logout-btn')?.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.href = '/login';
+    });
+
+    initProfile();
+  </script>
+</Layout>

@@ -1,0 +1,113 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Giriş Yap | Agora Go Akademisi">
+  <div class="login-container">
+    <div class="login-header">
+      <h1>Giriş Yap</h1>
+    </div>
+
+    <div id="selection-view" class="options-view">
+      <button id="show-email-form" class="btn-theme">
+        E-posta ile giriş yap
+      </button>
+      
+      <div class="separator"><span>VEYA</span></div>
+
+      <button id="google-login" class="btn-theme">
+        <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5" />
+        Google ile giriş yap
+      </button>
+    </div>
+
+    <div id="email-form-view" class="hidden">
+      <div class="login-card">
+        <form id="login-form">
+          <div class="input-group">
+            <label for="email">E-posta</label>
+            <input type="email" id="email" placeholder="E-posta adresinizi girin" required />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Şifre</label>
+            <input type="password" id="password" placeholder="Şifrenizi girin" required />
+          </div>
+
+          <button type="submit" class="submit-btn">Giriş Yap</button>
+        </form>
+        <button id="back-to-selection" class="back-link">← Seçeneklere Geri Dön</button>
+      </div>
+    </div>
+    
+    <p id="message"></p>
+  </div>
+
+  <style>
+    .login-container { max-width: 420px; margin: 5rem auto; padding: 0 1rem; font-family: 'Inter', sans-serif; }
+    .login-header h1 { font-size: 2rem; text-align: left; margin-bottom: 2.5rem; color: #1a1a1a; font-weight: 700; }
+    
+    .btn-theme, .submit-btn {
+      width: 100%; padding: 0.85rem; border: none; border-radius: 9999px;
+      background: #1e293b; color: white; font-size: 0.95rem; font-weight: 600; 
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
+      transition: opacity 0.2s, transform 0.1s; margin-bottom: 0.75rem;
+    }
+    .btn-theme:hover, .submit-btn:hover { opacity: 0.9; }
+    
+    .separator { text-align: center; margin: 1.5rem 0; border-bottom: 1px solid #d1d5db; line-height: 0.1em; }
+    .separator span { background: #DFE1E5; padding: 0 15px; color: #6b7280; font-size: 0.7rem; font-weight: bold; }
+
+    .hidden { display: none; }
+    .input-group { margin-bottom: 1.2rem; }
+    label { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; font-weight: 600; color: #334155; }
+    input { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 0.95rem; }
+
+    .back-link { background: none; border: none; color: #64748b; margin-top: 1.5rem; cursor: pointer; font-size: 0.85rem; width: 100%; text-decoration: underline; }
+    #message { margin-top: 1.2rem; text-align: center; font-size: 0.9rem; font-weight: 500; }
+    .w-5, .h-5 { width: 1.25rem; height: 1.25rem; }
+  </style>
+
+  <script>
+    import { supabase } from '../lib/supabase';
+
+    const selectionView = document.getElementById('selection-view');
+    const emailFormView = document.getElementById('email-form-view');
+    const messageBox = document.getElementById('message');
+
+    // Görünüm Değiştirme
+    document.getElementById('show-email-form')?.addEventListener('click', () => {
+      selectionView?.classList.add('hidden');
+      emailFormView?.classList.remove('hidden');
+    });
+
+    document.getElementById('back-to-selection')?.addEventListener('click', () => {
+      emailFormView?.classList.add('hidden');
+      selectionView?.classList.remove('hidden');
+    });
+
+    // E-posta ile Giriş
+    document.getElementById('login-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = (document.getElementById('email') as HTMLInputElement).value;
+      const password = (document.getElementById('password') as HTMLInputElement).value;
+
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error && messageBox) {
+        messageBox.textContent = "Giriş başarısız: " + error.message;
+        messageBox.style.color = "#ef4444";
+      } else {
+        window.location.href = "/"; // Başarılıysa ana sayfaya git
+      }
+    });
+
+    // Google ile Giriş
+    document.getElementById('google-login')?.addEventListener('click', async () => {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
+      });
+    });
+  </script>
+</Layout>

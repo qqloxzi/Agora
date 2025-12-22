@@ -127,5 +127,18 @@ import Layout from '../layouts/Layout.astro';
         messageBox.style.color = "#10b981";
       }
     });
+
+    document.getElementById('google-signup')?.addEventListener('click', async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      // Giriş yapıldıktan sonra kullanıcının yönlendirileceği sayfa
+      redirectTo: window.location.origin + '/dashboard', 
+    },
+  })
+
+  if (error) console.error("Giriş hatası:", error.message)
+})
   </script>
 </Layout>
+
