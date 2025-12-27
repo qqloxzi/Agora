@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>WGo.js Tam Uygulama</title>
+    <script type="text/javascript" src="wgo/wgo.js"></script>
+</head>
+<body>
+
+    <select id="tool" style="display: block; margin-bottom: 10px;">
+        <option value="black" selected>Siyah Taş</option>
+        <option value="white">Beyaz Taş</option>
+        <option value="SQ">Kare</option>
+        <option value="TR">Üçgen</option>
+        <option value="CR">Daire</option>
+        <option value="plane">Uçak (Özel Nesne)</option>
+        <option value="remove">Kaldır</option>
+    </select>
+
+    <div id="board"></div>
+
+    <script>
+  // 1. DÜZELTME: TypeScript'in WGo kütüphanesini tanıması için bunu ekleyin
+  declare const WGo: any;
+
+  // Özel Nesne Tanımları (Uçak)
+  var plane = {
+      stone: {
+          draw: function(args: any, board: any) { // (Opsiyonel) args ve board için :any eklenebilir
+              var xr = board.getX(args.x),
+                  yr = board.getY(args.y),
+                  sr = board.stoneRadius;
+
+              if(board.obj_arr[args.x][args.y][0].c == WGo.B) this.strokeStyle = "white";
+              else this.strokeStyle = "black";
+
+              this.lineWidth = 3;
+              this.beginPath();
+              this.moveTo(xr - sr*0.8, yr);
+              this.lineTo(xr + sr*0.5, yr);
+              this.lineTo(xr + sr*0.8, yr - sr*0.25);
+              this.moveTo(xr - sr*0.4, yr);
+              this.lineTo(xr + sr*0.3, yr - sr*0.6);
+              this.moveTo(xr - sr*0.4, yr);
+              this.lineTo(xr + sr*0.3, yr + sr*0.6);
+              this.stroke();
+          }
+      }
+  }
+
+  // Koordinat Sistemi
+  var coordinates = {
+      grid: {
+          draw: function(args: any, board: any) {
+              var ch, t, xright, xleft, ytop, ybottom;
+              this.fillStyle = "rgba(0,0,0,0.7)";
+              this.textBaseline = "middle";
+              this.textAlign = "center";
+              this.font = board.stoneRadius + "px " + (board.font || "");
+              
+              xright = board.getX(-0.75);
+              xleft = board.getX(board.size - 0.25);
+              ytop = board.getY(-0.75);
+              ybottom = board.getY(board.size - 0.25);
+
+              for (var i = 0; i < board.size; i++) {
+                  ch = i + "A".charCodeAt(0);
+                  if (ch >= "I".charCodeAt(0)) ch++;
+                  
+                  t = board.getY(i);
+                  this.fillText(board.size - i, xright, t);
+                  this.fillText(board.size - i, xleft, t);
+
+                  t = board.getX(i);
+                  this.fillText(String.fromCharCode(ch), t, ytop);
+                  this.fillText(String.fromCharCode(ch), t, ybottom);
+              }
+              this.fillStyle = "black";
+          }
+      }
+  }
+
+  var board = new WGo.Board(document.getElementById("board"), {
+      width: 600,
+      section: { top: 12, left: 6, right: -0.5, bottom: -0.5 }
+  });
+
+  board.addCustomObject(coordinates);
+
+  // 2. DÜZELTME: Elementin türünü belirtiyoruz (casting)
+  // Bu sayede 'tool' null olabilir hatası ve 'value' yok hatası gider.
+  var tool = document.getElementById("tool") as HTMLSelectElement;
+
+  board.addEventListener("click", function(x: any, y: any) {
+      // tool.value artık hata vermeyecek
+      var val = tool.value;
+
+      if (val == "black") {
+          board.addObject({ x: x, y: y, c: WGo.B });
+      } else if (val == "white") {
+          board.addObject({ x: x, y: y, c: WGo.W });
+      } else if (val == "remove") {
+          board.removeObjectsAt(x, y);
+      } else if (val == "plane") {
+          board.addObject({ x: x, y: y, type: plane });
+      } else {
+          board.addObject({ x: x, y: y, type: val });
+      }
+  });
+</script>
+</body>
+</html>
