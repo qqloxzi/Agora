@@ -8,11 +8,10 @@ const leagues = [
     id: 1,
     name: "Temel Taşlar Ligi",
     sub: "17-12 Kyu",
-    status: "Kayıtlar Açık", 
+    status: "Kayıtlar doldu", 
     participants: [
-      "P1", "P2", "P3", "P4", "P5", "P6", "P7","P8"
+      "Mehmed Samed Karapınar", "Ayfer Eralp", "Tufan Baran Ilıcalı", "Ekin Elya Tanrıvere", "Ali Baran Mermutlu", "Arda Eren Şahin", "Elif Öztaş","Duru Örsal"
     ],
-    
     standings: [
       { rank: 1, name: "P1", played: 0, points: 0 },
       { rank: 2, name: "P2", played: 0, points: 0 },
@@ -22,58 +21,34 @@ const leagues = [
       { rank: 6, name: "P6", played: 0, points: 0 },
       { rank: 7, name: "P7", played: 0, points: 0 },
     ],
-
-    fixtures: [
-      { week: "1. Hafta", matches: ["P1 vs P2", "P3 vs P4", "P5 vs P6"] },
-      { week: "2. Hafta", matches: ["P7 vs P1", "P2 vs P3", "P4 vs P5"] },
-      { week: "3. Hafta", matches: ["P6 vs P7", "P1 vs P3", "P2 vs P4"] },
-      { week: "4. Hafta", matches: ["P5 vs P1", "P6 vs P2", "P7 vs P3"] },
-    ]
+    fixtures: 
+     [
+  { week: "1. Hafta", matches: ["Mehmed Samed Karapınar vs Duru Örsal", "Ayfer Eralp vs Elif Öztaş", "Tufan Baran Ilıcalı vs Arda Eren Şahin", "Ekin Elya Tanrıvere vs Ali Baran Mermutlu"] },
+  { week: "2. Hafta", matches: ["Elif Öztaş vs Mehmed Samed Karapınar", "Arda Eren Şahin vs Duru Örsal", "Ali Baran Mermutlu vs Ayfer Eralp", "Ekin Elya Tanrıvere vs Tufan Baran Ilıcalı"] },
+  { week: "3. Hafta", matches: ["Mehmed Samed Karapınar vs Arda Eren Şahin", "Ali Baran Mermutlu vs Elif Öztaş", "Duru Örsal vs Ekin Elya Tanrıvere", "Ayfer Eralp vs Tufan Baran Ilıcalı"] },
+  { week: "4. Hafta", matches: ["Ali Baran Mermutlu vs Mehmed Samed Karapınar", "Arda Eren Şahin vs Ekin Elya Tanrıvere", "Tufan Baran Ilıcalı vs Elif Öztaş", "Duru Örsal vs Ayfer Eralp"] },
+  { week: "5. Hafta", matches: ["Mehmed Samed Karapınar vs Ekin Elya Tanrıvere", "Tufan Baran Ilıcalı vs Ali Baran Mermutlu", "Arda Eren Şahin vs Ayfer Eralp", "Elif Öztaş vs Duru Örsal"] },
+  { week: "6. Hafta", matches: ["Tufan Baran Ilıcalı vs Mehmed Samed Karapınar", "Ayfer Eralp vs Ekin Elya Tanrıvere", "Duru Örsal vs Ali Baran Mermutlu", "Arda Eren Şahin vs Elif Öztaş"] },
+  { week: "7. Hafta", matches: ["Mehmed Samed Karapınar vs Ayfer Eralp", "Duru Örsal vs Tufan Baran Ilıcalı", "Elif Öztaş vs Ekin Elya Tanrıvere", "Ali Baran Mermutlu vs Arda Eren Şahin"] }
+]
   },
   {
     id: 2,
     name: "Gelişim Ligi",
     sub: "11-6 Kyu",
     status: "Kayıtlar Açık",
-    participants: [
-      "P1", "P2", "P3", "P4", "P5", "P6","P7","P8","P9"
-    ],
-    standings: [
-      { rank: 1, name: "P1", played: 0, points: 0 },
-      { rank: 2, name: "P2", played: 0, points: 0 },
-      { rank: 3, name: "P3", played: 0, points: 0 },
-      { rank: 4, name: "P4", played: 0, points: 0 },
-      { rank: 5, name: "P5", played: 0, points: 0 },
-      { rank: 6, name: "P6", played: 0, points: 0 },
-    ],
-    fixtures: [
-      { week: "1. Hafta", matches: ["P1 vs P6", "P2 vs P5", "P3 vs P4"] },
-      { week: "2. Hafta", matches: ["P6 vs P4", "P5 vs P3", "P1 vs P2"] },
-      { week: "3. Hafta", matches: ["P2 vs P6", "P3 vs P1", "P4 vs P5"] },
-      { week: "4. Hafta", matches: ["P6 vs P5", "P1 vs P4", "P2 vs P3"] },
-    ]
+    participants: ["Sefa Atar", "Umut Can Dumlupınar", "Mert Karakaş", "Murat Özbay"],
+    standings: [{ rank: 1, name: "P1", played: 0, points: 0 }],
+    fixtures: [{ week: "1. Hafta", matches: ["P1 vs P6", "P2 vs P5"] }]
   },
   {
     id: 3,
     name: "Aydınlanma Ligi",
     sub: "5 kyu ve üstü",
     status: "Kayıtlar Açık",
-    participants: [
-      "P1", "P2", "P3", "P4", "P5","P6","P7",
-    ],
-    standings: [
-      { rank: 1, name: "P1", played: 0, points: 0 },
-      { rank: 2, name: "P2", played: 0, points: 0 },
-      { rank: 3, name: "P3", played: 0, points: 0 },
-      { rank: 4, name: "P4", played: 0, points: 0 },
-      { rank: 5, name: "P5", played: 0, points: 0 },
-    ],
-    fixtures: [
-      { week: "1. Hafta", matches: ["P1 vs P5", "P2 vs P4"] },
-      { week: "2. Hafta", matches: ["P5 vs P3", "P1 vs P2"] },
-      { week: "3. Hafta", matches: ["P3 vs P1", "P4 vs P5"] },
-      { week: "4. Hafta", matches: ["P2 vs P3", "P4 vs P1"] },
-    ]
+    participants: ["P1", "P2", "P3", "P4", "P5"],
+    standings: [{ rank: 1, name: "P1", played: 0, points: 0 }],
+    fixtures: [{ week: "1. Hafta", matches: ["P1 vs P5"] }]
   },
 ];
 ---
@@ -82,9 +57,7 @@ const leagues = [
   <Container>
     <Sectionhead>
       <Fragment slot="title">Ligler ve Oyuncular</Fragment>
-      <Fragment slot="desc">
-        Seviyenize uygun lige katılın, sıralamayı ve haftalık maç programını takip edin.
-      </Fragment>
+      <Fragment slot="desc">Seviyenize uygun lige katılın, sıralamayı ve haftalık maç programını takip edin.</Fragment>
     </Sectionhead>
 
     <div class="mt-8 text-center bg-slate-900 p-8 rounded-lg max-w-4xl mx-auto shadow-lg mb-16">
@@ -108,24 +81,26 @@ const leagues = [
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 divide-y lg:divide-y-0 lg:divide-x divide-gray-100 dark:divide-gray-800">
                     
+                    {/* Katılımcılar */}
                     <div class="pt-4 lg:pt-0">
                         <div class="flex items-center gap-2 font-bold text-gray-900 dark:text-white mb-4 text-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
                             Katılımcılar
                         </div>
                         <ul class="grid grid-cols-2 lg:grid-cols-1 gap-2">
                             {item.participants.map((p) => (
                                 <li class="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-2 hover:bg-gray-50 dark:hover:bg-slate-800 rounded transition-colors">
                                     <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                                    {p}
+                                    <span class="truncate" title={p}>{p}</span>
                                 </li>
                             ))}
                         </ul>
                     </div>
 
+                    {/* Puan Durumu */}
                     <div class="pt-8 lg:pt-0 lg:pl-12">
                         <div class="flex items-center gap-2 font-bold text-gray-900 dark:text-white mb-4 text-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
                             Puan Durumu
                         </div>
                         <div class="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
@@ -141,7 +116,7 @@ const leagues = [
                                     {item.standings && item.standings.map((s) => (
                                         <tr class="hover:bg-gray-50 dark:hover:bg-slate-800/50">
                                             <td class="px-3 py-2 text-center font-medium text-gray-400">{s.rank}</td>
-                                            <td class="px-3 py-2 font-medium text-gray-800 dark:text-gray-300">{s.name}</td>
+                                            <td class="px-3 py-2 font-medium text-gray-800 dark:text-gray-300 truncate max-w-[120px]" title={s.name}>{s.name}</td>
                                             <td class="px-3 py-2 text-center font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50/50 dark:bg-indigo-900/20">{s.points}</td>
                                         </tr>
                                     ))}
@@ -150,34 +125,48 @@ const leagues = [
                         </div>
                     </div>
 
+                    {/* Fikstür - SOL BEYAZ / SAĞ SİYAH */}
                     <div class="pt-8 lg:pt-0 lg:pl-12">
                         <div class="flex items-center gap-2 font-bold text-gray-900 dark:text-white mb-4 text-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                             Haftalık Fikstür
                         </div>
-                        <div class="space-y-4">
-                            {item.fixtures && item.fixtures.length > 0 ? (
-                                item.fixtures.map((fix) => (
-                                    <div class="bg-gray-50 dark:bg-slate-800 rounded-lg p-3">
-                                        <div class="text-xs font-bold text-indigo-500 uppercase tracking-wide mb-2 border-b border-gray-200 dark:border-gray-700 pb-1">
-                                            {fix.week}
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            {fix.matches.map((match) => (
-                                                <div class="text-sm text-gray-700 dark:text-gray-300 font-medium pl-2 border-l-2 border-gray-300 dark:border-gray-600">
-                                                    {match}
-                                                </div>
-                                            ))}
-                                        </div>
+                        <div class="space-y-6">
+                            {item.fixtures.map((fix) => (
+                                <div>
+                                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 border-b border-gray-100 dark:border-gray-800 pb-1">
+                                        {fix.week}
                                     </div>
-                                ))
-                            ) : (
-                                <div class="text-gray-400 text-sm italic">Fikstür henüz belli değil.</div>
-                            )}
+                                    <div class="space-y-2">
+                                        {fix.matches.map((match) => {
+                                            const [p1, p2] = match.split(" vs ");
+                                            return (
+                                                <div class="grid grid-cols-[1fr_20px_1fr] items-center rounded-md overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm">
+                                                    {/* SOL: Beyaz Arkaplan - Siyah Yazı */}
+                                                    <div class="bg-white dark:bg-gray-100 text-slate-900 text-[11px] font-bold py-2.5 px-3 text-right truncate" title={p1}>
+                                                        {p1}
+                                                    </div>
+                                                    
+                                                    {/* AYRAÇ */}
+                                                    <div class="bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-[10px] font-bold text-gray-300 border-x border-gray-200 dark:border-gray-700 h-full">
+                                                        -
+                                                    </div>
+                                                    
+                                                    {/* SAĞ: Siyah Arkaplan - Beyaz Yazı */}
+                                                    <div class="bg-slate-900 dark:bg-black text-white text-[11px] font-bold py-2.5 px-3 text-left truncate" title={p2}>
+                                                        {p2}
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
-                </div> </div>
+                </div>
+            </div>
         </div>
       ))}
     </div>

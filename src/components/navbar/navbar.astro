@@ -12,48 +12,60 @@ const menuitems = [
 ---
 
 <Container>
-  <header class="flex flex-col lg:flex-row justify-between items-center my-5">
+  <header class="my-5">
     <Astronav>
-      <div class="flex w-full lg:w-full items-center justify-between lg:gap-10">
-        <div class="flex items-center justify-between w-full lg:w-auto">
+      <div class="flex flex-col lg:flex-row w-full items-center justify-between">
+        
+        <div class="flex items-center justify-between w-full lg:w-1/4">
           <a href="/" class="flex items-center">
-            <img src="/transparentAgora.svg" alt="Agora Go Akademisi Logo" class="w-24 h-auto object-contain" />
+            <img src="/transparentAgora.svg" alt="Agora Logo" class="w-24 h-auto object-contain" />
           </a>
           <div class="block lg:hidden">
-            <MenuIcon class="w-4 h-4 text-gray-800" />
+            <MenuIcon class="w-6 h-6 text-gray-800" />
           </div>
         </div>
 
-        <MenuItems class="hidden w-full lg:w-full mt-2 lg:flex lg:mt-0 items-center">
-          <ul class="flex flex-col lg:flex-row lg:gap-6 items-center">
+        <MenuItems class="hidden w-full lg:flex lg:flex-1 justify-center mt-2 lg:mt-0">
+          <ul class="flex flex-col lg:flex-row lg:gap-8 items-center">
             {menuitems.map((item) => (
               <li>
-                <a href={item.path} class="flex py-2 text-gray-600 hover:text-black font-medium transition-colors">
+                <a href={item.path} class="py-2 text-gray-600 hover:text-black font-medium transition-colors whitespace-nowrap">
                   {item.title}
                 </a>
               </li>
             ))}
           </ul>
-
-          <div class="flex flex-col lg:flex-row lg:items-center gap-4 mt-4 lg:mt-0 lg:ml-auto">
-            <div id="auth-guest" class="flex items-center gap-4">
-              <a href="/login" class="text-gray-600 hover:text-black font-medium transition-colors px-4 py-2">Giriş Yap</a>
-              <a href="/signup" class="bg-[#1e3561] text-white px-6 py-2 rounded-full font-medium hover:bg-[#1d4ed8] transition-all text-center shadow-md">Kayıt Ol</a>
-            </div>
-
-            <div id="auth-user" class="auth-hidden flex items-center gap-4">
-              <button id="logout-nav-btn" class="text-gray-600 hover:text-black font-medium transition-colors px-4 py-2">Çıkış Yap</button>
-              <a href="/profile" class="bg-[#1e3561] text-white px-6 py-2 rounded-full font-medium hover:bg-[#1d4ed8] transition-all text-center shadow-md">Profilim</a>
-            </div>
-          </div>
         </MenuItems>
+
+        <div class="hidden lg:flex lg:w-1/4 justify-end items-center gap-3">
+          <div id="auth-guest" class="flex items-center gap-3">
+            <a href="/login" class="border border-[#1e3562] text-[#1e3562] px-5 py-2 rounded-full font-medium hover:bg-[#1e3562] hover:text-white transition-all text-sm whitespace-nowrap">
+              Giriş Yap
+            </a>
+            <a href="/signup" class="bg-[#1e3562] text-white px-6 py-2 rounded-full font-medium hover:bg-[#1a2d54] transition-all shadow-sm text-sm whitespace-nowrap">
+              Kayıt Ol
+            </a>
+          </div>
+
+          <div id="auth-user" class="auth-hidden flex items-center gap-4">
+            <div class="flex items-center gap-3 bg-gray-50 pr-4 pl-1 py-1 rounded-full border border-gray-100">
+              <img id="user-nav-avatar" src="/default-avatar.svg" class="w-10 h-10 rounded-full object-cover border-2 border-[#1e3562]" alt="Profil" />
+              <div class="flex flex-col">
+                <span id="user-nav-name" class="text-sm font-bold text-[#1e3562] leading-none">Yükleniyor...</span>
+                <span id="user-nav-level" class="text-[10px] text-gray-500 font-medium mt-1">Seviye: --</span>
+              </div>
+            </div>
+            <button id="logout-nav-btn" class="text-gray-500 hover:text-red-600 transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </Astronav>
   </header>
 </Container>
 
 <style>
-  /* Tailwind'in hidden sınıfıyla çakışmaması için isim değiştirdik */
   .auth-hidden { display: none !important; }
 </style>
 
@@ -63,8 +75,13 @@ const menuitems = [
   async function updateNav() {
     const guestZone = document.getElementById('auth-guest');
     const userZone = document.getElementById('auth-user');
+    const userName = document.getElementById('user-nav-name');
+    const userLevel = document.getElementById('user-nav-level');
+    
+    // TS Hatası Çözümü: "as HTMLImageElement" eklendi
+    const userAvatar = document.getElementById('user-nav-avatar') as HTMLImageElement | null;
 
-    if (!guestZone || !userZone) return; // Elemanlar yoksa fonksiyonu durdur
+    if (!guestZone || !userZone) return;
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -72,16 +89,30 @@ const menuitems = [
       if (session) {
         guestZone.classList.add('auth-hidden');
         userZone.classList.remove('auth-hidden');
+
+        // Tablo adın Agorasusers olarak güncellendi
+        const { data: profile, error } = await supabase
+          .from('Agorasusers') 
+          .select('username, level, avatar_url')
+          .eq('id', session.user.id)
+          .single();
+
+        if (profile && !error) {
+          if (userName) userName.innerText = profile.username || 'Kullanıcı';
+          if (userLevel) userLevel.innerText = `Seviye: ${profile.level || 1}`;
+          if (userAvatar && profile.avatar_url) {
+            userAvatar.src = profile.avatar_url;
+          }
+        }
       } else {
         guestZone.classList.remove('auth-hidden');
         userZone.classList.add('auth-hidden');
       }
     } catch (e) {
-      console.error("Navigasyon güncellenirken hata oluştu:", e);
+      console.error("Navigasyon hatası:", e);
     }
   }
 
-  // Güvenli buton dinleyicisi
   const logoutBtn = document.getElementById('logout-nav-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
@@ -90,11 +121,6 @@ const menuitems = [
     });
   }
 
-  // Dinleyiciyi başlat
-  supabase.auth.onAuthStateChange(() => {
-    updateNav();
-  });
-
-  // İlk yüklemede çalıştır
+  supabase.auth.onAuthStateChange(() => updateNav());
   updateNav();
 </script>
