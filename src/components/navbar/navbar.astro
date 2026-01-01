@@ -73,46 +73,49 @@ const menuitems = [
   import { supabase } from '../../lib/supabase';
 
   async function updateNav() {
+    // 1. Elementleri Tanımla
     const guestZone = document.getElementById('auth-guest');
     const userZone = document.getElementById('auth-user');
     const userName = document.getElementById('user-nav-name');
     const userLevel = document.getElementById('user-nav-level');
-    
-    // TS Hatası Çözümü: "as HTMLImageElement" eklendi
     const userAvatar = document.getElementById('user-nav-avatar') as HTMLImageElement | null;
 
     if (!guestZone || !userZone) return;
 
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
 
-      if (session) {
-        guestZone.classList.add('auth-hidden');
-        userZone.classList.remove('auth-hidden');
+    if (session) {
+      // 2. Google/Auth verilerini al
+      const userMetadata = session.user.user_metadata;
+      let displayName = userMetadata.full_name || userMetadata.name || "Kullanıcı";
+      let displayAvatar = userMetadata.avatar_url || "/default-avatar.svg";
 
-        // Tablo adın Agorasusers olarak güncellendi
-        const { data: profile, error } = await supabase
-          .from('agorasusers') 
-          .select('username, level, avatar_url')
-          .eq('id', session.user.id)
-          .single();
+      // 3. Tablodan ek verileri çek (agorasusers - Küçük Harf)
+      const { data: profile } = await supabase
+        .from('agorasusers') 
+        .select('username, level, avatar_url')
+        .eq('id', session.user.id)
+        .maybeSingle();
 
-        if (profile && !error) {
-          if (userName) userName.innerText = profile.username || 'Kullanıcı';
-          if (userLevel) userLevel.innerText = `Seviye: ${profile.level || 1}`;
-          if (userAvatar && profile.avatar_url) {
-            userAvatar.src = profile.avatar_url;
-          }
-        }
-      } else {
-        guestZone.classList.remove('auth-hidden');
-        userZone.classList.add('auth-hidden');
-      }
-    } catch (e) {
-      console.error("Navigasyon hatası:", e);
+      // 4. Veri varsa güncelle
+      if (profile?.username) displayName = profile.username;
+      if (profile?.avatar_url) displayAvatar = profile.avatar_url;
+
+      if (userName) userName.innerText = displayName;
+      if (userLevel) userLevel.innerText = `Seviye: ${profile?.level || 1}`;
+      if (userAvatar) userAvatar.src = displayAvatar;
+
+      // Görünürlüğü ayarla
+      guestZone.classList.add('auth-hidden');
+      userZone.classList.remove('auth-hidden');
+    } else {
+      // 5. Giriş yapılmamışsa butonları geri getir
+      guestZone.classList.remove('auth-hidden');
+      userZone.classList.add('auth-hidden');
     }
   }
 
+  // Çıkış Yap butonu kontrolü
   const logoutBtn = document.getElementById('logout-nav-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
@@ -121,6 +124,7 @@ const menuitems = [
     });
   }
 
+  // Oturum değişikliklerini dinle ve çalıştır
   supabase.auth.onAuthStateChange(() => updateNav());
   updateNav();
 </script>
