@@ -92,7 +92,7 @@ const menuitems = [
 
         // Tablo adın Agorasusers olarak güncellendi
         const { data: profile, error } = await supabase
-          .from('Agorasusers') 
+          .from('agorasusers') 
           .select('username, level, avatar_url')
           .eq('id', session.user.id)
           .single();

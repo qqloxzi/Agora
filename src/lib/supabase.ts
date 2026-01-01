@@ -1,9 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Sadece çalışan bilgileri içeren tek bir tanım bırakıyoruz
 export const supabase = createClient(
-  'https://gncxqiarmnyspvrlsutp.supabase.co', 
-  'sb_publishable_sWU29ifFK2XJIbx7GoLD5g_lMaWWo2f'
+  import.meta.env.PUBLIC_SUPABASE_URL,
+  import.meta.env.PUBLIC_SUPABASE_ANON_KEY
 )
 
 export async function signUp(email, password) {
