@@ -129,16 +129,32 @@ import Layout from '../layouts/Layout.astro';
     });
 
     document.getElementById('google-signup')?.addEventListener('click', async () => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      // Giriş yapıldıktan sonra kullanıcının yönlendirileceği sayfa
-      redirectTo: window.location.origin + '/dashboard', 
-    },
-  })
+      if (messageBox) {
+        messageBox.textContent = "Google ile bağlanılıyor...";
+        messageBox.style.color = "#1e293b";
+      }
 
-  if (error) console.error("Giriş hatası:", error.message)
-})
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          // ÖNEMLİ: /dashboard sayfası projenizde (src/pages/dashboard.astro) mutlaka var olmalı.
+          // Eğer yoksa şimdilik sadece '/' (ana sayfa) yapın.
+          redirectTo: window.location.origin + '/dashboard', 
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      });
+
+      if (error) {
+        if (messageBox) {
+          messageBox.textContent = "Giriş hatası: " + error.message;
+          messageBox.style.color = "#ef4444";
+        }
+        console.error("Giriş hatası:", error.message);
+      }
+    });
   </script>
 </Layout>
 
