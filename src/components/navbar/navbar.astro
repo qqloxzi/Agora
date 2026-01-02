@@ -37,8 +37,7 @@ const menuitems = [
           </ul>
         </MenuItems>
 
-        <div class="hidden lg:flex lg:w-1/4 justify-end items-center gap-4">
-          
+        <div class="hidden lg:flex lg:w-1/4 justify-end items-center">
           <button id="theme-toggle" class="p-2 rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-300 transition-all focus:outline-none">
             <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
@@ -47,41 +46,14 @@ const menuitems = [
               <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
             </svg>
           </button>
-
-          <div id="auth-guest" class="flex items-center gap-3">
-            <a href="/login" class="border border-[#1e3562] text-[#1e3562] dark:border-blue-400 dark:text-blue-400 px-5 py-2 rounded-full font-medium hover:bg-[#1e3562] hover:text-white transition-all text-sm whitespace-nowrap">
-              Giriş Yap
-            </a>
-            <a href="/signup" class="bg-[#1e3562] text-white px-6 py-2 rounded-full font-medium hover:bg-[#1a2d54] transition-all shadow-sm text-sm whitespace-nowrap">
-              Kayıt Ol
-            </a>
-          </div>
-
-          <div id="auth-user" class="auth-hidden flex items-center gap-4">
-            <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 pr-4 pl-1 py-1 rounded-full border border-gray-100 dark:border-gray-700">
-              <img id="user-nav-avatar" src="/default-avatar.svg" class="w-10 h-10 rounded-full object-cover border-2 border-[#1e3562]" alt="Profil" />
-              <div class="flex flex-col">
-                <span id="user-nav-name" class="text-sm font-bold text-[#1e3562] dark:text-blue-400 leading-none">Yükleniyor...</span>
-                <span id="user-nav-level" class="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-1">Seviye: --</span>
-              </div>
-            </div>
-            <button id="logout-nav-btn" class="text-gray-500 hover:text-red-600 transition-colors">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
-            </button>
-          </div>
         </div>
       </div>
     </Astronav>
   </header>
 </Container>
 
-<style>
-  .auth-hidden { display: none !important; }
-</style>
-
 <script>
-  import { supabase } from '../../lib/supabase';
-
+  // --- TEMA YÖNETİMİ ---
   const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
   const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
   const themeToggleBtn = document.getElementById('theme-toggle');
@@ -94,64 +66,10 @@ const menuitems = [
       themeToggleDarkIcon?.classList.remove('hidden');
   }
 
-  themeToggleBtn?.addEventListener('click', function() {
+  themeToggleBtn?.addEventListener('click', () => {
       themeToggleDarkIcon?.classList.toggle('hidden');
       themeToggleLightIcon?.classList.toggle('hidden');
-
-      if (document.documentElement.classList.contains('dark')) {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('color-theme', 'light');
-      } else {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('color-theme', 'dark');
-      }
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
   });
-
-  async function updateNav() {
-    const guestZone = document.getElementById('auth-guest');
-    const userZone = document.getElementById('auth-user');
-    const userName = document.getElementById('user-nav-name');
-    const userLevel = document.getElementById('user-nav-level');
-    const userAvatar = document.getElementById('user-nav-avatar') as HTMLImageElement | null;
-
-    if (!guestZone || !userZone) return;
-
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (session) {
-      const userMetadata = session.user.user_metadata;
-      let displayName = userMetadata.full_name || userMetadata.name || "Kullanıcı";
-      let displayAvatar = userMetadata.avatar_url || "/default-avatar.svg";
-
-      const { data: profile } = await supabase
-        .from('agorasusers') 
-        .select('username, level, avatar_url')
-        .eq('id', session.user.id)
-        .maybeSingle();
-
-      if (profile?.username) displayName = profile.username;
-      if (profile?.avatar_url) displayAvatar = profile.avatar_url;
-
-      if (userName) userName.innerText = displayName;
-      if (userLevel) userLevel.innerText = `Seviye: ${profile?.level || 1}`;
-      if (userAvatar) userAvatar.src = displayAvatar;
-
-      guestZone.classList.add('auth-hidden');
-      userZone.classList.remove('auth-hidden');
-    } else {
-      guestZone.classList.remove('auth-hidden');
-      userZone.classList.add('auth-hidden');
-    }
-  }
-
-  const logoutBtn = document.getElementById('logout-nav-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      window.location.href = '/login';
-    });
-  }
-
-  supabase.auth.onAuthStateChange(() => updateNav());
-  updateNav();
 </script>
