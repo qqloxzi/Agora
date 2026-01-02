@@ -29,24 +29,28 @@ const leagues = [
   { week: "4. Hafta", matches: ["Ali Baran Mermutlu vs Mehmed Samed Karapınar", "Arda Eren Şahin vs Ekin Elya Tanrıvere", "Tufan Baran Ilıcalı vs Elif Öztaş", "Duru Örsal vs Ayfer Eralp"] },
   { week: "5. Hafta", matches: ["Mehmed Samed Karapınar vs Ekin Elya Tanrıvere", "Tufan Baran Ilıcalı vs Ali Baran Mermutlu", "Arda Eren Şahin vs Ayfer Eralp", "Elif Öztaş vs Duru Örsal"] },
   { week: "6. Hafta", matches: ["Tufan Baran Ilıcalı vs Mehmed Samed Karapınar", "Ayfer Eralp vs Ekin Elya Tanrıvere", "Duru Örsal vs Ali Baran Mermutlu", "Arda Eren Şahin vs Elif Öztaş"] },
-  { week: "7. Hafta", matches: ["Mehmed Samed Karapınar vs Ayfer Eralp", "Duru Örsal vs Tufan Baran Ilıcalı", "Elif Öztaş vs Ekin Elya Tanrıvere", "Ali Baran Mermutlu vs Arda Eren Şahin"] }
 ]
   },
   {
     id: 2,
     name: "Gelişim Ligi",
     sub: "11-6 Kyu",
-    status: "Kayıtlar Açık",
-    participants: ["Sefa Atar", "Umut Can Dumlupınar", "Mert Karakaş", "Murat Özbay","Gülşen Sıla Demirağ","Ali Moeninajafibadi"],
-    standings: [{ rank: 1, name: "P1", played: 0, points: 0 }],
+    status: "Kayıtlar doldu",
+    participants: ["Sefa Atar", "Umut Can Dumlupınar", "Mert Karakaş", "Murat Özbay","Gülşen Sıla Demirağ","Ali Moeninajafibadi","Doğan Ergezen","Doğukan Bora Alay" ],
+    standings: [{ rank: 1, name: "P1", played: 0, points: 0 },
+        { rank: 2, name: "P2", played: 0, points: 0 },
+      { rank: 3, name: "P3", played: 0, points: 0 },
+      { rank: 4, name: "P4", played: 0, points: 0 },
+      { rank: 5, name: "P5", played: 0, points: 0 },
+      { rank: 6, name: "P6", played: 0, points: 0 },
+      { rank: 7, name: "P7", played: 0, points: 0 }],
     fixtures: [
-  
-  { "week": "1. Hafta", "matches": ["Sefa Atar vs Ali Moeninajafibadi", "Umut Can Dumlupınar vs Gülşen Sıla Demirağ", "Mert Karakaş vs Murat Özbay"] },
-  { "week": "2. Hafta", "matches": ["Sefa Atar vs Gülşen Sıla Demirağ", "Ali Moeninajafibadi vs Murat Özbay", "Umut Can Dumlupınar vs Mert Karakaş"] },
-  { "week": "3. Hafta", "matches": ["Sefa Atar vs Murat Özbay", "Gülşen Sıla Demirağ vs Mert Karakaş", "Ali Moeninajafibadi vs Umut Can Dumlupınar"] },
-  { "week": "4. Hafta", "matches": ["Sefa Atar vs Mert Karakaş", "Murat Özbay vs Umut Can Dumlupınar", "Gülşen Sıla Demirağ vs Ali Moeninajafibadi"] },
-  { "week": "5. Hafta", "matches": ["Sefa Atar vs Umut Can Dumlupınar", "Mert Karakaş vs Ali Moeninajafibadi", "Murat Özbay vs Gülşen Sıla Demirağ"] }
-
+  { "week": "1. Hafta", "matches": ["Sefa Atar vs Umut Can Dumlupınar", "Mert Karakaş vs Murat Özbay", "Gülşen Sıla Demirağ vs Ali Moeninajafibadi", "Doğan Ergezen vs Doğukan Bora Alay"] },
+  { "week": "2. Hafta", "matches": ["Murat Özbay vs Sefa Atar", "Ali Moeninajafibadi vs Umut Can Dumlupınar", "Doğukan Bora Alay vs Mert Karakaş", "Doğan Ergezen vs Gülşen Sıla Demirağ"] },
+  { "week": "3. Hafta", "matches": ["Sefa Atar vs Mert Karakaş", "Umut Can Dumlupınar vs Gülşen Sıla Demirağ", "Murat Özbay vs Doğan Ergezen", "Doğukan Bora Alay vs Ali Moeninajafibadi"] },
+  { "week": "4. Hafta", "matches": ["Doğukan Bora Alay vs Sefa Atar", "Ali Moeninajafibadi vs Doğan Ergezen", "Gülşen Sıla Demirağ vs Murat Özbay", "Umut Can Dumlupınar vs Mert Karakaş"] },
+  { "week": "5. Hafta", "matches": ["Sefa Atar vs Doğan Ergezen", "Gülşen Sıla Demirağ vs Doğukan Bora Alay", "Ali Moeninajafibadi vs Mert Karakaş", "Murat Özbay vs Umut Can Dumlupınar"] },
+  { "week": "6. Hafta", "matches": ["Gülşen Sıla Demirağ vs Sefa Atar", "Mert Karakaş vs Doğan Ergezen", "Umut Can Dumlupınar vs Doğukan Bora Alay", "Ali Moeninajafibadi vs Murat Özbay"] },
 ]
   
 
@@ -56,9 +60,9 @@ const leagues = [
     name: "Aydınlanma Ligi",
     sub: "5 kyu ve üstü",
     status: "Kayıtlar Açık",
-    participants: ["P1", "P2", "P3", "P4", "P5"],
-    standings: [{ rank: 1, name: "P1", played: 0, points: 0 }],
-    fixtures: [{ week: "1. Hafta", matches: ["P1 vs P5"] }]
+    participants: [],
+    standings: [{  }],
+    fixtures: [{ week: "1. Hafta", matches: [] }]
   },
 ];
 ---

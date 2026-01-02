@@ -21,7 +21,7 @@ const menuitems = [
             <img src="/transparentAgora.svg" alt="Agora Logo" class="w-24 h-auto object-contain" />
           </a>
           <div class="block lg:hidden">
-            <MenuIcon class="w-6 h-6 text-gray-800" />
+            <MenuIcon class="w-6 h-6 text-gray-800 dark:text-gray-200" />
           </div>
         </div>
 
@@ -29,7 +29,7 @@ const menuitems = [
           <ul class="flex flex-col lg:flex-row lg:gap-8 items-center">
             {menuitems.map((item) => (
               <li>
-                <a href={item.path} class="py-2 text-gray-600 hover:text-black font-medium transition-colors whitespace-nowrap">
+                <a href={item.path} class="py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium transition-colors whitespace-nowrap">
                   {item.title}
                 </a>
               </li>
@@ -37,9 +37,19 @@ const menuitems = [
           </ul>
         </MenuItems>
 
-        <div class="hidden lg:flex lg:w-1/4 justify-end items-center gap-3">
+        <div class="hidden lg:flex lg:w-1/4 justify-end items-center gap-4">
+          
+          <button id="theme-toggle" class="p-2 rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-300 transition-all focus:outline-none">
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
+            </svg>
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+            </svg>
+          </button>
+
           <div id="auth-guest" class="flex items-center gap-3">
-            <a href="/login" class="border border-[#1e3562] text-[#1e3562] px-5 py-2 rounded-full font-medium hover:bg-[#1e3562] hover:text-white transition-all text-sm whitespace-nowrap">
+            <a href="/login" class="border border-[#1e3562] text-[#1e3562] dark:border-blue-400 dark:text-blue-400 px-5 py-2 rounded-full font-medium hover:bg-[#1e3562] hover:text-white transition-all text-sm whitespace-nowrap">
               Giriş Yap
             </a>
             <a href="/signup" class="bg-[#1e3562] text-white px-6 py-2 rounded-full font-medium hover:bg-[#1a2d54] transition-all shadow-sm text-sm whitespace-nowrap">
@@ -48,11 +58,11 @@ const menuitems = [
           </div>
 
           <div id="auth-user" class="auth-hidden flex items-center gap-4">
-            <div class="flex items-center gap-3 bg-gray-50 pr-4 pl-1 py-1 rounded-full border border-gray-100">
+            <div class="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 pr-4 pl-1 py-1 rounded-full border border-gray-100 dark:border-gray-700">
               <img id="user-nav-avatar" src="/default-avatar.svg" class="w-10 h-10 rounded-full object-cover border-2 border-[#1e3562]" alt="Profil" />
               <div class="flex flex-col">
-                <span id="user-nav-name" class="text-sm font-bold text-[#1e3562] leading-none">Yükleniyor...</span>
-                <span id="user-nav-level" class="text-[10px] text-gray-500 font-medium mt-1">Seviye: --</span>
+                <span id="user-nav-name" class="text-sm font-bold text-[#1e3562] dark:text-blue-400 leading-none">Yükleniyor...</span>
+                <span id="user-nav-level" class="text-[10px] text-gray-500 dark:text-gray-400 font-medium mt-1">Seviye: --</span>
               </div>
             </div>
             <button id="logout-nav-btn" class="text-gray-500 hover:text-red-600 transition-colors">
@@ -72,8 +82,32 @@ const menuitems = [
 <script>
   import { supabase } from '../../lib/supabase';
 
+  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  const themeToggleBtn = document.getElementById('theme-toggle');
+
+  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      themeToggleLightIcon?.classList.remove('hidden');
+  } else {
+      document.documentElement.classList.remove('dark');
+      themeToggleDarkIcon?.classList.remove('hidden');
+  }
+
+  themeToggleBtn?.addEventListener('click', function() {
+      themeToggleDarkIcon?.classList.toggle('hidden');
+      themeToggleLightIcon?.classList.toggle('hidden');
+
+      if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('color-theme', 'light');
+      } else {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('color-theme', 'dark');
+      }
+  });
+
   async function updateNav() {
-    // 1. Elementleri Tanımla
     const guestZone = document.getElementById('auth-guest');
     const userZone = document.getElementById('auth-user');
     const userName = document.getElementById('user-nav-name');
@@ -85,19 +119,16 @@ const menuitems = [
     const { data: { session } } = await supabase.auth.getSession();
 
     if (session) {
-      // 2. Google/Auth verilerini al
       const userMetadata = session.user.user_metadata;
       let displayName = userMetadata.full_name || userMetadata.name || "Kullanıcı";
       let displayAvatar = userMetadata.avatar_url || "/default-avatar.svg";
 
-      // 3. Tablodan ek verileri çek (agorasusers - Küçük Harf)
       const { data: profile } = await supabase
         .from('agorasusers') 
         .select('username, level, avatar_url')
         .eq('id', session.user.id)
         .maybeSingle();
 
-      // 4. Veri varsa güncelle
       if (profile?.username) displayName = profile.username;
       if (profile?.avatar_url) displayAvatar = profile.avatar_url;
 
@@ -105,17 +136,14 @@ const menuitems = [
       if (userLevel) userLevel.innerText = `Seviye: ${profile?.level || 1}`;
       if (userAvatar) userAvatar.src = displayAvatar;
 
-      // Görünürlüğü ayarla
       guestZone.classList.add('auth-hidden');
       userZone.classList.remove('auth-hidden');
     } else {
-      // 5. Giriş yapılmamışsa butonları geri getir
       guestZone.classList.remove('auth-hidden');
       userZone.classList.add('auth-hidden');
     }
   }
 
-  // Çıkış Yap butonu kontrolü
   const logoutBtn = document.getElementById('logout-nav-btn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
@@ -124,7 +152,6 @@ const menuitems = [
     });
   }
 
-  // Oturum değişikliklerini dinle ve çalıştır
   supabase.auth.onAuthStateChange(() => updateNav());
   updateNav();
 </script>

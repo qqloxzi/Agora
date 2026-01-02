@@ -32,9 +32,27 @@ const makeTitle = title
     <link rel="icon" type="image/x-icon" href="/CircleLogo450.ico" />
     <meta name="generator" content={Astro.generator} />
 
+    <script is:inline>
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
+          return localStorage.getItem('color-theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+    
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
     <SEO
       title={makeTitle}
-      description="Agora Go Akademisi, Türkiye'deki oyuncular için çevrimiçi Go eğitimi sunan bir platformdur. Başlangıç seviyesinden ileri seviyeye kadar çeşitli kurslar ve interaktif öğrenme materyalleri ile Go oyununu öğrenin ve geliştirin."
+      description="Agora Go Akademisi, Türkiye'deki oyuncular için çevrimiçi Go eğitimi sunan bir platformdur..."
       canonical={canonicalURL}
       openGraph={{
         basic: {
@@ -60,9 +78,11 @@ const makeTitle = title
     </script>
   </head>
   
-  <body class="bg-[#DFE1E5]">
+  <body class="bg-[#DFE1E5] dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
     <Navbar />
-    <slot />
+    <main>
+      <slot />
+    </main>
     <Footer />
     
     <CookieConsent />
@@ -70,6 +90,12 @@ const makeTitle = title
     <style is:global>
       img {
         content-visibility: auto;
+      }
+      /* Global geçiş yumuşatması */
+      .transition-colors {
+        transition-property: background-color, border-color, color, fill, stroke;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 300ms;
       }
     </style>
   </body>
