@@ -84,12 +84,12 @@ const pricing = [
     <Sectionhead>
       <Fragment slot="title">Kurs Planları</Fragment>
       <Fragment slot="desc">
-        Açılışa özel, kurs planlarında büyük imkanlar. Her bir kurs için 8 Kişilik kontenjan ve 31 Aralığa kadar kayıt süresi:
+        2. Sezon için erken kayıtlar devam ediyor. Her bir kurs için 6 Kişilik kontenjan ve 1 Şubata kadar kayıt süresi:
       </Fragment>
     </Sectionhead>
 
     <div class="mt-8 text-center bg-gray-100 dark:bg-gray-800 p-6 rounded-lg max-w-2xl mx-auto border border-indigo-100 dark:border-gray-700">
-      <p class="text-lg font-semibold text-indigo-600 mb-2">Agora Go Akademisi'nin açılışına özel:</p>
+      <p class="text-lg font-semibold text-indigo-600 mb-2">2. Sezon için:</p>
       <div class="flex justify-center gap-4 text-2xl font-bold text-gray-800 dark:text-white" id="countdown">
         <div class="flex flex-col items-center">
           <span id="days">00</span>
@@ -115,7 +115,7 @@ const pricing = [
 
     <div class="mt-6 text-center">
       <p class="inline-block text-sm md:text-base font-medium text-slate-700 bg-slate-100 dark:text-slate-300 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-full">
-        Her lig için maksimum 8 kişi — Kontenjan dolduğunda kayıtlar kapanır.
+        Her lig için maksimum 6 kişi — Kontenjan dolduğunda kayıtlar kapanır.
       </p>
     </div>
 
@@ -127,16 +127,7 @@ const pricing = [
     </div>
     <div class="mt-16 text-center">
       <p class="text-lg text-black mb-8">
-        Üniversite öğrencilerine yönelik ek %10 indirim. Bizimle
-        <a 
-          href="/contact" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          class="underline font-bold hover:text-gray-600 transition-colors cursor-pointer"
-        >
-          iletişime
-        </a>
-        geçebilirsiniz.
+        Üniversite öğrencilerine yönelik ek %10 indirim için "TESUJİ" kodunu kullanabilirsiniz.
       </p>
     </div>
   </Container>
@@ -144,7 +135,7 @@ const pricing = [
 
 <script>
   // Hedef tarih
-  const targetDate = new Date("2025-12-31T23:59:59").getTime();
+  const targetDate = new Date("2026-02-01T23:59:59").getTime();
 
   const timer = setInterval(function() {
     const now = new Date().getTime();
