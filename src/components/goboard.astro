@@ -1,0 +1,96 @@
+---
+// src/components/Goboard.astro
+---
+
+<div class="go-board-wrapper">
+  <div id="tenuki-board"></div>
+</div>
+
+<style is:global>
+  /* 1. TAHTA KAPSAYICISI */
+  .go-board-wrapper {
+    width: fit-content;
+    margin: 2rem auto;
+    padding: 16px;
+    background-color: #dcb35c !important; /* Ahşap rengi */
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    border: 4px solid #8b6e37;
+  }
+
+  /* 2. SVG VE ARKA PLAN (Karanlık modu burada devre dışı bırakıyoruz) */
+  #tenuki-board {
+    width: 500px;
+    height: 500px;
+    background-color: #dcb35c !important;
+  }
+
+  #tenuki-board svg {
+    background-color: #dcb35c !important;
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Tahta yüzeyindeki dikdörtgeni boya */
+  #tenuki-board svg rect {
+    fill: #dcb35c !important;
+  }
+
+  /* 3. SİYAH NOKTA HATASI ÇÖZÜMÜ (Taşların görünürlüğü) */
+  /* Normalde tüm taş yer tutucuları tamamen şeffaf olmalı */
+  #tenuki-board .intersection .stone {
+    opacity: 0 !important;
+    transition: opacity 0.1s ease-in;
+  }
+
+  /* Sadece taş konulan (has-stone sınıfı olan) yerler görünsün */
+  #tenuki-board .intersection.has-stone .stone {
+    opacity: 1 !important;
+  }
+
+  /* 4. ÇİZGİLER VE TAŞ RENKLERİ */
+  #tenuki-board line {
+    stroke: #222 !important; /* Çizgiler net siyah olsun */
+    stroke-width: 1px;
+  }
+
+  #tenuki-board .stone.black {
+    fill: #000 !important;
+    stroke: #000 !important;
+  }
+
+  #tenuki-board .stone.white {
+    fill: #fff !important;
+    stroke: #ccc !important;
+  }
+
+  /* Yıldız noktaları (Hoshi) */
+  #tenuki-board .hoshi {
+    fill: #222 !important;
+  }
+</style>
+
+<script>
+  import * as tenuki from "tenuki";
+
+  function initBoard() {
+    const el = document.getElementById("tenuki-board");
+    
+    // Üst üste binmeyi (birden fazla tahta oluşmasını) engelle
+    if (el && el.childElementCount === 0) {
+      const game = new tenuki.Game({
+        element: el,
+        boardSize: 19
+      });
+      game.setup();
+      
+      // Çizimi zorlamak için render'ı çağır
+      game.render();
+    }
+  }
+
+  // Astro sayfa döngüsü
+  initBoard();
+  document.addEventListener("astro:after-swap", initBoard);
+</script>
