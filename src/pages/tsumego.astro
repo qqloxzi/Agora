@@ -3,183 +3,325 @@
 import GoBoard from '../components/goboard.astro';
 import { problemSet } from '../data/problems';
 import Layout from "@layouts/Layout.astro";
+
+// Kategorileri (Setleri) bul ve listele
+const categories = [...new Set(problemSet.map(p => p.category))];
+
+const getCategoryStyle = (cat) => {
+  const styles = {
+    'Rules': { icon: '📖', color: '#3498db' },
+    'Basic Capturing': { icon: '⚗️', color: '#f1c40f' },
+    'Life & Death': { icon: '💀', color: '#e74c3c' },
+    'Tesuji': { icon: '⚡', color: '#9b59b6' },
+    'Endgame': { icon: '🏁', color: '#2ecc71' }
+  };
+  return styles[cat] || { icon: 'Go', color: '#95a5a6' };
+};
 ---
 
-<div class="page-wrapper">
-  <h1>Go Training Center</h1>
-  
-  <div id="problem-container">
-    {problemSet.map((p, index) => (
-      <div class="problem-card" data-index={index} style={index === 0 ? "display: block;" : "display: none;"}>
-        <div class="header">
-          <h2>{p.title}</h2>
-          <span class="count">Problem {index + 1} / {problemSet.length}</span>
-        </div>
-        
-        <GoBoard problem={p} isTeacher={false} />
-        
-        <div class="nav-controls">
-          <button 
-            class="nav-btn prev-btn" 
-            onclick={`changeProblem(${index - 1})`}
-            style={index === 0 ? "visibility: hidden;" : ""}
-          >
-            ← Önceki Problem
-          </button>
-
-          <button 
-            class="nav-btn next-btn" 
-            id={`next-btn-${index}`}
-            onclick={`changeProblem(${index + 1})`}
-            disabled={true} 
-            style={index === problemSet.length - 1 ? "display: none;" : ""}
-          >
-            Sonraki Problem →
-          </button>
-        </div>
+<Layout title="Go Dojo">
+  <div class="page-wrapper">
+    
+    <div id="level-map" class="level-map-container">
+      <h1 class="main-title">Dojo'ya Hoşgeldin</h1>
+      <p class="subtitle">Çalışmak istediğin seti seç</p>
+      
+      <div class="levels-grid">
+        {categories.map(cat => {
+          const style = getCategoryStyle(cat);
+          const count = problemSet.filter(p => p.category === cat).length;
+          return (
+            <div class="level-card" onclick={`openLevel('${cat}')`}>
+              <div class="icon-ring">
+                <div class="level-icon" style={`background-color: ${style.color}`}>
+                  {style.icon}
+                </div>
+                <div class="badge">{count}</div>
+              </div>
+              <h3>{cat}</h3>
+              <span class="status-text">Başla</span>
+            </div>
+          );
+        })}
       </div>
-    ))}
+    </div>
+
+    <div id="game-view" style="display: none;">
+      
+      <div class="game-nav">
+        <button class="back-btn" onclick="goToMap()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+          Menüye Dön
+        </button>
+        <h2 id="current-set-title">SET ADI</h2>
+      </div>
+
+      <div id="problem-container">
+        {problemSet.map((p, index) => (
+          <div class="problem-card" data-index={index} data-category={p.category} style="display: none;">
+            
+            <div class="header">
+              <h3>{p.title}</h3>
+              <span class="count-badge">Soru {index + 1}</span>
+            </div>
+
+            <div class="turn-container">
+              <div class={`turn-badge ${p.turn === 'black' ? 'turn-black' : 'turn-white'}`}>
+                <span class="stone-icon"></span>
+                <span>{p.turn === 'black' ? 'Siyah Oynar' : 'Beyaz Oynar'}</span>
+              </div>
+            </div>
+            
+            <GoBoard problem={p} isTeacher={false} />
+            
+            <div class="hint-display" id={`hint-text-${index}`}></div>
+
+            <div class="nav-controls">
+              <button class="nav-btn icon-btn prev-btn" onclick="navigate(-1)" title="Önceki">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+
+              <button class="nav-btn icon-btn hint-btn" onclick={`showHint(${index})`} title="İpucu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+              </button>
+
+              <button class="nav-btn icon-btn next-btn" onclick="navigate(1)" disabled={true} title="Sonraki">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
   </div>
-</div>
+</Layout>
 
 <script is:inline>
-  // 1. Sayfa yüklendiğinde çalışacak başlangıç ayarları
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log("Sayfa Hazır - Buton kontrolü aktif");
-  });
+  let activeProblems = []; 
+  let currentIndex = 0;    
 
-  // 2. Problem değiştirme fonksiyonu
-  function changeProblem(newIndex) {
-    const cards = document.querySelectorAll('.problem-card');
-    if (newIndex >= 0 && newIndex < cards.length) {
-      cards.forEach(card => card.style.display = 'none');
-      cards[newIndex].style.display = 'block';
-      
-      // Sayfayı yukarı kaydır
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  // --- HARİTA / OYUN GEÇİŞLERİ ---
+  window.openLevel = function(category) {
+    document.getElementById('level-map').style.display = 'none';
+    document.getElementById('game-view').style.display = 'block';
+    document.getElementById('current-set-title').innerText = category.toUpperCase();
+    filterSet(category);
+  };
+
+  window.goToMap = function() {
+    document.getElementById('game-view').style.display = 'none';
+    document.getElementById('level-map').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // --- FİLTRELEME VE NAVİGASYON ---
+  window.filterSet = function(category) {
+    const allCards = Array.from(document.querySelectorAll('.problem-card'));
+    activeProblems = allCards.filter(card => card.getAttribute('data-category') === category);
+
+    if (activeProblems.length === 0) {
+        alert("Bu sette henüz problem yok!");
+        goToMap();
+        return;
     }
+    currentIndex = 0;
+    
+    // Rozetleri güncelle
+    activeProblems.forEach((card, idx) => {
+        const countBadge = card.querySelector('.count-badge');
+        if(countBadge) countBadge.innerText = `Soru ${idx + 1} / ${activeProblems.length}`;
+    });
+    updateView();
+  };
+
+  function updateView() {
+    document.querySelectorAll('.problem-card').forEach(c => c.style.display = 'none');
+    const currentCard = activeProblems[currentIndex];
+    currentCard.style.display = 'block';
+
+    const prevBtn = currentCard.querySelector('.prev-btn');
+    const nextBtn = currentCard.querySelector('.next-btn');
+
+    if (currentIndex === 0) prevBtn.style.visibility = 'hidden';
+    else prevBtn.style.visibility = 'visible';
+
+    if (currentIndex === activeProblems.length - 1) nextBtn.style.visibility = 'hidden';
+    else nextBtn.style.visibility = 'visible';
+
+    document.querySelectorAll('.hint-display').forEach(h => {
+        h.style.opacity = '0';
+        h.innerHTML = '';
+    });
   }
 
-  // 3. GLOBAL FONKSİYON: GoBoard bunu doğrudan çağıracak
+  window.navigate = function(direction) {
+    const newIndex = currentIndex + direction;
+    if (newIndex >= 0 && newIndex < activeProblems.length) {
+      currentIndex = newIndex;
+      updateView();
+    }
+  };
+
+  window.showHint = function(index) {
+    const currentCard = activeProblems[currentIndex];
+    const hintDiv = currentCard.querySelector('.hint-display');
+    if (hintDiv.style.opacity === "1") {
+        hintDiv.style.opacity = "0";
+        setTimeout(() => { hintDiv.innerHTML = ""; }, 300); 
+    } else {
+        hintDiv.innerHTML = `<span class="hint-icon">💡</span> <strong>İpucu:</strong> Hamleni yapmadan önce 2 adım sonrasını düşün.`;
+        hintDiv.style.opacity = "1";
+    }
+  };
+
   window.unlockNextButton = function() {
-    console.log("Tebrikler! Kilit açma fonksiyonu tetiklendi.");
-    
-    // Şu an ekranda görünen (display: block olan) kartı bul
-    // Not: Stil kontrolü bazen tarayıcıya göre değişebilir, bu yüzden garanti yöntem:
-    const cards = document.querySelectorAll('.problem-card');
-    let activeCard = null;
-
-    cards.forEach(card => {
-        if (card.style.display !== 'none') {
-            activeCard = card;
-        }
-    });
-
-    if (activeCard) {
-      const nextBtn = activeCard.querySelector('.next-btn');
+    const currentCard = activeProblems[currentIndex];
+    if (currentCard) {
+      const nextBtn = currentCard.querySelector('.next-btn');
       if (nextBtn) {
-        // Butonu aktifleştir
         nextBtn.disabled = false;
         nextBtn.style.opacity = "1";
         nextBtn.style.cursor = "pointer";
-        nextBtn.innerText = "Sonraki Problem →";
-        
-        // Parlama efekti ekle
+        nextBtn.style.backgroundColor = "#2ecc71"; 
         nextBtn.classList.add('glow-animation');
-        
-        console.log("Buton başarıyla açıldı!");
-      } else {
-        console.log("Hata: Bu kartta 'next-btn' bulunamadı.");
       }
-    } else {
-        console.log("Hata: Aktif kart bulunamadı.");
     }
   };
 </script>
 
 <style>
   .page-wrapper {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  .problem-card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+  /* --- HARİTA STİLLERİ --- */
+  .level-map-container { text-align: center; padding: 40px 20px; }
+  .main-title { font-size: 2.5rem; color: #ffffff; margin-bottom: 10px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+  .subtitle { color: #bdc3c7; font-size: 1.2rem; margin-bottom: 50px; }
+  
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 40px;
+    justify-content: center;
+    padding: 20px;
   }
 
-  .header {
+  .level-card {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #f1f1f1;
-    padding-bottom: 10px;
-  }
-
-  .count {
-    background: #f7b731;
-    color: #fff;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-  }
-
-  .nav-controls {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    gap: 15px;
-  }
-
-  .nav-btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
     cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    flex: 1;
+    transition: transform 0.3s ease;
+  }
+  .level-card:hover { transform: translateY(-10px); }
+
+  .icon-ring {
+    width: 120px; height: 120px; border-radius: 50%;
+    background-color: #ecf0f1; border: 5px solid #bdc3c7;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+  }
+  .level-card:hover .icon-ring { border-color: #3498db; box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3); }
+
+  .level-icon {
+    width: 90px; height: 90px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; color: white;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
   }
 
-  .prev-btn {
-    background-color: #95a5a6;
-    color: white;
+  .badge {
+    position: absolute; bottom: 0; right: 0;
+    background: #34495e; color: white;
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; font-weight: bold; border: 2px solid #fff;
   }
 
-  .next-btn {
-    background-color: #3498db;
-    color: white;
+  .level-card h3 { color: #ffffff; margin: 0; font-size: 1.1rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+  .status-text { color: #bdc3c7; font-size: 0.9rem; margin-top: 5px; }
+
+  /* --- OYUN EKRANI STİLLERİ --- */
+  
+  /* Üst Navigasyon (DÜZELTİLEN KISIM) */
+  .game-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    color: white; /* Yazı rengi beyaz */
   }
 
-  /* Pasif Buton Stili */
-  .next-btn:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-    opacity: 0.6;
-    transform: none !important;
+  .game-nav h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
   }
 
-  .next-btn:not(:disabled):hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
+  /* Geri Dön Butonu */
+  .back-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: flex; align-items: center; gap: 8px;
+    font-weight: bold; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .back-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateX(-3px); }
+
+  /* Kart Stili (DÜZELTİLEN KISIM - ŞEFFAF) */
+  .problem-card {
+    background: transparent; /* Şeffaf */
+    border: none;
+    box-shadow: none;
+    padding: 10px 0;
+    margin-bottom: 20px;
+    text-align: center;
   }
 
-  /* Başarı Animasyonu */
-  .glow-animation {
-    animation: glow 1.5s infinite;
-    background-color: #2ecc71 !important; /* Doğru bilince yeşile döner */
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  
+  .header h3 {
+    margin: 0; font-size: 1.5rem; color: #ffffff; /* Beyaz Başlık */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   }
 
-  @keyframes glow {
-    0% { box-shadow: 0 0 5px #2ecc71; }
-    50% { box-shadow: 0 0 20px #2ecc71; }
-    100% { box-shadow: 0 0 5px #2ecc71; }
+  .count-badge { 
+    background: rgba(255,255,255,0.2); 
+    color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; 
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.1);
   }
+  
+  .turn-container { display: flex; justify-content: center; margin-bottom: 15px; }
+  .turn-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+  .turn-black { background-color: #2c3e50; color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+  .turn-white { background-color: #ecf0f1; color: #2c3e50; border: 1px solid #bdc3c7; }
+  .stone-icon { width: 18px; height: 18px; border-radius: 50%; display: inline-block; }
+  .turn-black .stone-icon { background: #000; box-shadow: inset -2px -2px 3px rgba(255,255,255,0.3); } 
+  .turn-white .stone-icon { background: #fff; border: 1px solid #ccc; box-shadow: inset 2px 2px 3px rgba(0,0,0,0.1); }
+
+  .hint-display { margin-top: 15px; background-color: #fff3cd; padding: 10px; border-radius: 8px; opacity: 0; transition: opacity 0.3s; color: #333; }
+  
+  .nav-controls { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+  .nav-btn.icon-btn { width: 55px; height: 55px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+  .prev-btn { background-color: #7f8c8d; }
+  .hint-btn { background-color: #f1c40f; width: 45px; height: 45px; }
+  .next-btn { background-color: #3498db; }
+  .next-btn:disabled { background-color: #bdc3c7; cursor: not-allowed; opacity: 0.5; box-shadow: none; }
+  
+  .glow-animation { animation: pulse-green 2s infinite; }
+  @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(46, 204, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); } }
 </style>
