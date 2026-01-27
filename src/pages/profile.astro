@@ -5,10 +5,24 @@ import Layout from '../layouts/Layout.astro';
 <Layout title="Profilim | Agora Go Akademisi">
   <div class="profile-container">
     <div class="profile-card">
+      
       <div class="profile-header">
-        <div class="avatar-circle" id="avatar-placeholder"></div>
+        <div class="avatar-circle" id="avatar-placeholder">
+           <span id="avatar-initial">?</span>
+        </div>
         <h1 id="display-username">Yükleniyor...</h1>
         <p id="display-email" class="email-text">...</p>
+      </div>
+
+      <div class="level-section">
+        <div class="level-info">
+            <span class="level-badge" id="display-level">Lvl 1</span>
+            <span class="xp-text"><span id="current-xp">0</span> XP</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
+        </div>
+        <p class="next-level-text">Sonraki seviyeye: <span id="xp-needed">100</span> XP</p>
       </div>
 
       <div class="profile-info">
@@ -17,8 +31,12 @@ import Layout from '../layouts/Layout.astro';
           <span id="info-username">-</span>
         </div>
         <div class="info-item">
+          <label>Kayıt Tarihi</label>
+          <span id="info-date">-</span>
+        </div>
+        <div class="info-item">
           <label>Hesap Tipi</label>
-          <span>Agora üyesi</span>
+          <span>Agora Üyesi</span>
         </div>
       </div>
 
@@ -27,66 +45,163 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </div>
   </div>
-
-  <style>
-    .profile-container { max-width: 500px; margin: 5rem auto; padding: 0 1rem; font-family: 'Inter', sans-serif; }
-    .profile-card { background: white; padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); text-align: center; }
-    
-    .avatar-circle { width: 80px; height: 80px; background: #1e293b; margin: 0 auto 1.5rem; border-radius: 50%; }
-    h1 { font-size: 1.5rem; color: #1e293b; margin-bottom: 0.25rem; }
-    .email-text { color: #64748b; font-size: 0.9rem; margin-bottom: 2rem; }
-
-    .profile-info { text-align: left; background: #f8fafc; padding: 1.5rem; border-radius: 16px; margin-bottom: 2rem; }
-    .info-item { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0; }
-    .info-item:last-child { border: none; }
-    label { font-weight: 600; color: #475569; font-size: 0.9rem; }
-    span { color: #1e293b; font-size: 0.9rem; }
-
-    .btn-danger {
-      width: 100%; padding: 0.85rem; border: none; border-radius: 9999px;
-      background: #ef4444; color: white; font-weight: 600; cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .btn-danger:hover { opacity: 0.9; }
-  </style>
-
-  <script>
-    import { supabase } from '../lib/supabase';
-
-    async function initProfile() {
-      // 1. Mevcut kullanıcıyı al
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        window.location.href = '/login';
-        return;
-      }
-
-      // 2. Agorasusers tablosundan verileri çek
-      const { data: profile } = await supabase
-        .from('agorasusers')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      // 3. Arayüzü güncelle
-      document.getElementById('display-username')!.textContent = profile?.username || 'İsimsiz Oyuncu';
-      document.getElementById('display-email')!.textContent = user.email!;
-      document.getElementById('info-username')!.textContent = profile?.username || '-';
-      document.getElementById('avatar-placeholder')!.textContent = (profile?.username?.[0] || 'A').toUpperCase();
-      document.getElementById('avatar-placeholder')!.style.display = 'flex';
-      document.getElementById('avatar-placeholder')!.style.alignItems = 'center';
-      document.getElementById('avatar-placeholder')!.style.justifyContent = 'center';
-      document.getElementById('avatar-placeholder')!.style.color = 'white';
-      document.getElementById('avatar-placeholder')!.style.fontSize = '2rem';
-    }
-
-    // Çıkış Butonu
-    document.getElementById('logout-btn')?.addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      window.location.href = '/login';
-    });
-
-    initProfile();
-  </script>
 </Layout>
+
+<script>
+  import { supabase } from '../lib/supabase';
+
+  async function initProfile() {
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      window.location.href = '/signup';
+      return;
+    }
+
+    // DOM Elemanlarını Seç ve Tip Dönüşümü Yap (HTMLElement olarak)
+    const els = {
+        username: document.getElementById('display-username'),
+        email: document.getElementById('display-email'),
+        infoUsername: document.getElementById('info-username'),
+        infoDate: document.getElementById('info-date'),
+        avatarInitial: document.getElementById('avatar-initial'),
+        // Level Elemanları
+        levelBadge: document.getElementById('display-level'),
+        currentXp: document.getElementById('current-xp'),
+        xpBar: document.getElementById('xp-bar'),
+        xpNeeded: document.getElementById('xp-needed')
+    };
+
+    if (els.email) els.email.textContent = user.email || "";
+
+    // Veritabanından veriyi çek
+    const { data: profile, error } = await supabase
+      .from('agorasusers')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (error) console.error('Profil hatası:', error);
+
+    const displayName = profile?.username || user.email?.split('@')[0] || "Oyuncu";
+    
+    // Temel Bilgileri Yaz
+    if (els.username) els.username.textContent = displayName;
+    if (els.infoUsername) els.infoUsername.textContent = displayName;
+    if (els.infoDate && profile?.created_at) {
+        els.infoDate.textContent = new Date(profile.created_at).toLocaleDateString('tr-TR');
+    }
+    if (els.avatarInitial) els.avatarInitial.textContent = (displayName[0] || '?').toUpperCase();
+
+    // --- LEVEL ve XP HESAPLAMA ---
+    const totalXP = profile?.xp || 0;
+    const currentLevel = profile?.level || 1;
+    
+    // Matematik
+    const xpPerLevel = 100; 
+    const xpInCurrentLevel = totalXP % xpPerLevel; 
+    const progressPercent = (xpInCurrentLevel / xpPerLevel) * 100;
+    const xpToNext = xpPerLevel - xpInCurrentLevel;
+
+    // Arayüzü Güncelle
+    // HATA ÇÖZÜMÜ 1: Sayıları String'e çevirdik (.toString())
+    if (els.levelBadge) els.levelBadge.textContent = `Lvl ${currentLevel}`;
+    if (els.currentXp) els.currentXp.textContent = totalXP.toString(); 
+    if (els.xpNeeded) els.xpNeeded.textContent = xpToNext.toString();
+    
+    // Bar Animasyonu
+    // HATA ÇÖZÜMÜ 2: Null kontrolünü kesinleştirdik
+    if (els.xpBar) {
+        const barElement = els.xpBar; // Elementi yerel bir değişkene aldık
+        setTimeout(() => {
+            barElement.style.width = `${progressPercent}%`;
+        }, 100);
+    }
+  }
+
+  // Çıkış
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+          await supabase.auth.signOut();
+          window.location.href = '/signup';
+      });
+  }
+
+  initProfile();
+</script>
+
+<style>
+  /* GENEL STİLLER */
+  .profile-container { max-width: 500px; margin: 5rem auto; padding: 0 1rem; font-family: 'Inter', sans-serif; }
+  .profile-card { background: white; padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); text-align: center; }
+  
+  /* AVATAR */
+  .avatar-circle { 
+    width: 80px; height: 80px; background: #2c3e50; margin: 0 auto 1rem; 
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; color: white; font-weight: bold;
+    box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3);
+  }
+  
+  h1 { font-size: 1.5rem; color: #1e293b; margin-bottom: 0.25rem; font-weight: 800; }
+  .email-text { color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+  /* --- YENİ LEVEL BÖLÜMÜ --- */
+  .level-section {
+    background: #f1f5f9;
+    padding: 1.5rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+
+  .level-info {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+  }
+
+  .level-badge {
+    background: #f59e0b; color: white; padding: 4px 12px;
+    border-radius: 20px; font-weight: 800; font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(245, 158, 11, 0.4);
+  }
+
+  .xp-text { font-weight: 600; color: #475569; font-size: 0.9rem; }
+
+  .progress-track {
+    width: 100%; height: 10px; background: #e2e8f0;
+    border-radius: 10px; overflow: hidden; position: relative;
+  }
+
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #f59e0b, #d97706);
+    border-radius: 10px; width: 0%;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .next-level-text {
+    font-size: 0.8rem; color: #94a3b8; margin-top: 8px; text-align: right;
+  }
+
+  /* BİLGİ KARTLARI */
+  .profile-info { text-align: left; margin-bottom: 2rem; }
+  .info-item { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0; }
+  .info-item:last-child { border: none; }
+  label { font-weight: 600; color: #64748b; font-size: 0.9rem; }
+  span { color: #1e293b; font-size: 0.95rem; font-weight: 500; }
+
+  /* BUTON */
+  .btn-danger {
+    width: 100%; padding: 0.85rem; border: none; border-radius: 12px;
+    background: #ef4444; color: white; font-weight: 600; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-danger:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+
+  /* DARK MODE */
+  :global(body.dark) .profile-card { background: #1e293b; }
+  :global(body.dark) h1 { color: #f1f5f9; }
+  :global(body.dark) .level-section { background: #0f172a; }
+  :global(body.dark) .progress-track { background: #334155; }
+  :global(body.dark) span, :global(body.dark) label { color: #cbd5e1; }
+</style>

@@ -38,7 +38,7 @@ const menuitems = [
               ))}
               
               <li class="lg:hidden mt-2 pt-2 border-t border-gray-100 dark:border-gray-800 w-full text-center">
-                 <a href="/profile" class="block py-2 text-blue-600 dark:text-blue-400 font-bold">Profilim / Giriş</a>
+                 <a href="/profile" class="block py-2 text-blue-600 dark:text-blue-400 font-bold">Profilim</a>
               </li>
             </ul>
           </MenuItems>
@@ -57,7 +57,9 @@ const menuitems = [
                             <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
                         </svg>
                     </div>
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">Profilim</span>
+                    <span id="nav-user-name" class="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">
+                        Profilim
+                    </span>
                 </a>
             </div>
 
@@ -81,33 +83,48 @@ const menuitems = [
 <div class="h-20 lg:h-24"></div>
 
 <script>
-  // Scripti güvenli hale getirdik. Hata olsa bile sayfa bozulmaz.
   import { supabase } from 'lib/supabase';
 
   async function checkNavbarAuth() {
     try {
       const loginBtn = document.getElementById('nav-login-btn');
       const profileBtn = document.getElementById('nav-profile-btn');
+      // YENİ: İsim alanı
+      const userNameSpan = document.getElementById('nav-user-name');
 
       if (!loginBtn || !profileBtn) return;
 
-      // Kullanıcıyı kontrol et
       const { data: { user }, error } = await supabase.auth.getUser();
 
-      if (error) {
-        console.error("Auth Hatası:", error);
-        return; // Hata varsa varsayılan (Giriş Yap) kalsın
-      }
-
       if (user) {
-        console.log("Kullanıcı giriş yapmış:", user.email);
-        // Kullanıcı varsa: Login'i gizle, Profil'i aç
+        // 1. Önce butonları ayarla
         loginBtn.classList.add('hidden');
         profileBtn.classList.remove('hidden');
         profileBtn.style.display = 'flex'; 
+
+        // 2. Kullanıcı adını veritabanından çek
+        if (userNameSpan) {
+            const { data: profile } = await supabase
+                .from('agorasusers')
+                .select('username')
+                .eq('id', user.id)
+                .single();
+            
+            // Profilde ad varsa onu yaz, yoksa mailin başını yaz
+            const displayName = profile?.username || user.email?.split('@')[0] || "Profilim";
+            
+            // Eğer isim çok uzunsa kısalt (Örn: "Mehmet Sa...")
+            if (displayName.length > 15) {
+                userNameSpan.innerText = displayName.substring(0, 12) + '...';
+            } else {
+                userNameSpan.innerText = displayName;
+            }
+        }
+
       } else {
-        console.log("Kullanıcı giriş yapmamış.");
-        // Kullanıcı yoksa: Login açık kalsın (Zaten varsayılan bu)
+        // Kullanıcı yoksa
+        loginBtn.classList.remove('hidden');
+        profileBtn.classList.add('hidden');
       }
 
     } catch (err) {
