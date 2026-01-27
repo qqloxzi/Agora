@@ -1,160 +1,201 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Hesap Oluştur | Agora Go Akademisi">
-  <div class="register-container">
-    <div class="register-header">
-      <h1>Hesap Oluştur</h1>
-    </div>
+<Layout title="Giriş Yap / Kayıt Ol">
+  <div class="auth-container">
+    <div class="auth-box">
+      <h1>Go Akademi'ye Hoşgeldin</h1>
+      <p class="subtitle">İlerlemeni kaydetmek için giriş yap.</p>
 
-    <div id="selection-view" class="options-view">
-      <button id="show-email-form" class="btn-theme">
-        E-posta ile devam et
+      <button id="google-btn" class="google-btn">
+        <svg class="google-icon" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+          <g transform="matrix(1, 0, 0, 1, 27.009001, -39.23856)">
+            <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z" />
+            <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z" />
+            <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z" />
+            <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.424 44.599 -10.174 45.789 L -6.704 42.319 C -8.804 40.359 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z" />
+          </g>
+        </svg>
+        Google ile Devam Et
       </button>
-      
-      <div class="separator"><span>VEYA</span></div>
 
-      <button id="google-signup" class="btn-theme">
-        <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5" />
-        Google ile devam et
-      </button>
+      <div class="divider"><span>veya e-posta ile</span></div>
+
+      <form id="auth-form">
+        <div class="input-group">
+          <input type="email" id="email" placeholder="E-posta Adresi" required />
+        </div>
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Şifre" required />
+        </div>
+        
+        <div class="error-message" id="error-msg"></div>
+
+        <button type="submit" class="submit-btn" id="login-btn">Giriş Yap</button>
+        <button type="button" class="secondary-btn" id="signup-btn">Hesap Oluştur</button>
+      </form>
     </div>
-
-    <div id="email-form-view" class="hidden">
-      <div class="register-card">
-        <form id="signup-form">
-          <div class="input-group">
-            <label for="email">E-posta</label>
-            <input type="email" id="email" placeholder="E-posta adresinizi girin" required />
-          </div>
-
-          <div class="input-group">
-            <label for="password">Şifre</label>
-            <input type="password" id="password" placeholder="Şifrenizi belirleyin" required />
-          </div>
-
-          <div class="input-group">
-            <label for="username">Kullanıcı Adı</label>
-            <input type="text" id="username" placeholder="Sitede görünecek adınız" required />
-          </div>
-
-
-          <button type="submit" class="submit-btn">Hesap Oluştur</button>
-        </form>
-        <button id="back-to-selection" class="back-link">← Seçeneklere Geri Dön</button>
-      </div>
-    </div>
-    
-    <p id="message"></p>
   </div>
+</Layout>
 
-  <style>
-    .register-container { max-width: 420px; margin: 5rem auto; padding: 0 1rem; font-family: 'Inter', sans-serif; }
-    .register-header h1 { font-size: 2rem; text-align: left; margin-bottom: 2.5rem; color: #1a1a1a; font-weight: 700; }
-    
-    /* Navbardaki "Kayıt Ol" Butonu Teması (Koyu Lacivert) */
-    .btn-theme, .submit-btn {
-      width: 100%; 
-      padding: 0.85rem; 
-      border: none; 
-      border-radius: 9999px; /* Tam yuvarlak */
-      background: #1e293b; /* Koyu lacivert/slate tonu */
-      color: white; 
-      font-size: 0.95rem; 
-      font-weight: 600; 
-      cursor: pointer;
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 12px;
-      transition: opacity 0.2s, transform 0.1s;
-      margin-bottom: 0.75rem;
+<script>
+  import { supabase } from "../lib/supabase";
+
+  // HTML Elemanlarını Seç ve Türlerini Belirt (TypeScript Casting)
+  const form = document.getElementById("auth-form") as HTMLFormElement;
+  const emailInput = document.getElementById("email") as HTMLInputElement;
+  const passwordInput = document.getElementById("password") as HTMLInputElement;
+  const loginBtn = document.getElementById("login-btn") as HTMLButtonElement;
+  const signupBtn = document.getElementById("signup-btn") as HTMLButtonElement;
+  const googleBtn = document.getElementById("google-btn") as HTMLButtonElement;
+  const errorMsg = document.getElementById("error-msg") as HTMLDivElement;
+
+  // --- YARDIMCI FONKSİYONLAR ---
+  function showError(msg: string, type = "error") {
+    if (!errorMsg) return;
+    errorMsg.textContent = msg;
+    errorMsg.style.color = type === "error" ? "#e74c3c" : "#2ecc71";
+    errorMsg.style.display = "block";
+  }
+
+  function clearError() {
+    if (!errorMsg) return;
+    errorMsg.style.display = "none";
+  }
+
+  function setLoading(isLoading: boolean) {
+    if (!loginBtn || !signupBtn) return;
+    if (isLoading) {
+      loginBtn.textContent = "İşleniyor...";
+      loginBtn.disabled = true;
+      signupBtn.disabled = true;
+    } else {
+      loginBtn.textContent = "Giriş Yap";
+      loginBtn.disabled = false;
+      signupBtn.disabled = false;
     }
-    .btn-theme:hover, .submit-btn:hover { opacity: 0.9; }
-    .btn-theme:active, .submit-btn:active { transform: scale(0.97); }
+  }
 
-    .separator { text-align: center; margin: 1.5rem 0; border-bottom: 1px solid #d1d5db; line-height: 0.1em; }
-    .separator span { background: #DFE1E5; padding: 0 15px; color: #6b7280; font-size: 0.7rem; font-weight: bold; }
+  // --- ANA MANTIK ---
+  // Tüm elemanların sayfada olduğundan eminsek işlemleri yap
+  if (form && emailInput && passwordInput && loginBtn && signupBtn && googleBtn && errorMsg) {
 
-    .hidden { display: none; }
-    .input-group { margin-bottom: 1.2rem; }
-    label { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; font-weight: 600; color: #334155; }
-    input, select { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 0.95rem; }
-
-    .back-link { background: none; border: none; color: #64748b; margin-top: 1.5rem; cursor: pointer; font-size: 0.85rem; width: 100%; text-decoration: underline; }
-
-    #message { margin-top: 1.2rem; text-align: center; font-size: 0.9rem; font-weight: 500; }
-    .w-5 { width: 1.25rem; }
-    .h-5 { height: 1.25rem; }
-  </style>
-
-  <script>
-    import { supabase } from '../lib/supabase';
-
-    const selectionView = document.getElementById('selection-view');
-    const emailFormView = document.getElementById('email-form-view');
-    const showEmailBtn = document.getElementById('show-email-form');
-    const backBtn = document.getElementById('back-to-selection');
-    const signupForm = document.getElementById('signup-form') as HTMLFormElement | null;
-    const messageBox = document.getElementById('message');
-
-    showEmailBtn?.addEventListener('click', () => {
-      selectionView?.classList.add('hidden');
-      emailFormView?.classList.remove('hidden');
-    });
-
-    backBtn?.addEventListener('click', () => {
-      emailFormView?.classList.add('hidden');
-      selectionView?.classList.remove('hidden');
-    });
-
-    signupForm?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = (document.getElementById('email') as HTMLInputElement).value;
-      const password = (document.getElementById('password') as HTMLInputElement).value;
-
-      if (!messageBox) return;
-      messageBox.textContent = "Hesabınız oluşturuluyor...";
-
-      const { error } = await supabase.auth.signUp({ email, password });
-
-      if (error) {
-        messageBox.textContent = "Hata: " + error.message;
-        messageBox.style.color = "#ef4444";
-      } else {
-        messageBox.textContent = "Başarılı! Lütfen e-postanızı onaylayın.";
-        messageBox.style.color = "#10b981";
-      }
-    });
-
-    document.getElementById('google-signup')?.addEventListener('click', async () => {
-      if (messageBox) {
-        messageBox.textContent = "Google ile bağlanılıyor...";
-        messageBox.style.color = "#1e293b";
-      }
-
-      const { data, error } = await supabase.auth.signInWithOAuth({
+    // 1. GOOGLE GİRİŞİ
+    googleBtn.addEventListener("click", async () => {
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          // ÖNEMLİ: /dashboard sayfası projenizde (src/pages/dashboard.astro) mutlaka var olmalı.
-          // Eğer yoksa şimdilik sadece '/' (ana sayfa) yapın.
-          redirectTo: window.location.origin + '/dashboard', 
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
+          // Giriş sonrası nereye dönecek?
+          redirectTo: window.location.origin + '/goagaci',
         },
+      });
+      if (error) showError(error.message);
+    });
+
+    // 2. E-POSTA GİRİŞİ (LOGIN)
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearError();
+      setLoading(true);
+
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
       if (error) {
-        if (messageBox) {
-          messageBox.textContent = "Giriş hatası: " + error.message;
-          messageBox.style.color = "#ef4444";
-        }
-        console.error("Giriş hatası:", error.message);
+        showError("Giriş başarısız: " + error.message);
+        setLoading(false);
+      } else {
+        window.location.href = "/goagaci";
       }
     });
-  </script>
-</Layout>
 
+    // 3. KAYIT OLMA (SIGN UP)
+    signupBtn.addEventListener("click", async () => {
+      clearError();
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showError("Lütfen e-posta ve şifre giriniz.");
+        return;
+      }
+
+      setLoading(true);
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        showError(error.message);
+      } else {
+        showError("Kayıt başarılı! Lütfen e-posta kutunuzu onaylayın.", "success");
+      }
+      setLoading(false);
+    });
+
+  } // if bloğu sonu
+</script>
+
+<style>
+  .auth-container {
+    display: flex; justify-content: center; align-items: center;
+    min-height: 80vh; padding: 20px;
+  }
+  .auth-box {
+    background: white; padding: 40px; border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 100%; max-width: 400px; text-align: center;
+  }
+  h1 { color: #2c3e50; margin-bottom: 10px; font-size: 1.8rem; }
+  .subtitle { color: #7f8c8d; margin-bottom: 30px; }
+  
+  .input-group { margin-bottom: 15px; }
+  input {
+    width: 100%; padding: 12px; border: 2px solid #ecf0f1;
+    border-radius: 8px; font-size: 1rem; outline: none; transition: 0.3s;
+  }
+  input:focus { border-color: #3498db; }
+
+  .submit-btn {
+    width: 100%; background: #2c3e50; color: white; padding: 12px;
+    border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;
+    font-weight: bold; margin-bottom: 10px; transition: 0.2s;
+  }
+  .submit-btn:hover { background: #34495e; }
+
+  .secondary-btn {
+    background: transparent; border: none; color: #3498db;
+    cursor: pointer; font-weight: 600;
+  }
+  
+  .google-btn {
+    width: 100%; background: white; border: 2px solid #ecf0f1;
+    border-radius: 8px; padding: 10px; display: flex; align-items: center;
+    justify-content: center; gap: 10px; cursor: pointer; font-weight: 600;
+    color: #555; margin-bottom: 20px; transition: 0.2s;
+  }
+  .google-btn:hover { background: #f9f9f9; border-color: #bdc3c7; }
+
+  .divider { 
+    display: flex; align-items: center; color: #bdc3c7; margin: 20px 0; font-size: 0.9rem; 
+  }
+  .divider::before, .divider::after {
+    content: ""; flex: 1; height: 1px; background: #ecf0f1;
+  }
+  .divider span { padding: 0 10px; }
+  
+  .error-message { margin-bottom: 15px; font-size: 0.9rem; display: none; }
+  
+  /* Dark Mode support if needed */
+  :global(body.dark) .auth-box { background: #2c3e50; }
+  :global(body.dark) h1 { color: white; }
+  :global(body.dark) input { background: #34495e; border-color: #465b6e; color: white; }
+</style>

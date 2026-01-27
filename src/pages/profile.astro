@@ -64,7 +64,7 @@ import Layout from '../layouts/Layout.astro';
 
       // 2. Agorasusers tablosundan verileri çek
       const { data: profile } = await supabase
-        .from('Agorasusers')
+        .from('agorasusers')
         .select('*')
         .eq('id', user.id)
         .single();

@@ -5,74 +5,142 @@ const { problem, isTeacher = false } = Astro.props;
 
 <div class="go-app" data-problem={problem ? JSON.stringify(problem) : null} data-teacher={isTeacher.toString()}>
   
+  {!isTeacher && problem && (
+    <div class="top-info-bar">
+      <div class="turn-badge">
+        <div class={`turn-indicator ${problem.turn}`}></div>
+        <span>{problem.turn === 'black' ? 'Siyah Oynar' : 'Beyaz Oynar'}</span>
+      </div>
+    </div>
+  )}
+
   <div class="status"></div>
 
   <div class="go-container">
     <canvas class="goBoard"></canvas>
   </div>
 
-  <div class="bottom-controls">
+  <div class="bottom-action-bar">
     
-    {!isTeacher && problem && (
-      <div class="control-item tooltip" data-tip={problem.turn === 'black' ? 'Sıra Siyahın' : 'Sıra Beyazın'}>
-        <div class={`turn-indicator ${problem.turn}`}></div>
-      </div>
-    )}
+    <button class="control-btn resetBtn tooltip" data-tip="Başa Dön / Sıfırla">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
 
     {isTeacher && (
-        <div class="teacher-group">
+        <div class="teacher-tools-right">
             <button class="control-btn tooltip" id="undoBtn" data-tip="Geri Al">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
             </button>
 
             <div class="divider"></div>
 
-            <button class="control-btn tooltip" id="markCorrectBtn" data-tip="DOĞRU Yol Olarak İşaretle" style="color: #2ecc71; border-color: #2ecc71;">
+            <button class="control-btn tooltip" id="markCorrectBtn" data-tip="DOĞRU Yol" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.5);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
-            <button class="control-btn tooltip" id="markWrongBtn" data-tip="YANLIŞ Yol Olarak İşaretle" style="color: #e74c3c; border-color: #e74c3c;">
+            <button class="control-btn tooltip" id="markWrongBtn" data-tip="YANLIŞ Yol" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.5);">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
 
             <div class="divider"></div>
 
-            <button class="control-btn setupBtn tooltip" data-tip="Taş Dizme Modu">⚙️</button>
-            <button class="control-btn recordBtn tooltip" data-tip="Kayıt Modu">⏺</button>
+            <button class="control-btn setupBtn tooltip" data-tip="Kurulum (Dizme)">⚙️</button>
+            <button class="control-btn recordBtn tooltip" data-tip="Kayıt Başlat">⏺</button>
             <button class="control-btn exportBtn tooltip" data-tip="JSON İndir">💾</button>
             
             <button class="control-btn colorToggleBtn tooltip" data-tip="Renk Değiştir">
                <div class="turn-indicator black" id="teacherColorIndicator"></div>
             </button>
-
-            <div class="divider"></div>
-
-            <button class="control-btn resetBtn tooltip" data-tip="Sıfırla">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-            </button>
         </div>
     )}
+
   </div>
 </div>
 
 <style>
-  .go-app { text-align: center; margin-bottom: 2rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; }
+  .go-app { 
+    text-align: center; 
+    margin-bottom: 2rem; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    position: relative; 
+  }
   
-  .status { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; height: 1.5em; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.6); transition: color 0.3s ease; }
+  /* Durum Yazısı (Beyaz ve gölgeli kalabilir, koyu butonların üstünde duracak) */
+  .status { 
+    font-size: 1.1rem; 
+    font-weight: bold; 
+    margin-bottom: 5px; 
+    height: 1.5em; 
+    color: #ffffff; 
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8); /* Gölgeyi biraz artırdım */
+    transition: color 0.3s ease; 
+  }
 
-  .go-container { display: inline-block; padding: 10px; background-color: #eebb66; border-radius: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); border: 1px solid #d4a753; position: relative; z-index: 10; }
+  /* ÜST BİLGİ */
+  .top-info-bar { margin-bottom: 10px; display: flex; justify-content: center; width: 100%; }
+  
+  /* SIRA KİMDE ROZETİ - ARKA PLAN KOYU YAPILDI */
+  .turn-badge { 
+    display: flex; align-items: center; gap: 10px; 
+    background: #2c3e50;  /* SABİT KOYU ARKA PLAN */
+    border: 1px solid #34495e; 
+    padding: 6px 16px; border-radius: 20px; 
+    color: #fff; /* Beyaz Yazı */
+    font-weight: 600; font-size: 0.95rem; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+  }
+
+  /* TAHTA */
+  .go-container { 
+    display: inline-block; padding: 10px; 
+    background-color: #eebb66; 
+    border-radius: 4px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+    border: 1px solid #d4a753; 
+    position: relative; z-index: 10; 
+  }
   canvas { cursor: pointer; display: block; border-radius: 2px; max-width: 100%; height: auto; }
 
-  .bottom-controls { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 20px; padding: 8px 20px; background: rgba(255, 255, 255, 0.1); border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); }
-  .bottom-controls:empty { display: none; }
+  /* ALT ÇUBUK */
+  .bottom-action-bar { width: 100%; max-width: 520px; display: flex; justify-content: flex-start; align-items: center; margin-top: 15px; position: relative; }
+  .teacher-tools-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  
+  .divider { 
+    width: 1px; height: 25px; 
+    background: rgba(255,255,255,0.3); 
+    margin: 0 5px; 
+  }
 
-  .teacher-group { display: flex; align-items: center; gap: 10px; }
-  .divider { width: 1px; height: 25px; background: rgba(255,255,255,0.2); margin: 0 5px; }
+  /* BUTONLAR (Restart vb.) - ARKA PLAN KOYU YAPILDI */
+  .control-btn { 
+    width: 45px; height: 45px; border-radius: 50%; 
+    background: #2c3e50; /* SABİT KOYU ARKA PLAN */
+    border: 2px solid #34495e; 
+    color: white; /* Beyaz İkon */
+    display: flex; align-items: center; justify-content: center; 
+    cursor: pointer; transition: all 0.2s ease; 
+    font-size: 1.2rem; 
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+  
+  /* Hover Efekti */
+  .control-btn:hover { 
+    background: #1a252f; /* Daha koyu ton */
+    transform: scale(1.1); 
+    color: #fff; 
+    border-color: #2c3e50;
+  }
+  
+  /* Aktif Buton */
+  .control-btn.active { 
+    background: #3498db; 
+    border-color: #2980b9; 
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); 
+  }
 
-  .control-btn { width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; font-size: 1.2rem; }
-  .control-btn:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-  .control-btn.active { background: #3498db; border-color: #2980b9; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
-
-  .turn-indicator { width: 20px; height: 20px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+  .turn-indicator { width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
   .turn-indicator.black { background: #000; border: 1px solid rgba(255,255,255,0.2); }
   .turn-indicator.white { background: #fff; border: 1px solid #ccc; }
 
@@ -80,7 +148,6 @@ const { problem, isTeacher = false } = Astro.props;
   .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; white-space: nowrap; pointer-events: none; opacity: 0; animation: fadeIn 0.2s forwards; z-index: 20; }
   @keyframes fadeIn { to { opacity: 1; } }
 </style>
-
 <script>
   const setupBoard = () => {
     document.querySelectorAll('.go-app').forEach(app => {
@@ -92,6 +159,7 @@ const { problem, isTeacher = false } = Astro.props;
       const ctx = canvas.getContext('2d', { alpha: false });
       if (!ctx) return;
 
+      // --- STATE ---
       let size = 9; 
       const resolution = 2; const boardDisplaySize = 500; let padding = 30 * resolution; 
       let mode = isTeacher ? 'SETUP' : 'SOLVE';
@@ -99,7 +167,8 @@ const { problem, isTeacher = false } = Astro.props;
       let stones: any[] = []; 
       let currentColor = 'black'; 
       let initialStonesState = ""; 
-      
+      let recordingStartColor = 'black'; 
+
       let moveTree: any = { children: [] }; 
       let currentNode: any = moveTree;      
       let currentPathStack: any[] = [];       
@@ -114,7 +183,59 @@ const { problem, isTeacher = false } = Astro.props;
       };
       initStones(size);
 
-      // --- VERİ YÜKLEME ---
+      // --- GO MANTIĞI ---
+      const isOnBoard = (x, y) => x >= 0 && x < size && y >= 0 && y < size;
+
+      const getLiberties = (x, y, color, checked = new Set()) => {
+          const key = `${x},${y}`;
+          if (checked.has(key)) return 0;
+          checked.add(key);
+          let liberties = 0;
+          const neighbors = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
+          neighbors.forEach(([nx, ny]) => {
+              if (!isOnBoard(nx, ny)) return;
+              const stone = stones[nx][ny];
+              if (!stone) liberties++;
+              else if (stone.color === color) liberties += getLiberties(nx, ny, color, checked);
+          });
+          return liberties;
+      };
+
+      const removeGroup = (x, y, color) => {
+          const stone = stones[x][y];
+          if (!stone || stone.color !== color) return;
+          stones[x][y] = null;
+          const neighbors = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
+          neighbors.forEach(([nx, ny]) => {
+              if (isOnBoard(nx, ny)) removeGroup(nx, ny, color);
+          });
+      };
+
+      const playMove = (x, y, color) => {
+          if (stones[x][y]) return false;
+          stones[x][y] = { color };
+          let captured = false;
+          const opponent = color === 'black' ? 'white' : 'black';
+          const neighbors = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
+
+          neighbors.forEach(([nx, ny]) => {
+              if (isOnBoard(nx, ny) && stones[nx][ny] && stones[nx][ny].color === opponent) {
+                  if (getLiberties(nx, ny, opponent) === 0) {
+                      removeGroup(nx, ny, opponent);
+                      captured = true;
+                  }
+              }
+          });
+
+          if (!captured && getLiberties(x, y, color) === 0) {
+              stones[x][y] = null;
+              updateStatusText("İntihar hamlesi yasak!", "#e74c3c");
+              return false;
+          }
+          return true;
+      };
+
+      // --- DATA LOAD ---
       const savedData = app.getAttribute('data-problem');
       if (savedData) {
         try {
@@ -122,13 +243,7 @@ const { problem, isTeacher = false } = Astro.props;
           size = prob.size || 9;
           initStones(size);
           
-          // BAŞLANGIÇ RENGİNİ AYARLA
-          // Eğer problemde sıra belirtildiyse (prob.turn), o renkten başla. Yoksa Siyah.
-          if (prob.turn) {
-              currentColor = prob.turn;
-          } else {
-              currentColor = 'black';
-          }
+          if (prob.turn) currentColor = prob.turn; else currentColor = 'black';
 
           if (prob.initialState) {
              initialStonesState = prob.initialState;
@@ -153,10 +268,10 @@ const { problem, isTeacher = false } = Astro.props;
           }
           currentNode = moveTree; 
           if (!isTeacher) mode = 'SOLVE';
-        } catch (e) { console.error("Veri yükleme hatası", e); }
+        } catch (e) { console.error(e); }
       }
 
-      // --- ÇİZİM ---
+      // --- DRAW ---
       const drawBoard = () => {
         ctx.fillStyle = "#eebb66"; ctx.fillRect(0, 0, canvas.width, canvas.height);
         const cellSize = (canvas.width - padding * 2) / (size - 1);
@@ -184,8 +299,8 @@ const { problem, isTeacher = false } = Astro.props;
             if (stone) drawStone(x, y, stone.color, cellSize, 1); 
         }));
 
-        // GHOST STONE (Öğretmen modunda her zaman, Solve modunda sadece sırası gelen kullanıcı için)
-        // Kullanıcı hamlesini göstermek için currentColor kullanıyoruz.
+        // GHOST STONE (ÖNİZLEME)
+        // Artık SOLVE modunda da currentColor neyse o renkte ghost taşı gösteriyoruz.
         if (hoverPos.x >= 0 && hoverPos.x < size && hoverPos.y >= 0 && hoverPos.y < size) {
           if (!stones[hoverPos.x][hoverPos.y]) {
             drawStone(hoverPos.x, hoverPos.y, currentColor, cellSize, 0.5);
@@ -223,7 +338,7 @@ const { problem, isTeacher = false } = Astro.props;
       });
       canvas.addEventListener('mouseleave', () => { hoverPos = { x: -1, y: -1 }; drawBoard(); });
 
-      // --- TIKLAMA MANTIĞI ---
+      // --- CLICK ---
       canvas.addEventListener('click', (e) => {
         if (hoverPos.x === -1) return;
         const x = hoverPos.x; const y = hoverPos.y;
@@ -232,55 +347,45 @@ const { problem, isTeacher = false } = Astro.props;
             stones[x][y] = stones[x][y] && stones[x][y].color === currentColor ? null : { color: currentColor }; 
             drawBoard();
         } 
-        
         else if (mode === 'RECORD') { 
             if (stones[x][y]) return; 
+            const stateBeforeMove = JSON.stringify(stones);
+            const colorBeforeMove = currentColor;
+
+            if (!playMove(x, y, currentColor)) return;
+
             let existingChild = currentNode.children.find((child: any) => child.x === x && child.y === y);
 
             if (existingChild) {
-                stones[x][y] = { color: existingChild.color };
-                currentPathStack.push(currentNode);
+                currentPathStack.push({ node: currentNode, stonesSnapshot: stateBeforeMove, turn: colorBeforeMove });
                 currentNode = existingChild;
-                // Sırayı değiştir
-                currentColor = currentColor === 'black' ? 'white' : 'black';
                 updateStatusText(`Mevcut dalda ilerlendi.`, '#3498db');
             } else {
                 const newNode = { x, y, color: currentColor, children: [], status: null };
                 currentNode.children.push(newNode);
-                stones[x][y] = { color: currentColor };
-                currentPathStack.push(currentNode);
+                currentPathStack.push({ node: currentNode, stonesSnapshot: stateBeforeMove, turn: colorBeforeMove });
                 currentNode = newNode;
-                // Sırayı değiştir
-                currentColor = currentColor === 'black' ? 'white' : 'black';
                 updateStatusText("Yeni varyasyon kaydediliyor...", '#f1c40f');
             }
+            currentColor = currentColor === 'black' ? 'white' : 'black';
             drawBoard();
         } 
-        
         else if (mode === 'SOLVE') {
-            if (stones[x][y]) return;
             const nextNode = currentNode.children.find((child: any) => child.x === x && child.y === y);
 
             if (nextNode) {
-                // 1. ÖĞRENCİ HAMLESİ
-                stones[x][y] = { color: nextNode.color };
+                playMove(x, y, nextNode.color);
                 currentNode = nextNode;
-                
-                // Sırayı değiştir (Öğrenci oynadı, sıra bilgisayarda)
                 currentColor = currentColor === 'black' ? 'white' : 'black';
                 drawBoard();
                 checkNodeStatus(currentNode);
 
-                // 2. BİLGİSAYAR HAMLESİ (Yanıt Varsa)
                 if (currentNode.children.length > 0 && !currentNode.status) {
                     setTimeout(() => {
                         const responseNode = currentNode.children[0];
-                        stones[responseNode.x][responseNode.y] = { color: responseNode.color };
+                        playMove(responseNode.x, responseNode.y, responseNode.color);
                         currentNode = responseNode;
-                        
-                        // Sırayı tekrar öğrenciye ver
                         currentColor = currentColor === 'black' ? 'white' : 'black';
-                        
                         drawBoard();
                         checkNodeStatus(currentNode);
                     }, 500); 
@@ -310,11 +415,10 @@ const { problem, isTeacher = false } = Astro.props;
       if (isTeacher) {
           app.querySelector('#undoBtn')?.addEventListener('click', () => {
               if (currentPathStack.length > 0) {
-                  const lastNode = currentNode;
-                  stones[lastNode.x][lastNode.y] = null;
-                  currentNode = currentPathStack.pop();
-                  // Geri alınca rengi de geri al
-                  currentColor = currentColor === 'black' ? 'white' : 'black';
+                  const lastStep = currentPathStack.pop();
+                  currentNode = lastStep.node; 
+                  stones = JSON.parse(lastStep.stonesSnapshot); 
+                  currentColor = lastStep.turn;
                   updateStatusText("Geri alındı.", '#fff');
                   drawBoard();
               }
@@ -339,8 +443,8 @@ const { problem, isTeacher = false } = Astro.props;
             const data = { 
                 id: `prob-${Date.now()}`, 
                 size, 
-                turn: currentColor, // KAYIT SIRASINDAKİ BAŞLANGIÇ RENGİNİ KAYDET
-                initialState: JSON.stringify(stones), 
+                turn: recordingStartColor,
+                initialState: initialStonesState || JSON.stringify(stones), 
                 solution: moveTree 
             }; 
             console.log(JSON.stringify(data, null, 2)); alert("Ağaç yapısı (Tree) Console'a yazdırıldı!");
@@ -355,28 +459,36 @@ const { problem, isTeacher = false } = Astro.props;
       }
 
       const updateUI = (newMode) => {
-        mode = newMode;
-        app.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
-        if(newMode === 'SETUP') app.querySelector('.setupBtn')?.classList.add('active');
-        if(newMode === 'RECORD') app.querySelector('.recordBtn')?.classList.add('active');
+        if (newMode === 'SETUP') {
+            if (initialStonesState) {
+                const parsed = JSON.parse(initialStonesState);
+                if(Array.isArray(parsed) && Array.isArray(parsed[0])) stones = parsed;
+                moveTree = { children: [] };
+                currentNode = moveTree;
+                currentPathStack = [];
+            }
+            updateStatusText("Taşları dizin.", '#fff');
+        }
 
         if (newMode === 'RECORD' && mode === 'SETUP') {
              initialStonesState = JSON.stringify(stones);
+             recordingStartColor = currentColor; 
              moveTree = { children: [] }; 
              currentNode = moveTree;
              currentPathStack = [];
              updateStatusText("Kayıt Başladı.", '#f1c40f');
         }
-        if (newMode === 'SETUP') {
-            updateStatusText("Taşları dizin.", '#fff');
-        }
+
+        mode = newMode;
+        app.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+        if(newMode === 'SETUP') app.querySelector('.setupBtn')?.classList.add('active');
+        if(newMode === 'RECORD') app.querySelector('.recordBtn')?.classList.add('active');
       };
 
       app.querySelector('.resetBtn')?.addEventListener('click', () => {
          updateStatusText("", "#fff");
          if (isTeacher && mode === 'SETUP') { initStones(size); }
          else { 
-             // RESET: Başlangıç state'ine ve rengine dön
              const probData = savedData ? JSON.parse(savedData) : {};
              if (probData.turn) currentColor = probData.turn; 
              else currentColor = 'black';

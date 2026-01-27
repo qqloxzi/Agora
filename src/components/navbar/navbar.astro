@@ -36,10 +36,33 @@ const menuitems = [
                   </a>
                 </li>
               ))}
+              
+              <li class="lg:hidden mt-2 pt-2 border-t border-gray-100 dark:border-gray-800 w-full text-center">
+                 <a href="/profile" class="block py-2 text-blue-600 dark:text-blue-400 font-bold">Profilim / Giriş</a>
+              </li>
             </ul>
           </MenuItems>
 
-          <div class="hidden lg:flex lg:w-1/4 justify-end items-center">
+          <div class="hidden lg:flex lg:w-1/4 justify-end items-center gap-3">
+            
+            <div id="nav-auth-container" class="flex items-center">
+                
+                <a id="nav-login-btn" href="/signup" class="px-4 py-2 text-sm font-medium text-white bg-slate-800 hover:bg-slate-700 rounded-full transition-colors">
+                    Giriş Yap
+                </a>
+
+                <a id="nav-profile-btn" href="/profile" class="hidden flex items-center gap-2 p-1 pr-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-700 group">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                            <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">Profilim</span>
+                </a>
+            </div>
+
+            <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
+
             <button id="theme-toggle" class="p-2 rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-300 transition-all focus:outline-none">
               <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
@@ -58,6 +81,44 @@ const menuitems = [
 <div class="h-20 lg:h-24"></div>
 
 <script>
+  // Scripti güvenli hale getirdik. Hata olsa bile sayfa bozulmaz.
+  import { supabase } from 'lib/supabase';
+
+  async function checkNavbarAuth() {
+    try {
+      const loginBtn = document.getElementById('nav-login-btn');
+      const profileBtn = document.getElementById('nav-profile-btn');
+
+      if (!loginBtn || !profileBtn) return;
+
+      // Kullanıcıyı kontrol et
+      const { data: { user }, error } = await supabase.auth.getUser();
+
+      if (error) {
+        console.error("Auth Hatası:", error);
+        return; // Hata varsa varsayılan (Giriş Yap) kalsın
+      }
+
+      if (user) {
+        console.log("Kullanıcı giriş yapmış:", user.email);
+        // Kullanıcı varsa: Login'i gizle, Profil'i aç
+        loginBtn.classList.add('hidden');
+        profileBtn.classList.remove('hidden');
+        profileBtn.style.display = 'flex'; 
+      } else {
+        console.log("Kullanıcı giriş yapmamış.");
+        // Kullanıcı yoksa: Login açık kalsın (Zaten varsayılan bu)
+      }
+
+    } catch (err) {
+      console.error("Navbar Script Hatası:", err);
+    }
+  }
+
+  // Sayfa yüklendiğinde çalıştır
+  checkNavbarAuth();
+
+  // --- TEMA AYARLARI ---
   const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
   const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
   const themeToggleBtn = document.getElementById('theme-toggle');
