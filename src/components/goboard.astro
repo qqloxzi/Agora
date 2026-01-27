@@ -112,6 +112,12 @@ const { problem, isTeacher = false } = Astro.props;
     box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
     border: 1px solid #d4a753; 
     position: relative; z-index: 10; 
+    width: 100%;
+    max-width: 500px; 
+    aspect-ratio: 1 / 1; 
+    margin: 0 auto;
+    flex-wrap: wrap; 
+    overflow: hidden
   }
   canvas { cursor: pointer; display: block; border-radius: 2px; max-width: 100%; height: auto; }
 
@@ -135,6 +141,7 @@ const { problem, isTeacher = false } = Astro.props;
     cursor: pointer; transition: all 0.2s ease; 
     font-size: 1.2rem; 
     box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+    flex-shrink: 0;
   }
   
   .control-btn:hover { 
