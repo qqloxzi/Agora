@@ -33,23 +33,26 @@ const makeTitle = title
     <link rel="icon" type="image/x-icon" href="/CircleLogo450.ico" />
     <meta name="generator" content={Astro.generator} />
 
-    <script is:inline>
-      const theme = (() => {
-        if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
-          return localStorage.getItem('color-theme');
-        }
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
-        }
-        return 'light';
-      })(); 
-    
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    </script>
+   <script is:inline>
+  const theme = (() => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
+      return localStorage.getItem('color-theme');
+    }
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  })(); 
+
+  // GÜNCELLENEN KISIM BURASI:
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light'); // Light varsa sil
+  } else {
+    document.documentElement.classList.remove('dark'); // Dark varsa sil
+    document.documentElement.classList.add('light');    // Light'ı EKLE
+  }
+</script>
 
     <SEO
       title={makeTitle}

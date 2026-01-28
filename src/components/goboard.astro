@@ -20,25 +20,34 @@ const { problem, isTeacher = false } = Astro.props;
     <canvas class="goBoard"></canvas>
   </div>
 
-  <div class="bottom-action-bar">
+  <div class="bottom-controls">
     
-    <button class="control-btn resetBtn tooltip" data-tip="Başa Dön / Sıfırla">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-    </button>
+    {!isTeacher && (
+      <button class="control-btn resetBtn tooltip" data-tip="Başa Dön / Sıfırla">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+    )}
 
     {isTeacher && (
-        <div class="teacher-tools-right">
-            <button class="control-btn tooltip" id="undoBtn" data-tip="Geri Al">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
-            </button>
+        <div class="teacher-group">
+            
+            <div class="size-selector">
+                <button class="size-btn active" data-size="9">9x9</button>
+                <button class="size-btn" data-size="13">13x13</button>
+                <button class="size-btn" data-size="19">19x19</button>
+            </div>
 
             <div class="divider"></div>
 
+            <button class="control-btn tooltip" id="undoBtn" data-tip="Geri Al">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
+            </button>
+
             <button class="control-btn tooltip" id="markCorrectBtn" data-tip="DOĞRU Yol" style="color: #2ecc71; border-color: rgba(46, 204, 113, 0.5);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
             <button class="control-btn tooltip" id="markWrongBtn" data-tip="YANLIŞ Yol" style="color: #e74c3c; border-color: rgba(231, 76, 60, 0.5);">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
 
             <div class="divider"></div>
@@ -50,23 +59,28 @@ const { problem, isTeacher = false } = Astro.props;
             <button class="control-btn colorToggleBtn tooltip" data-tip="Renk Değiştir">
                <div class="turn-indicator black" id="teacherColorIndicator"></div>
             </button>
+
+            <div class="divider"></div>
+
+            <button class="control-btn resetBtn tooltip" data-tip="Sıfırla">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
         </div>
     )}
-
   </div>
 </div>
 
 <style>
   /* --- TEMA RENKLERİ --- */
   :root {
-    --status-text: #ffffff; /* Koyu modda beyaz yazı */
+    --status-text: #ffffff; 
     --status-shadow: 0 1px 3px rgba(0,0,0,0.8);
   }
 
   /* Açık Mod Algılaması */
   :global(body.light) .go-app {
-    --status-text: #2c3e50; /* Açık modda koyu yazı */
-    --status-shadow: none;  /* Gölge yok */
+    --status-text: #2c3e50;
+    --status-shadow: none;
   }
 
   .go-app { 
@@ -77,9 +91,9 @@ const { problem, isTeacher = false } = Astro.props;
     flex-direction: column; 
     align-items: center; 
     position: relative; 
+    width: 100%;
   }
   
-  /* Durum Yazısı */
   .status { 
     font-size: 1.1rem; 
     font-weight: bold; 
@@ -90,10 +104,8 @@ const { problem, isTeacher = false } = Astro.props;
     transition: color 0.3s ease; 
   }
 
-  /* ÜST BİLGİ */
   .top-info-bar { margin-bottom: 10px; display: flex; justify-content: center; width: 100%; }
   
-  /* SIRA KİMDE ROZETİ */
   .turn-badge { 
     display: flex; align-items: center; gap: 10px; 
     background: #2c3e50; 
@@ -104,65 +116,95 @@ const { problem, isTeacher = false } = Astro.props;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
   }
 
-  /* TAHTA */
+  /* --- TAHTA (DÜZELTİLMİŞ & RESPONSIVE) --- */
   .go-container { 
-    display: inline-block; padding: 10px; 
+    display: block; 
+    /* Padding notasyonlar için gerekli, border-box taşmayı önler */
+    padding: 15px; 
+    box-sizing: border-box;
+    
     background-color: #eebb66; 
     border-radius: 4px; 
     box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
     border: 1px solid #d4a753; 
-    position: relative; z-index: 10; 
+    position: relative; 
+    z-index: 10; 
+    
+    /* Mobil Uyum */
     width: 100%;
-    max-width: 500px; 
-    aspect-ratio: 1 / 1; 
+    max-width: 500px; /* Masaüstü genişlik sınırı */
+    aspect-ratio: 1 / 1; /* Kare oranını zorla */
     margin: 0 auto;
-    flex-wrap: wrap; 
-    overflow: hidden
   }
-  canvas { cursor: pointer; display: block; border-radius: 2px; max-width: 100%; height: auto; }
-
-  /* ALT ÇUBUK */
-  .bottom-action-bar { width: 100%; max-width: 520px; display: flex; justify-content: flex-start; align-items: center; margin-top: 15px; position: relative; }
-  .teacher-tools-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
   
-  .divider { 
-    width: 1px; height: 25px; 
-    background: rgba(255,255,255,0.3); 
-    margin: 0 5px; 
+  canvas { 
+    cursor: pointer; 
+    display: block; 
+    width: 100% !important; 
+    height: 100% !important; 
+    /* DÜZELTME: object-fit kaldırıldı, canvas boyutu intrinsic olarak yönetilecek */
   }
+
+  /* --- KONTROLLER --- */
+  .bottom-controls {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 600px; /* Kontroller için biraz daha geniş alan */
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1px;
+  }
+
+  .teacher-group { 
+      display: flex; 
+      gap: 8px; 
+      align-items: center; 
+      flex-wrap: wrap; 
+      justify-content: center; 
+      background: rgba(44, 62, 80, 0.9); /* Koyu arka plan */
+      padding: 8px 15px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  
+  .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 2px; }
 
   /* BUTONLAR */
   .control-btn { 
-    width: 45px; height: 45px; border-radius: 50%; 
-    background: #2c3e50; 
-    border: 2px solid #34495e; 
-    color: white; 
+    width: 40px; height: 40px; border-radius: 50%; 
+    background: transparent; 
+    border: 1px solid transparent; 
+    color: #ecf0f1; 
     display: flex; align-items: center; justify-content: center; 
     cursor: pointer; transition: all 0.2s ease; 
-    font-size: 1.2rem; 
-    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-    flex-shrink: 0;
+    flex-shrink: 0; 
   }
   
-  .control-btn:hover { 
-    background: #1a252f; 
-    transform: scale(1.1); 
-    color: #fff; 
-    border-color: #2c3e50;
-  }
-  
-  .control-btn.active { 
-    background: #3498db; 
-    border-color: #2980b9; 
-    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); 
-  }
+  .control-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); color: #fff; }
+  .control-btn.active { background: #3498db; border-color: #2980b9; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
 
-  .turn-indicator { width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+  /* BOYUT SEÇİCİ BUTONLAR */
+  .size-selector { display: flex; gap: 5px; margin-right: 5px; }
+  .size-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #bdc3c7;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+  }
+  .size-btn:hover { color: #fff; background: rgba(255,255,255,0.2); }
+  .size-btn.active { background: #3498db; color: #fff; border-color: #3498db; font-weight: bold; }
+
+  .turn-indicator { width: 16px; height: 16px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
   .turn-indicator.black { background: #000; border: 1px solid rgba(255,255,255,0.2); }
   .turn-indicator.white { background: #fff; border: 1px solid #ccc; }
 
   .tooltip { position: relative; }
-  .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; white-space: nowrap; pointer-events: none; opacity: 0; animation: fadeIn 0.2s forwards; z-index: 20; }
+  .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; white-space: nowrap; pointer-events: none; opacity: 0; animation: fadeIn 0.2s forwards; z-index: 20; }
   @keyframes fadeIn { to { opacity: 1; } }
 </style>
 
@@ -179,7 +221,9 @@ const { problem, isTeacher = false } = Astro.props;
 
       // --- STATE ---
       let size = 9; 
-      const resolution = 2; const boardDisplaySize = 500; let padding = 30 * resolution; 
+      const resolution = 2; 
+      const boardDisplaySize = 500; 
+      let padding = 30 * resolution; 
       let mode = isTeacher ? 'SETUP' : 'SOLVE';
       
       let stones: any[] = []; 
@@ -192,14 +236,87 @@ const { problem, isTeacher = false } = Astro.props;
       let currentPathStack: any[] = [];       
 
       let hoverPos = { x: -1, y: -1 };
+      let isLocked = false;
 
-      canvas.width = boardDisplaySize * resolution; canvas.height = boardDisplaySize * resolution;
-      canvas.style.width = `${boardDisplaySize}px`; canvas.style.height = `${boardDisplaySize}px`;
+      // CSS width/height'i canvas'ın internal çözünürlüğünden ayırıyoruz.
+      // İç çözünürlük yüksek (netlik için), görüntülenen boyut CSS ile belirlenir.
+      const updateCanvasSize = () => {
+          canvas.width = boardDisplaySize * resolution; 
+          canvas.height = boardDisplaySize * resolution;
+      };
+      updateCanvasSize();
 
       const initStones = (newSize) => { 
           stones = Array(newSize).fill(0).map(() => Array(newSize).fill(null)); 
       };
-      initStones(size);
+      
+      // Varsayılan başlatma
+      const savedData = app.getAttribute('data-problem');
+      if (savedData) {
+        try {
+          const prob = JSON.parse(savedData);
+          size = prob.size || 9;
+          initStones(size);
+          
+          if (prob.turn) currentColor = prob.turn; else currentColor = 'black';
+
+          if (prob.initialState) {
+             initialStonesState = prob.initialState;
+             const parsedState = JSON.parse(prob.initialState);
+             if (Array.isArray(parsedState)) {
+                if (Array.isArray(parsedState[0])) stones = parsedState;
+                else (parsedState as any[]).forEach((s: any) => { if (s && s.x !== undefined) stones[s.x][s.y] = { color: s.color }; });
+             }
+          }
+          if (prob.solution) {
+              if (Array.isArray(prob.solution)) {
+                  let ptr = moveTree;
+                  prob.solution.forEach((move: any) => {
+                      const newNode = { ...move, children: [], status: null };
+                      ptr.children.push(newNode);
+                      ptr = newNode;
+                  });
+                  ptr.status = 'correct';
+              } else {
+                  moveTree = prob.solution;
+              }
+          }
+          currentNode = moveTree; 
+          if (!isTeacher) mode = 'SOLVE';
+        } catch (e) { console.error(e); }
+      } else {
+          initStones(size);
+      }
+
+      // --- TAHTA BOYUTU DEĞİŞTİRME (YENİ EKLENDİ) ---
+      const changeBoardSize = (newSize) => {
+          size = newSize;
+          initStones(size);
+          // Ağacı ve geçmişi temizle
+          moveTree = { children: [] };
+          currentNode = moveTree;
+          currentPathStack = [];
+          initialStonesState = "";
+          currentColor = 'black';
+          
+          // UI Güncelle
+          document.querySelectorAll('.size-btn').forEach(btn => {
+              if(btn.getAttribute('data-size') == newSize) btn.classList.add('active');
+              else btn.classList.remove('active');
+          });
+          
+          drawBoard();
+          updateStatusText(`${size}x${size} Tahta Hazır`, '#fff');
+      };
+
+      if (isTeacher) {
+          app.querySelectorAll('.size-btn').forEach(btn => {
+              btn.addEventListener('click', (e) => {
+                  const s = parseInt((e.target as HTMLElement).getAttribute('data-size') || "9");
+                  changeBoardSize(s);
+              });
+          });
+      }
 
       // --- GO MANTIĞI ---
       const isOnBoard = (x, y) => x >= 0 && x < size && y >= 0 && y < size;
@@ -253,43 +370,6 @@ const { problem, isTeacher = false } = Astro.props;
           return true;
       };
 
-      // --- DATA LOAD ---
-      const savedData = app.getAttribute('data-problem');
-      if (savedData) {
-        try {
-          const prob = JSON.parse(savedData);
-          size = prob.size || 9;
-          initStones(size);
-          
-          if (prob.turn) currentColor = prob.turn; else currentColor = 'black';
-
-          if (prob.initialState) {
-             initialStonesState = prob.initialState;
-             const parsedState = JSON.parse(prob.initialState);
-             if (Array.isArray(parsedState)) {
-                if (Array.isArray(parsedState[0])) stones = parsedState;
-                else (parsedState as any[]).forEach((s: any) => { if (s && s.x !== undefined) stones[s.x][s.y] = { color: s.color }; });
-             }
-          }
-          if (prob.solution) {
-              if (Array.isArray(prob.solution)) {
-                  let ptr = moveTree;
-                  prob.solution.forEach((move: any) => {
-                      const newNode = { ...move, children: [], status: null };
-                      ptr.children.push(newNode);
-                      ptr = newNode;
-                  });
-                  ptr.status = 'correct';
-              } else {
-                  moveTree = prob.solution;
-              }
-          }
-          currentNode = moveTree; 
-          if (!isTeacher) mode = 'SOLVE';
-        } catch (e) { console.error(e); }
-      }
-
-      // --- DRAW ---
       const drawBoard = () => {
         ctx.fillStyle = "#eebb66"; ctx.fillRect(0, 0, canvas.width, canvas.height);
         const cellSize = (canvas.width - padding * 2) / (size - 1);
@@ -341,8 +421,11 @@ const { problem, isTeacher = false } = Astro.props;
         ctx.restore();
       };
 
-      // --- EVENTS ---
       canvas.addEventListener('mousemove', (e) => {
+        if (mode === 'SOLVE' && isLocked) {
+            canvas.style.cursor = 'default';
+            return;
+        }
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width; const scaleY = canvas.height / rect.height;
         const mouseX = (e.clientX - rect.left) * scaleX - padding;
@@ -354,8 +437,13 @@ const { problem, isTeacher = false } = Astro.props;
       });
       canvas.addEventListener('mouseleave', () => { hoverPos = { x: -1, y: -1 }; drawBoard(); });
 
-      // --- CLICK ---
       canvas.addEventListener('click', (e) => {
+        // Kilit kontrolü (SOLVE modunda ve kilitliyse işlem yapma)
+        if (mode === 'SOLVE' && isLocked) {
+            updateStatusText("Tekrar denemek için 'Yenile' butonuna basın.", '#e74c3c');
+            return; 
+        }
+
         if (hoverPos.x === -1) return;
         const x = hoverPos.x; const y = hoverPos.y;
 
@@ -364,6 +452,7 @@ const { problem, isTeacher = false } = Astro.props;
             drawBoard();
         } 
         else if (mode === 'RECORD') { 
+            // ... (RECORD modu kodları aynı kalıyor) ...
             if (stones[x][y]) return; 
             const stateBeforeMove = JSON.stringify(stones);
             const colorBeforeMove = currentColor;
@@ -390,12 +479,14 @@ const { problem, isTeacher = false } = Astro.props;
             const nextNode = currentNode.children.find((child: any) => child.x === x && child.y === y);
 
             if (nextNode) {
+                // Hamle ağaçta varsa oynat
                 playMove(x, y, nextNode.color);
                 currentNode = nextNode;
                 currentColor = currentColor === 'black' ? 'white' : 'black';
                 drawBoard();
                 checkNodeStatus(currentNode);
 
+                // Bilgisayarın cevabı varsa oynat
                 if (currentNode.children.length > 0 && !currentNode.status) {
                     setTimeout(() => {
                         const responseNode = currentNode.children[0];
@@ -407,19 +498,38 @@ const { problem, isTeacher = false } = Astro.props;
                     }, 500); 
                 }
             } else {
+                
                 updateStatusText("Tanımsız hamle. (Yanlış olabilir)", '#e74c3c');
+                
+              
+                isLocked = true;
+                app.classList.add('locked'); 
+                
                 if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(false);
             }
         }
       });
 
+      // components/goboard.astro içindeki checkNodeStatus fonksiyonu
+
       function checkNodeStatus(node) {
           if (node.status === 'correct') {
               updateStatusText("Tebrikler! Doğru Çözüm.", '#2ecc71');
+              
+              // --- YENİ EKLENEN: DOĞRU CEVAPTA KİLİTLEME ---
+              isLocked = true;              // Tahtayı işlemlere kapat
+              app.classList.add('locked');  // Görsel efektleri ve sesi kapat
+              // ---------------------------------------------
+
               if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(true);
               if (typeof (window as any).unlockNextButton === 'function') (window as any).unlockNextButton();
+          
           } else if (node.status === 'wrong') {
-              updateStatusText("Yanlış yol! Başarısız.", '#e74c3c');
+              updateStatusText("Yanlış yol! (Yenile butonuna basınız)", '#e74c3c');
+              
+              isLocked = true; 
+              app.classList.add('locked');
+              
               if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(false);
           }
       }
@@ -503,6 +613,8 @@ const { problem, isTeacher = false } = Astro.props;
 
       app.querySelector('.resetBtn')?.addEventListener('click', () => {
          updateStatusText("", "#fff");
+         isLocked= false;
+         app.classList.remove('locked');
          if (isTeacher && mode === 'SETUP') { initStones(size); }
          else { 
              const probData = savedData ? JSON.parse(savedData) : {};
@@ -521,8 +633,7 @@ const { problem, isTeacher = false } = Astro.props;
          drawBoard();
       });
 
-      // --- EKLENEN KISIM: Global Reset Fonksiyonu ---
-      // Dışarıdan tüm boardları sıfırlamak için kullanılır.
+      // --- Global Reset Fonksiyonu ---
       if (!(window as any).resetAllBoards) {
           (window as any).resetAllBoards = () => {
               const resetButtons = document.querySelectorAll('.resetBtn');

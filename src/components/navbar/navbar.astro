@@ -85,11 +85,11 @@ const menuitems = [
 <script>
   import { supabase } from 'lib/supabase';
 
+  // --- AUTH KONTROLÜ (Aynen korundu) ---
   async function checkNavbarAuth() {
     try {
       const loginBtn = document.getElementById('nav-login-btn');
       const profileBtn = document.getElementById('nav-profile-btn');
-      // YENİ: İsim alanı
       const userNameSpan = document.getElementById('nav-user-name');
 
       if (!loginBtn || !profileBtn) return;
@@ -97,12 +97,10 @@ const menuitems = [
       const { data: { user }, error } = await supabase.auth.getUser();
 
       if (user) {
-        // 1. Önce butonları ayarla
         loginBtn.classList.add('hidden');
         profileBtn.classList.remove('hidden');
         profileBtn.style.display = 'flex'; 
 
-        // 2. Kullanıcı adını veritabanından çek
         if (userNameSpan) {
             const { data: profile } = await supabase
                 .from('agorasusers')
@@ -110,48 +108,68 @@ const menuitems = [
                 .eq('id', user.id)
                 .single();
             
-            // Profilde ad varsa onu yaz, yoksa mailin başını yaz
             const displayName = profile?.username || user.email?.split('@')[0] || "Profilim";
             
-            // Eğer isim çok uzunsa kısalt (Örn: "Mehmet Sa...")
             if (displayName.length > 15) {
                 userNameSpan.innerText = displayName.substring(0, 12) + '...';
             } else {
                 userNameSpan.innerText = displayName;
             }
         }
-
       } else {
-        // Kullanıcı yoksa
         loginBtn.classList.remove('hidden');
         profileBtn.classList.add('hidden');
       }
-
     } catch (err) {
       console.error("Navbar Script Hatası:", err);
     }
   }
 
-  // Sayfa yüklendiğinde çalıştır
   checkNavbarAuth();
 
-  // --- TEMA AYARLARI ---
+  // --- TEMA AYARLARI (GÜNCELLENEN KISIM) ---
   const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
   const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
   const themeToggleBtn = document.getElementById('theme-toggle');
 
-  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  // 1. Mevcut tercihi bul
+  const currentTheme = (() => {
+      if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
+          return localStorage.getItem('color-theme');
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+      }
+      return 'light';
+  })();
+
+  // 2. Sayfa yüklenirken doğru sınıfları ekle/çıkar
+  if (currentTheme === 'dark') {
       document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light'); // Light varsa sil
       themeToggleLightIcon?.classList.remove('hidden');
   } else {
-      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.remove('dark');  // Dark varsa sil
+      document.documentElement.classList.add('light');    // Light EKLE
       themeToggleDarkIcon?.classList.remove('hidden');
   }
 
+  // 3. Butona tıklama olayı
   themeToggleBtn?.addEventListener('click', () => {
       themeToggleDarkIcon?.classList.toggle('hidden');
       themeToggleLightIcon?.classList.toggle('hidden');
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+
+      // Eğer şu an dark ise -> light'a geç
+      if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light'); // Light sınıfını ekle
+          localStorage.setItem('color-theme', 'light');
+      } 
+      // Eğer şu an light (veya boş) ise -> dark'a geç
+      else {
+          document.documentElement.classList.remove('light'); // Light sınıfını sil
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('color-theme', 'dark');
+      }
   });
 </script>
