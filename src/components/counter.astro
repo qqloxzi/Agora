@@ -1,0 +1,119 @@
+---
+// Counter.astro
+const stats = [
+  { label: "Öğrenci", value: 14, suffix: "+" },
+  { label: "Kurs Saati", value: 12, suffix: "" },
+  { label: "Tsumego", value: 100, suffix: " parça" },
+];
+---
+
+<section class="counter-section">
+    <div class="container">
+    <h3 class="section-title">Aralık 2025'ten beri</h3>
+  <div class="container">
+    {stats.map((stat) => (
+      <div class="stat-item">
+        <div class="number" data-target={stat.value}>0</div>
+        <div class="label">{stat.label}</div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* Kapsayıcı Alan */
+  .counter-section {
+    padding: 4rem 1rem;
+    background-color: #d5d5d548; /* Açık gri arka plan */
+    font-family: system-ui, sans-serif;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  /* Her bir İstatistik Kutusu */
+  .stat-item {
+    text-align: center;
+  }
+
+  /* Büyük Rakamlar */
+  .number {
+    font-size: 4rem; /* Görseldeki gibi büyük */
+    font-weight: 700;
+    color: #111;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Alt Başlıklar */
+  .label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555; /* Daha yumuşak gri */
+    text-transform: uppercase; /* Görseldeki gibi büyük harf */
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<script>
+  // Hedef elemanları ve kapsayıcıyı seçiyoruz
+  const section = document.querySelector('.counter-section');
+  const counters = document.querySelectorAll('.number');
+
+  // Animasyon ne kadar sürsün? (ms cinsinden, örn: 2000 = 2 saniye)
+  const duration = 2000; 
+
+  const startAnimation = () => {
+    counters.forEach((counter) => {
+      // TypeScript için elemanın HTML elemanı olduğunu belirtiyoruz
+      const el = counter as HTMLElement;
+      
+      const targetAttr = el.getAttribute('data-target');
+      if (!targetAttr) return; // Hedef sayı yoksa atla
+
+      const target = parseInt(targetAttr);
+      const startTime = performance.now();
+
+      const updateCounter = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        // İlerleme durumunu 0 ile 1 arasında hesapla
+        const progress = Math.min(elapsed / duration, 1);
+
+        // "Ease-out" efekti: Başta hızlı başlar, sona doğru yavaşlar
+        // Matematiksel formül: 1 - (1 - progress)^3
+        const ease = 1 - Math.pow(1 - progress, 3);
+
+        const current = Math.floor(ease * target);
+        el.innerText = current.toString();
+
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          // Animasyon bittiğinde sayıyı net olarak eşitle
+          el.innerText = target.toString(); 
+        }
+      };
+
+      requestAnimationFrame(updateCounter);
+    });
+  };
+
+  // Sayfa kaydırılıp eleman göründüğünde tetikle
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      startAnimation();
+      observer.disconnect(); // Sadece bir kez çalışması için izlemeyi bırak
+    }
+  }, { threshold: 0.2 }); // Elemanın %20'si göründüğünde başla
+
+  if (section) {
+    observer.observe(section);
+  }
+</script>
