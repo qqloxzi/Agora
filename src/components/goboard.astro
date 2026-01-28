@@ -396,6 +396,12 @@ const { problem, isTeacher = false } = Astro.props;
         stones.forEach((row: any, x) => row.forEach((stone: any, y) => { 
             if (stone) drawStone(x, y, stone.color, cellSize, 1); 
         }));
+        if (!isLocked && hoverPos.x >= 0 && hoverPos.x < size && hoverPos.y >= 0 && hoverPos.y < size) {
+          if (!stones[hoverPos.x][hoverPos.y]) {
+            drawStone(hoverPos.x, hoverPos.y, currentColor, cellSize, 0.5);
+          }
+        }
+      
 
         if (hoverPos.x >= 0 && hoverPos.x < size && hoverPos.y >= 0 && hoverPos.y < size) {
           if (!stones[hoverPos.x][hoverPos.y]) {
@@ -405,7 +411,7 @@ const { problem, isTeacher = false } = Astro.props;
       };
 
       const drawStone = (x, y, color, cellSize, opacity) => {
-        const posX = padding + x * cellSize; const posY = padding + y * cellSize; const radius = cellSize * 0.48;
+        const posX = padding + x * cellSize; const posY = padding + y * cellSize; const radius = cellSize * 0.45;
         ctx.save(); ctx.globalAlpha = opacity;
         if (opacity === 1) { ctx.shadowColor = "rgba(0,0,0,0.3)"; ctx.shadowBlur = 3 * resolution; ctx.shadowOffsetX = 1 * resolution; ctx.shadowOffsetY = 1 * resolution; }
         ctx.beginPath(); ctx.arc(posX, posY, radius, 0, Math.PI * 2);

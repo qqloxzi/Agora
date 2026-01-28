@@ -1,20 +1,23 @@
 <!DOCTYPE html><html lang="tr"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/x-icon" href="/CircleLogo450.ico"><meta name="generator" content="Astro v5.16.6"><script>
-      const theme = (() => {
-        if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
-          return localStorage.getItem('color-theme');
-        }
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
-        }
-        return 'light';
-      })(); 
-    
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    </script><title>Giriş Yap | Agora Go Akademisi | Agora Go Akademisi</title><link rel="canonical" href="https://agoragoakademisi.com/login/"><meta name="description" content="Agora Go Akademisi, Türkiye'deki oyuncular için çevrimiçi Go eğitimi sunan bir platformdur..."><meta name="robots" content="index, follow"><meta property="og:title" content="Agora Go Akademisi - Çevrimiçi Go Eğitim Platformu"><meta property="og:type" content="website"><meta property="og:image" content="https://agoragoakademisi.com/CircleLogo450.png"><meta property="og:url" content="https://agoragoakademisi.com/login/"><meta property="og:image:url" content="https://agoragoakademisi.com/CircleLogo450.png"><meta property="og:image:alt" content="Agora Go Akademisi Ana Sayfa"><script type="application/ld+json">
+  const theme = (() => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
+      return localStorage.getItem('color-theme');
+    }
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return 'dark';
+    }
+    return 'light';
+  })(); 
+
+  // GÜNCELLENEN KISIM BURASI:
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light'); // Light varsa sil
+  } else {
+    document.documentElement.classList.remove('dark'); // Dark varsa sil
+    document.documentElement.classList.add('light');    // Light'ı EKLE
+  }
+</script><title>Giriş Yap | Agora Go Akademisi | Agora Go Akademisi</title><link rel="canonical" href="https://agoragoakademisi.com/login/"><meta name="description" content="Agora Go Akademisi, Türkiye'deki oyuncular için çevrimiçi Go eğitimi sunan bir platformdur..."><meta name="robots" content="index, follow"><meta property="og:title" content="Agora Go Akademisi - Çevrimiçi Go Eğitim Platformu"><meta property="og:type" content="website"><meta property="og:image" content="https://agoragoakademisi.com/CircleLogo450.png"><meta property="og:url" content="https://agoragoakademisi.com/login/"><meta property="og:image:url" content="https://agoragoakademisi.com/CircleLogo450.png"><meta property="og:image:alt" content="Agora Go Akademisi Ana Sayfa"><script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
@@ -22,7 +25,7 @@
       "url": "https://agoragoakademisi.com",
       "logo": "https://agoragoakademisi.com/CircleLogo450.png"
     }
-    </script><link rel="stylesheet" href="/_astro/KVKK.BoGRq2he.css">
+    </script><link rel="stylesheet" href="/_astro/KVKK.B8jRFekA.css">
 <style>.login-container[data-astro-cid-sgpqyurt]{max-width:420px;margin:5rem auto;padding:0 1rem;font-family:Inter,sans-serif}.login-header[data-astro-cid-sgpqyurt] h1[data-astro-cid-sgpqyurt]{font-size:2rem;text-align:left;margin-bottom:2.5rem;color:#1a1a1a;font-weight:700}.btn-theme[data-astro-cid-sgpqyurt],.submit-btn[data-astro-cid-sgpqyurt]{width:100%;padding:.85rem;border:none;border-radius:9999px;background:#1e293b;color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:opacity .2s,transform .1s;margin-bottom:.75rem}.btn-theme[data-astro-cid-sgpqyurt]:hover,.submit-btn[data-astro-cid-sgpqyurt]:hover{opacity:.9}.separator[data-astro-cid-sgpqyurt]{text-align:center;margin:1.5rem 0;border-bottom:1px solid #d1d5db;line-height:.1em}.separator[data-astro-cid-sgpqyurt] span[data-astro-cid-sgpqyurt]{background:#dfe1e5;padding:0 15px;color:#6b7280;font-size:.7rem;font-weight:700}.hidden[data-astro-cid-sgpqyurt]{display:none}.input-group[data-astro-cid-sgpqyurt]{margin-bottom:1.2rem}label[data-astro-cid-sgpqyurt]{display:block;margin-bottom:.4rem;font-size:.85rem;font-weight:600;color:#334155}input[data-astro-cid-sgpqyurt]{width:100%;padding:.75rem;border:1px solid #cbd5e1;border-radius:12px;font-size:.95rem}.back-link[data-astro-cid-sgpqyurt]{background:none;border:none;color:#64748b;margin-top:1.5rem;cursor:pointer;font-size:.85rem;width:100%;text-decoration:underline}#message[data-astro-cid-sgpqyurt]{margin-top:1.2rem;text-align:center;font-size:.9rem;font-weight:500}.w-5[data-astro-cid-sgpqyurt],.h-5[data-astro-cid-sgpqyurt]{width:1.25rem;height:1.25rem}
 </style></head> <body class="bg-[#DFE1E5] dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300"> <header class="fixed top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm transition-all"> <div class="max-w-screen-xl mx-auto px-5">  <div class="py-4 lg:py-5">  <div class="flex flex-col lg:flex-row w-full items-center justify-between"> <div class="flex items-center justify-between w-full lg:w-1/4"> <a href="/" class="flex items-center"> <img src="/transparentAgora.svg" alt="Agora Logo" class="w-24 h-auto object-contain"> </a> <div class="block lg:hidden"> <button id="astronav-menu" aria-label="Toggle Menu">  <svg fill="currentColor" class="w-6 h-6 text-gray-800 dark:text-gray-200" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"> <title>Toggle Menu</title> <path class="astronav-close-icon astronav-toggle hidden" fill-rule="evenodd" clip-rule="evenodd" d="M18.278 16.864a1 1 0 01-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 01-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 011.414-1.414l4.829 4.828 4.828-4.828a1 1 0 111.414 1.414l-4.828 4.829 4.828 4.828z"></path> <path class="astronav-open-icon astronav-toggle" fill-rule="evenodd" d="M4 5h16a1 1 0 010 2H4a1 1 0 110-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2zm0 6h16a1 1 0 010 2H4a1 1 0 010-2z"></path> </svg>  </button> </div> </div> <nav class="astronav-items astronav-toggle hidden w-full lg:flex lg:flex-1 justify-center mt-2 lg:mt-0">  <ul class="flex flex-col lg:flex-row lg:gap-8 items-center"> <li> <a href="/ligler" class="py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium transition-colors whitespace-nowrap"> Ligler </a> </li><li> <a href="/pricing" class="py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium transition-colors whitespace-nowrap"> Kurs Planları </a> </li><li> <a href="/about" class="py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium transition-colors whitespace-nowrap"> Hakkımızda </a> </li><li> <a href="/blog" class="py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium transition-colors whitespace-nowrap"> Kütüphane </a> </li><li> <a href="/contact" class="py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium transition-colors whitespace-nowrap"> İletişim </a> </li><li> <a href="/goagaci" class="py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium transition-colors whitespace-nowrap"> Go Ağacı </a> </li> <li class="lg:hidden mt-2 pt-2 border-t border-gray-100 dark:border-gray-800 w-full text-center"> <a href="/profile" class="block py-2 text-blue-600 dark:text-blue-400 font-bold">Profilim</a> </li> </ul>  </nav> <div class="hidden lg:flex lg:w-1/4 justify-end items-center gap-3"> <div id="nav-auth-container" class="flex items-center"> <a id="nav-login-btn" href="/signup" class="px-4 py-2 text-sm font-medium text-white bg-slate-800 hover:bg-slate-700 rounded-full transition-colors">
 Giriş Yap
@@ -193,7 +196,7 @@ function handleCloseOnClick() {
       });
     });
 }
-})();</script> </div>  </div> </header> <div class="h-20 lg:h-24"></div> <script type="module" src="/_astro/navbar.astro_astro_type_script_index_0_lang.BHPRcVzK.js"></script> <main>  <div class="login-container" data-astro-cid-sgpqyurt> <div class="login-header" data-astro-cid-sgpqyurt> <h1 data-astro-cid-sgpqyurt>Giriş Yap</h1> </div> <div id="selection-view" class="options-view" data-astro-cid-sgpqyurt> <button id="show-email-form" class="btn-theme" data-astro-cid-sgpqyurt>
+})();</script> </div>  </div> </header> <div class="h-20 lg:h-24"></div> <script type="module" src="/_astro/navbar.astro_astro_type_script_index_0_lang.8G7YReV5.js"></script> <main>  <div class="login-container" data-astro-cid-sgpqyurt> <div class="login-header" data-astro-cid-sgpqyurt> <h1 data-astro-cid-sgpqyurt>Giriş Yap</h1> </div> <div id="selection-view" class="options-view" data-astro-cid-sgpqyurt> <button id="show-email-form" class="btn-theme" data-astro-cid-sgpqyurt>
 E-posta ile giriş yap
 </button> <div class="separator" data-astro-cid-sgpqyurt><span data-astro-cid-sgpqyurt>VEYA</span></div> <button id="google-login" class="btn-theme" data-astro-cid-sgpqyurt> <img src="https://www.google.com/favicon.ico" alt="Google" class="w-5 h-5" data-astro-cid-sgpqyurt>
 Google ile giriş yap
