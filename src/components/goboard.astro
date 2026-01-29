@@ -87,95 +87,119 @@ const { problem, isTeacher = false } = Astro.props;
   }
 
   .go-app { 
-    text-align: center; 
-    margin-bottom: 2rem; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    position: relative; 
+    justify-content: flex-start; /* Mobilde üstten başlasın */
     width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 10px 0;
+    box-sizing: border-box;
+    /* Mobilde içerik taşarsa yatay kaydırmayı engelle */
+    overflow-x: hidden; 
   }
   
   .status { 
-    font-size: 1.1rem; 
+    font-size: 1rem; 
     font-weight: bold; 
-    margin-bottom: 5px; 
-    height: 1.5em; 
+    margin-bottom: 8px; 
+    min-height: 1.5em; /* Titremeyi önlemek için min-height */
     color: var(--status-text); 
     text-shadow: var(--status-shadow); 
     transition: color 0.3s ease; 
   }
 
-  .top-info-bar { margin-bottom: 10px; display: flex; justify-content: center; width: 100%; }
+  .top-info-bar { margin-bottom: 5px; display: flex; justify-content: center; width: 100%; }
   
   .turn-badge { 
-    display: flex; align-items: center; gap: 10px; 
+    display: flex; align-items: center; gap: 8px; 
     background: #2c3e50; 
     border: 1px solid #34495e; 
-    padding: 6px 16px; border-radius: 20px; 
+    padding: 4px 12px; border-radius: 15px; 
     color: #fff; 
-    font-weight: 600; font-size: 0.95rem; 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3); 
+    font-weight: 600; font-size: 0.85rem; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3); 
   }
 
-  /* --- TAHTA (DÜZELTİLMİŞ & RESPONSIVE) --- */
+  /* --- TAHTA (MOBİL UYUMLU & KARE) --- */
   .go-container { 
     display: block; 
-    /* Padding notasyonlar için gerekli, border-box taşmayı önler */
-    padding: 15px; 
+    padding: 4px; /* Çerçeveyi incelttik (GoMagic tarzı) */
     box-sizing: border-box;
     
-    background-color: #eebb66; 
+    background-color: #dc9e42; /* Daha canlı ahşap rengi */
+    /* Hafif doku efekti */
+    background-image: linear-gradient(45deg, rgba(0,0,0,0.03) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.03) 75%, rgba(0,0,0,0.03)), 
+                      linear-gradient(45deg, rgba(0,0,0,0.03) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.03) 75%, rgba(0,0,0,0.03));
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+
     border-radius: 4px; 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
-    border: 1px solid #d4a753; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+    border: 1px solid #b57b2e; 
     position: relative; 
     z-index: 10; 
     
-    /* Mobil Uyum */
-    width: 100%;
-    max-width: 500px; /* Masaüstü genişlik sınırı */
-    aspect-ratio: 1 / 1; /* Kare oranını zorla */
-    margin: 0 auto;
+    /* --- ESNEME VE KAYMA ÖNLEYİCİ AYARLAR --- */
+    width: 96vw; /* Mobilde ekranın %96'sını kapla */
+    max-width: 480px; /* Masaüstü maksimum genişlik */
+    
+    aspect-ratio: 1 / 1; /* KESİN KARE ORANI (Esnemeyi engeller) */
+    
+    /* Yükseklik sınırlandırması: Ekranın %60-65'inden büyük olma */
+    max-height: 65vh;
+    
+    /* Eğer yükseklik sınırlanırsa genişliği otomatik daralt */
+    height: auto; 
+    margin: 0 auto; 
   }
   
+  /* Ekran çok basıksa (landscape mobile) tahtayı daha da küçült */
+  @media (max-height: 600px) {
+      .go-container {
+          max-height: 80vh; /* Yaty ekranda biraz daha yer kaplayabilir */
+          width: auto;      /* Yüksekliğe göre genişlik al */
+          aspect-ratio: 1 / 1;
+      }
+  }
+
   canvas { 
-    cursor: pointer; 
     display: block; 
     width: 100% !important; 
     height: 100% !important; 
-    /* DÜZELTME: object-fit kaldırıldı, canvas boyutu intrinsic olarak yönetilecek */
+    touch-action: none; /* ÖNEMLİ: Tahtaya dokunurken sayfanın kaymasını engeller */
   }
 
   /* --- KONTROLLER --- */
   .bottom-controls {
-    margin-top: 40px;
+    margin-top: 15px; 
     width: 100%;
-    max-width: 600px; /* Kontroller için biraz daha geniş alan */
     display: flex;
     justify-content: center;
-    padding-bottom: 1px;
+    padding-bottom: 20px; 
   }
 
   .teacher-group { 
       display: flex; 
-      gap: 8px; 
+      gap: 10px; 
       align-items: center; 
       flex-wrap: wrap; 
       justify-content: center; 
-      background: rgba(44, 62, 80, 0.9); /* Koyu arka plan */
-      padding: 8px 15px;
-      border-radius: 30px;
+      background: rgba(44, 62, 80, 0.95); 
+      padding: 10px 15px;
+      border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      max-width: 95%; /* Mobilde taşmayı önle */
   }
   
-  .divider { width: 1px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 2px; }
+  .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.2); margin: 0 4px; }
 
   /* BUTONLAR */
   .control-btn { 
-    width: 40px; height: 40px; border-radius: 50%; 
+    width: 42px; height: 42px; /* Mobilde parmakla basmak kolay olsun */
+    border-radius: 50%; 
     background: transparent; 
     border: 1px solid transparent; 
     color: #ecf0f1; 
@@ -184,17 +208,17 @@ const { problem, isTeacher = false } = Astro.props;
     flex-shrink: 0; 
   }
   
-  .control-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.1); color: #fff; }
-  .control-btn.active { background: #3498db; border-color: #2980b9; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
+  .control-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.05); color: #fff; }
+  .control-btn.active { background: #3498db; border-color: #2980b9; box-shadow: 0 0 12px rgba(52, 152, 219, 0.6); }
 
-  /* BOYUT SEÇİCİ BUTONLAR */
-  .size-selector { display: flex; gap: 5px; margin-right: 5px; }
+  /* BOYUT SEÇİCİ */
+  .size-selector { display: flex; gap: 4px; margin-right: 4px; }
   .size-btn {
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2);
       color: #bdc3c7;
       border-radius: 4px;
-      padding: 4px 8px;
+      padding: 6px 8px;
       font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.2s;
@@ -202,12 +226,12 @@ const { problem, isTeacher = false } = Astro.props;
   .size-btn:hover { color: #fff; background: rgba(255,255,255,0.2); }
   .size-btn.active { background: #3498db; color: #fff; border-color: #3498db; font-weight: bold; }
 
-  .turn-indicator { width: 16px; height: 16px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-  .turn-indicator.black { background: #000; border: 1px solid rgba(255,255,255,0.2); }
-  .turn-indicator.white { background: #fff; border: 1px solid #ccc; }
+  .turn-indicator { width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+  .turn-indicator.black { background: #000; border: 1px solid rgba(255,255,255,0.3); }
+  .turn-indicator.white { background: #fff; border: 1px solid #999; }
 
   .tooltip { position: relative; }
-  .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: #fff; padding: 5px 10px; border-radius: 6px; font-size: 0.75rem; white-space: nowrap; pointer-events: none; opacity: 0; animation: fadeIn 0.2s forwards; z-index: 20; }
+  .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 135%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; white-space: nowrap; pointer-events: none; opacity: 0; animation: fadeIn 0.2s forwards; z-index: 20; }
   @keyframes fadeIn { to { opacity: 1; } }
 </style>
 
@@ -632,15 +656,29 @@ const { problem, isTeacher = false } = Astro.props;
           app.querySelector('.recordBtn')?.addEventListener('click', () => updateUI('RECORD'));
           
           app.querySelector('.exportBtn')?.addEventListener('click', () => { 
+            
+            const title = prompt("Soru Başlığı (Title):", "Yeni Go Sorusu") || "İsimsiz Soru";
+            const category = prompt("Kategori (örn: Yaşam/Ölüm):", "Genel") || "Genel";
+            const description = prompt("Açıklama (Description):", "Siyah oynar ve kazanır.") || "";
             const data = { 
                 id: `prob-${Date.now()}`, 
                 size, 
                 labels: JSON.stringify(labels),
                 turn: recordingStartColor,
+                title: title,             
+                category: category,       
+                description: description,
                 initialState: initialStonesState || JSON.stringify(stones), 
                 solution: moveTree 
             }; 
-            console.log(JSON.stringify(data, null, 2)); alert("Ağaç yapısı (Tree) Console'a yazdırıldı!");
+            const jsonString = JSON.stringify(data, null, 2);
+
+            // 3. Regex ile Key'lerin tırnaklarını kaldır ("id": -> id:)
+            // Bu regex: "kelime": yapısını bulur ve kelime: ile değiştirir.
+            const jsObjectString = jsonString.replace(/"(\w+)":/g, '$1:');
+
+            console.log(jsObjectString); 
+            alert("TypeScript formatında veri hazır! Console'u (F12) açıp kopyalayabilirsiniz.");
           });
           
           const colorBtn = app.querySelector('.colorToggleBtn');
