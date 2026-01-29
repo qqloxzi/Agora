@@ -229,8 +229,7 @@ const { problem, isTeacher = false } = Astro.props;
       let padding = 30 * resolution; 
       let mode = isTeacher ? 'SETUP' : 'SOLVE';
       
-      // --- DÜZELTME 1: Değişken Tanımları ---
-      let labels: any[] = [];  // TİP HATASI DÜZELTİLDİ
+      let labels: any[] = []; 
       let isLabelMode = false; 
       let labelCounter = 1;  
 
@@ -241,8 +240,9 @@ const { problem, isTeacher = false } = Astro.props;
 
       let moveTree: any = { children: [] }; 
       let currentNode: any = moveTree;      
-      let currentPathStack: any[] = [];       
-
+      let currentPathStack: any[] = [];
+      
+      let hasSolution = false;
       let hoverPos = { x: -1, y: -1 };
       let isLocked = false;
 
@@ -257,7 +257,17 @@ const { problem, isTeacher = false } = Astro.props;
           labels = Array(newSize).fill(0).map(() => Array(newSize).fill(null));
       };
       
-      // Varsayılan başlatma
+      // --- KİLİT AÇMA (Safe Unlock) ---
+      const safeUnlock = () => {
+          if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(true);
+          if (typeof (window as any).unlockNextButton === 'function') (window as any).unlockNextButton();
+
+          setTimeout(() => {
+              if (typeof (window as any).unlockNextButton === 'function') (window as any).unlockNextButton();
+          }, 500);
+      };
+
+      // --- VERİ YÜKLEME ---
       const savedData = app.getAttribute('data-problem');
       if (savedData) {
         try {
@@ -265,6 +275,9 @@ const { problem, isTeacher = false } = Astro.props;
           size = prob.size || 9;
           initStones(size);
           
+          if (prob.labels) {
+            labels = typeof prob.labels === 'string' ? JSON.parse(prob.labels) : prob.labels;
+          }
           if (prob.turn) currentColor = prob.turn; else currentColor = 'black';
 
           if (prob.initialState) {
@@ -295,7 +308,17 @@ const { problem, isTeacher = false } = Astro.props;
           initStones(size);
       }
 
-      // --- TAHTA BOYUTU DEĞİŞTİRME ---
+      // --- ÇÖZÜM VAR MI? ---
+      if (moveTree) {
+          if (Array.isArray(moveTree) && moveTree.length > 0) hasSolution = true;
+          else if (moveTree.children && moveTree.children.length > 0) hasSolution = true;
+      }
+
+      if (!isTeacher && !hasSolution) {
+          updateStatusText("Serbest Analiz Modu (Cevap gerekmez)", '#3498db');
+          safeUnlock(); 
+      }
+
       const changeBoardSize = (newSize) => {
           size = newSize;
           initStones(size);
@@ -323,7 +346,7 @@ const { problem, isTeacher = false } = Astro.props;
           });
       }
 
-      // --- GO MANTIĞI ---
+      // --- GO OYUN MANTIĞI ---
       const isOnBoard = (x, y) => x >= 0 && x < size && y >= 0 && y < size;
 
       const getLiberties = (x, y, color, checked = new Set()) => {
@@ -398,7 +421,6 @@ const { problem, isTeacher = false } = Astro.props;
             }); });
         }
         
-        // --- Etiketleri Çiz ---
         ctx.fillStyle = "#000"; 
         ctx.font = `bold ${cellSize * 0.5}px sans-serif`;
         ctx.textAlign = 'center';
@@ -467,7 +489,6 @@ const { problem, isTeacher = false } = Astro.props;
         if (hoverPos.x === -1) return;
         const x = hoverPos.x; const y = hoverPos.y;
         
-        // --- Etiketleme Mantığı ---
         if (isLabelMode) {
             if (labels[x][y]) {
                 labels[x][y] = null;
@@ -506,6 +527,15 @@ const { problem, isTeacher = false } = Astro.props;
             drawBoard();
         } 
         else if (mode === 'SOLVE') {
+            if (!hasSolution) {
+                 if (stones[x][y]) return;
+                 stones[x][y] = { color: currentColor };
+                 currentColor = currentColor === 'black' ? 'white' : 'black';
+                 drawBoard();
+                 updateStatusText("Serbest Analiz Modu", '#3498db');
+                 return; 
+            }
+
             const nextNode = currentNode.children.find((child: any) => child.x === x && child.y === y);
 
             if (nextNode) {
@@ -513,9 +543,11 @@ const { problem, isTeacher = false } = Astro.props;
                 currentNode = nextNode;
                 currentColor = currentColor === 'black' ? 'white' : 'black';
                 drawBoard();
-                checkNodeStatus(currentNode);
+                
+                checkNodeStatus(currentNode); // Hamle yapar yapmaz kontrol et!
 
-                if (currentNode.children.length > 0 && !currentNode.status) {
+                // Bilgisayarın cevabı var mı?
+                if (currentNode.children && currentNode.children.length > 0 && !currentNode.status) {
                     setTimeout(() => {
                         const responseNode = currentNode.children[0];
                         playMove(responseNode.x, responseNode.y, responseNode.color);
@@ -534,21 +566,38 @@ const { problem, isTeacher = false } = Astro.props;
         }
       });
 
+      // --- DÜZELTME BURADA: STATÜ KONTROLÜNÜ GÜÇLENDİRDİK ---
       function checkNodeStatus(node) {
+          // 1. Öğretmen "Doğru" işaretlediyse -> DOĞRU
           if (node.status === 'correct') {
-              updateStatusText("Tebrikler! Doğru Çözüm.", '#2ecc71');
-              isLocked = true;              
-              app.classList.add('locked');  
-
-              if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(true);
-              if (typeof (window as any).unlockNextButton === 'function') (window as any).unlockNextButton();
-          
-          } else if (node.status === 'wrong') {
-              updateStatusText("Yanlış yol! (Yenile butonuna basınız)", '#e74c3c');
-              isLocked = true; 
-              app.classList.add('locked');
-              if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(false);
+              finalizeSuccess();
+              return;
+          } 
+          // 2. Öğretmen "Yanlış" işaretlediyse -> YANLIŞ
+          if (node.status === 'wrong') {
+              finalizeFail();
+              return;
           }
+
+          // 3. Yolun sonuna geldik mi? (Başka hamle yoksa)
+          // Eğer yol bittiyse ve "Yanlış" denmediyse, DOĞRU kabul ediyoruz.
+          if (!node.children || node.children.length === 0) {
+              finalizeSuccess();
+          }
+      }
+
+      function finalizeSuccess() {
+          updateStatusText("Tebrikler! Doğru Çözüm.", '#2ecc71');
+          isLocked = true;              
+          app.classList.add('locked');  
+          safeUnlock();
+      }
+
+      function finalizeFail() {
+          updateStatusText("Yanlış yol! (Yenile butonuna basınız)", '#e74c3c');
+          isLocked = true; 
+          app.classList.add('locked');
+          if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(false);
       }
 
       function updateStatusText(text, color) {
@@ -586,6 +635,7 @@ const { problem, isTeacher = false } = Astro.props;
             const data = { 
                 id: `prob-${Date.now()}`, 
                 size, 
+                labels: JSON.stringify(labels),
                 turn: recordingStartColor,
                 initialState: initialStonesState || JSON.stringify(stones), 
                 solution: moveTree 
@@ -649,13 +699,20 @@ const { problem, isTeacher = false } = Astro.props;
                  else { initStones(size); if(Array.isArray(parsed)) (parsed as any[]).forEach((s: any) => {if(s) stones[s.x][s.y] = {color:s.color}}); }
              } else { initStones(size); }
              
+             if (probData.labels) {
+                 labels = typeof probData.labels === 'string' ? JSON.parse(probData.labels) : probData.labels;
+             }
              currentNode = moveTree; 
              currentPathStack = [];
+             
+             if (!isTeacher && !hasSolution) {
+                 updateStatusText("Serbest Analiz Modu", '#3498db');
+                 safeUnlock();
+             }
          }
          drawBoard();
       });
 
-      // --- DÜZELTME 2: Buton Listener'ı İçeri Taşındı ---
       const labelBtn = app.querySelector('.labelBtn');
       if (labelBtn) {
           labelBtn.addEventListener('click', () => {
@@ -671,7 +728,6 @@ const { problem, isTeacher = false } = Astro.props;
           });
       }
 
-      // --- Global Reset Fonksiyonu ---
       if (!(window as any).resetAllBoards) {
           (window as any).resetAllBoards = () => {
               const resetButtons = document.querySelectorAll('.resetBtn');
