@@ -240,18 +240,23 @@ const { problem, isTeacher = false } = Astro.props;
     document.querySelectorAll('.go-app').forEach(app => {
       if (app.getAttribute('data-initialized')) return;
       
+      
       const canvas = app.querySelector('.goBoard') as HTMLCanvasElement;
       const statusDiv = app.querySelector('.status') as HTMLElement;
       const isTeacher = app.getAttribute('data-teacher') === 'true';
       const ctx = canvas.getContext('2d', { alpha: false });
       if (!ctx) return;
+      
 
-      // --- STATE ---
+      
       let size = 9; 
       const resolution = 2; 
       const boardDisplaySize = 500; 
       let padding = 30 * resolution; 
       let mode = isTeacher ? 'SETUP' : 'SOLVE';
+
+      
+      let boardHistory: any[]= [];
       
       let labels: any[] = []; 
       let isLabelMode = false; 
@@ -283,19 +288,57 @@ const { problem, isTeacher = false } = Astro.props;
       
       // --- KİLİT AÇMA (Safe Unlock) ---
       const safeUnlock = () => {
-          if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(true);
-          if (typeof (window as any).unlockNextButton === 'function') (window as any).unlockNextButton();
+    console.log("Kilit açma sinyali gönderildi.");
 
-          setTimeout(() => {
-              if (typeof (window as any).unlockNextButton === 'function') (window as any).unlockNextButton();
-          }, 500);
-      };
+    // Yöntem 1: Özel bir Event fırlat (En temiz yöntem)
+    // Sayfanın herhangi bir yerinden bu event dinlenebilir.
+    window.dispatchEvent(new CustomEvent('unlock-next-problem'));
+
+    // Yöntem 2: Doğrudan DOM Manipülasyonu (Garanti Yöntem)
+    // Sayfadaki "next" butonunu ID veya Class ile bulmaya çalış
+    const nextBtns = document.querySelectorAll('#nextBtn, .next-problem-btn, [data-action="next"]');
+    
+    nextBtns.forEach(btn => {
+        if (btn instanceof HTMLButtonElement || btn instanceof HTMLAnchorElement) {
+            btn.removeAttribute('disabled');
+            btn.classList.remove('disabled', 'opacity-50', 'pointer-events-none', 'cursor-not-allowed');
+            // Eğer buton görünmezse görünür yap
+            btn.style.display = ''; 
+        }
+    });
+
+    try {
+        if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(true);
+    } catch(e) { console.log("Eski fonksiyon bulunamadı"); }
+};
 
       // --- VERİ YÜKLEME ---
       const savedData = app.getAttribute('data-problem');
       if (savedData) {
         try {
           const prob = JSON.parse(savedData);
+          let hasActualSolution = false;
+    if (prob.solution) {
+        if (Array.isArray(prob.solution) && prob.solution.length > 0) {
+            hasActualSolution = true;
+        } else if (prob.solution.children && prob.solution.children.length > 0) {
+            hasActualSolution = true;
+        }
+        if (!isTeacher && !hasActualSolution) {
+    // Biraz gecikmeli çalıştır ki sayfa tam yüklensin
+    setTimeout(() => {
+        updateStatusText("Bilgi: Analiz Modu (Cevap gerekmez)", '#3498db');
+        hasSolution = false;
+        safeUnlock();
+    }, 100); 
+}
+    }
+
+    if (!isTeacher && !hasActualSolution) {
+        updateStatusText("Bilgi Notu: Analiz Modu", '#3498db');
+        hasSolution = false; // Global değişkeni güncelle
+        safeUnlock();        // Kilidi aç
+    }
           size = prob.size || 9;
           initStones(size);
           
@@ -399,28 +442,48 @@ const { problem, isTeacher = false } = Astro.props;
       };
 
       const playMove = (x, y, color) => {
-          if (stones[x][y]) return false;
-          stones[x][y] = { color };
-          let captured = false;
-          const opponent = color === 'black' ? 'white' : 'black';
-          const neighbors = [[x+1, y], [x-1, y], [x, y+1], [x, y-1]];
+    if (stones[x][y]) return false;
 
-          neighbors.forEach(([nx, ny]) => {
-              if (isOnBoard(nx, ny) && stones[nx][ny] && stones[nx][ny].color === opponent) {
-                  if (getLiberties(nx, ny, opponent) === 0) {
-                      removeGroup(nx, ny, opponent);
-                      captured = true;
-                  }
-              }
-          });
+    // 1. Mevcut durumun yedeğini al (Hamle geçersizse geri döneceğiz)
+    const originalStones = JSON.stringify(stones);
+    
+    // 2. Hamleyi simüle et
+    stones[x][y] = { color };
+    let capturedAny = false;
+    const opponent = color === 'black' ? 'white' : 'black';
+    const neighbors = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]];
 
-          if (!captured && getLiberties(x, y, color) === 0) {
-              stones[x][y] = null;
-              updateStatusText("İntihar hamlesi yasak!", "#e74c3c");
-              return false;
-          }
-          return true;
-      };
+    neighbors.forEach(([nx, ny]) => {
+        if (isOnBoard(nx, ny) && stones[nx][ny] && stones[nx][ny].color === opponent) {
+            if (getLiberties(nx, ny, opponent) === 0) {
+                removeGroup(nx, ny, opponent);
+                capturedAny = true;
+            }
+        }
+    });
+
+    // 3. İntihar Kontrolü
+    if (!capturedAny && getLiberties(x, y, color) === 0) {
+        stones = JSON.parse(originalStones);
+        updateStatusText("İntihar hamlesi yasak!", "#e74c3c");
+        return false;
+    }
+
+    // 4. KO KONTROLÜ (Kritik Nokta)
+    const newStateString = JSON.stringify(stones);
+    if (boardHistory.length > 0 && boardHistory[boardHistory.length - 1] === newStateString) {
+        stones = JSON.parse(originalStones); // Tahtayı eski haline getir
+        updateStatusText("Ko Kuralı: Aynı pozisyona dönülemez!", "#e74c3c");
+        return false;
+    }
+
+    // 5. Hamle geçerli: Geçmişi güncelle
+    boardHistory.push(originalStones);
+    // Hafızayı şişirmemek için sadece son durumu tutmak yeterlidir (Basit Ko)
+    if (boardHistory.length > 2) boardHistory.shift(); 
+
+    return true;
+};
 
       const drawBoard = () => {
         ctx.fillStyle = "#eebb66"; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -552,13 +615,14 @@ const { problem, isTeacher = false } = Astro.props;
         } 
         else if (mode === 'SOLVE') {
             if (!hasSolution) {
-                 if (stones[x][y]) return;
-                 stones[x][y] = { color: currentColor };
-                 currentColor = currentColor === 'black' ? 'white' : 'black';
-                 drawBoard();
-                 updateStatusText("Serbest Analiz Modu", '#3498db');
-                 return; 
-            }
+     // DÜZELTME: playMove fonksiyonunu çağırarak kuralları (taş yeme, intihar) işlet
+     if (playMove(x, y, currentColor)) {
+         currentColor = currentColor === 'black' ? 'white' : 'black';
+         drawBoard();
+         updateStatusText("Serbest Analiz Modu", '#3498db');
+     }
+     return; 
+}
 
             const nextNode = currentNode.children.find((child: any) => child.x === x && child.y === y);
 
@@ -724,6 +788,7 @@ const { problem, isTeacher = false } = Astro.props;
          labelCounter = 1; 
          isLabelMode = false;
          app.querySelector('.labelBtn')?.classList.remove('active');
+         boardHistory = []; 
          
          if (isTeacher && mode === 'SETUP') { initStones(size); }
          else { 
