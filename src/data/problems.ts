@@ -28,8 +28,10 @@ export const problemSet: Problem[] = [
     turn: "white",
     title: "Kurallar",
     initialState: '[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"black\"},null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]',      
-     solution:[],
-  },
+     solution: []
+    
+},
+  
  {
     id: "2",
     category: "Kurallar",
@@ -208,7 +210,7 @@ export const problemSet: Problem[] = [
     ]
   }
 },{
-  id: "prob-1769720964400",
+  id: "9",
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
@@ -220,7 +222,7 @@ export const problemSet: Problem[] = [
   
 },
 {
-  id: "prob-1769721862363",
+  id: "10",
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
@@ -286,17 +288,52 @@ export const problemSet: Problem[] = [
     ]
   }
 },
- {
-  id: "prob-1769723681623",
+{
+  id: "11",
   size: 9,
-  labels: "[[9,7,5,3,1,null,null,null,null],[10,null,6,4,2,null,null,null,null],[11,8,null,null,null,null,null,null,null],[null,null,null,16,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,12,13],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,14,15]]",
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "black",
-  title: "Alan",
+  title: "Oyun Sonu",
   category: "Kurallar",
-  description: "Siyah ve beyaz tahtadaki alanı paylaştıktan sonra iki taraf da sahip oldukları alanları ve esirleri sayarak oyuny bitirirler.",
-  initialState: "[[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,{\"color\":\"black\"},null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,{\"color\":\"white\"}],[{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},null],[{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"}],[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},null,null]]",
+  description: "Kendi alanımıza oynarsak: Kendi puanımızı (boşluğumuzu) doldurur, 1 puan kaybederiz. Rakibin alanına oynarsak: Taşımız orada yaşayamaz, rakibe bedavadan esir (puan) veririz.Yapacak kârlı hamlemiz kalmadığında: İkimiz de sırayla Pas deriz ve oyun biter, sayıma geçeriz.",
+  initialState: "[[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null],[{\"color\":\"black\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null,null]]",
   solution: {
     children: []
   }
 },
+{
+  id: "12",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,1,3,5],[null,null,null,null,null,null,2,4,6],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,8,7,null,null,null,null],[null,null,9,null,null,null,null,null,null],[12,11,10,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Oyun Sonu Alan",
+  category: "Kurallar",
+  description: " Oyun sonunda buna benzer tahtalar göreceğiz. Taşlarınla etrafını tamamen çevirdiğin her boş nokta sana 1 puan kazandırır. Amaç en çok taşı yemek değil, en geniş boş alanı kuşatmaktır ",
+  initialState: "[[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null],[{\"color\":\"black\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null,null]]",
+  solution: {
+    children: []
+  }
+},
+{
+  id: "13",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Teşekkürler",
+  category: "Kurallar",
+  description: "Go'yu öğrenmenin en doğal yolu oyun onamaktan geçiyor, isterseniz kütüphaneden oyun oynayabileceğiniz web sitelere, mobil uygulamalara bakabilirsiniz. ",
+  initialState: "[[null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"}],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 4,
+        y: 4,
+        color: "white",
+        children: [],
+        status: "correct"
+      }
+    ]
+  }
+}
+
 ];

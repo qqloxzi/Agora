@@ -4,6 +4,15 @@ import GoBoard from '../components/goboard.astro';
 import { problemSet } from '../data/problems';
 import Layout from "@layouts/Layout.astro";
 
+// --- ÇÖZÜM KONTROL FONKSİYONU ---
+// Bu fonksiyon sorunun çözümünün dolu olup olmadığını kontrol eder.
+const checkHasSolution = (p) => {
+  if (!p.solution) return false;
+  if (Array.isArray(p.solution)) return p.solution.length > 0;
+  if (p.solution.children) return p.solution.children.length > 0;
+  return false;
+};
+
 // --- MÜFREDAT YAPISI ---
 const treeColumns = [
   {
@@ -78,7 +87,6 @@ const getCategoryStyle = (cat) => {
   <div class="page-wrapper">
     
     <h1 class="main-title">Go Ağacı</h1>
-    <p class="subtitle">Sol menüden konuları inceleyebilir, sağ taraftaki ağaçtan ilerleyebilirsiniz.</p>
 
     <div id="level-map" class="content-grid">
       
@@ -160,7 +168,7 @@ const getCategoryStyle = (cat) => {
       <div class="game-nav">
         <button id="nav-back-btn" class="back-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-          Haritaya Dön
+          Geri
         </button>
         <div style="text-align: right;">
            <h2 id="current-set-title">SET ADI</h2>
@@ -170,34 +178,30 @@ const getCategoryStyle = (cat) => {
 
       <div id="problem-container">
         {problemSet.map((p, index) => (
-          <div class="problem-card" data-index={index} data-category={p.category} style="display: none;">
+          <div 
+            class="problem-card" 
+            data-index={index} 
+            data-category={p.category} 
+            data-has-solution={checkHasSolution(p).toString()} 
+            style="display: none;"
+          >
             <div class="header">
               <h3>{p.title}</h3>
               <span class="count-badge">Soru {index + 1}</span>
             </div>
             
             <div class="board-layout">
-        
-        {/* Senin istediğin sol metin kutusu */}
-        <div class="info-sidebar">
-          <h4 class="info-title">KUtucuk</h4>
-          <p class="info-desc">{p.description}</p>
-        </div>
+                <div class="info-sidebar">
+                  <h4 class="info-title">AÇIKLAMA</h4>
+                  <p class="info-desc">{p.description}</p>
+                </div>
 
-        {/* Go Tahtası buraya taşındı */}
-        <GoBoard problem={p} isTeacher={false} />
-        
-      </div>
+                <GoBoard problem={p} isTeacher={false} />
+            </div>
             
-            <div class="hint-display" id={`hint-text-${index}`}></div>
-
             <div class="nav-controls">
               <button class="nav-btn icon-btn prev-btn" title="Önceki" style="visibility: hidden;">
                   <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-              </button>
-
-              <button class="nav-btn icon-btn hint-btn" title="İpucu">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
               </button>
 
               <button class="nav-btn icon-btn next-btn" disabled={true} title="Sonraki">
@@ -267,7 +271,12 @@ const getCategoryStyle = (cat) => {
     await initUserProgress(); 
     updateTreeVisuals();      
     attachEventListeners();   
-    attachGameListeners();    
+    attachGameListeners();
+    
+    // GoBoard'dan gelen kilit açma sinyali (Yedek olarak kalsın)
+    window.addEventListener('unlock-next-problem', () => {
+        (window as any).unlockNextButton();
+    });
   });
 
   async function initUserProgress() {
@@ -313,21 +322,16 @@ const getCategoryStyle = (cat) => {
       if(navBackBtn) navBackBtn.addEventListener('click', (window as any).goToMap);
       
       const problemContainer = document.getElementById('problem-container');
-      // pages/goagaci.astro içindeki script
 
-if (problemContainer) {
-    problemContainer.addEventListener('mousedown', function(e: Event) {
-        const target = e.target as HTMLElement;
-        
-        // 1. Kilit kontrolü: Eğer tıklanan element kilitli bir tahtanın içindeyse DUR.
-        if (target.closest('.go-app.locked')) return;
-
-        // 2. Sadece Canvas'a basıldıysa çal
-        if (target && target.tagName === 'CANVAS' && target.classList.contains('goBoard')) {
-            playSound('stone');
-        }
-    });
-}
+    if (problemContainer) {
+        problemContainer.addEventListener('mousedown', function(e: Event) {
+            const target = e.target as HTMLElement;
+            if (target.closest('.go-app.locked')) return;
+            if (target && target.tagName === 'CANVAS' && target.classList.contains('goBoard')) {
+                playSound('stone');
+            }
+        });
+    }
   }
 
   function attachGameListeners() {
@@ -338,7 +342,6 @@ if (problemContainer) {
           if (!btn) return;
 
           if (btn.classList.contains('prev-btn')) (window as any).navigate(-1);
-          else if (btn.classList.contains('hint-btn')) (window as any).showHint(currentIndex);
           else if (btn.classList.contains('next-btn') && !btn.disabled) (window as any).navigate(1);
       });
   }
@@ -403,6 +406,7 @@ if (problemContainer) {
   (window as any).handleMoveResult = function(isCorrect: boolean) {
       if (isCorrect) {
           setTimeout(() => playSound('correct'), 400);
+          (window as any).unlockNextButton(); 
       } else {
           currentProblemFailed = true;
           setTimeout(() => playSound('wrong'), 400);
@@ -431,8 +435,27 @@ if (problemContainer) {
         const countBadge = card.querySelector('.count-badge') as HTMLElement;
         if(countBadge) countBadge.innerText = `Soru ${idx + 1} / ${activeProblems.length}`;
         const nextBtn = card.querySelector('.next-btn') as HTMLButtonElement;
+        
+        // --- İŞTE KRİTİK DÜZELTME BURASI ---
+        // Butonu sıfırlarken, sorunun "Analiz Modu" olup olmadığına bakıyoruz
         if(nextBtn) {
-            nextBtn.disabled = true; nextBtn.style.opacity = "0.5"; nextBtn.classList.remove('glow-animation'); 
+            const hasSolution = card.getAttribute('data-has-solution') === 'true';
+            
+            // Eğer çözüm YOKSA (Analiz Modu), buton baştan AKTİF olsun
+            if (!hasSolution) {
+                nextBtn.disabled = false;
+                nextBtn.style.opacity = "1";
+                nextBtn.classList.remove('glow-animation'); // Dikkat dağıtmamak için animasyon yok
+                nextBtn.style.cursor = "pointer";
+            } 
+            // Çözüm VARSA, kilitli başlasın
+            else {
+                nextBtn.disabled = true; 
+                nextBtn.style.opacity = "0.5"; 
+                nextBtn.classList.remove('glow-animation');
+                nextBtn.style.cursor = "not-allowed";
+            }
+
             nextBtn.innerHTML = idx === activeProblems.length - 1 
                 ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>` 
                 : `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>`;
@@ -445,7 +468,6 @@ if (problemContainer) {
     document.querySelectorAll('.problem-card').forEach((c) => (c as HTMLElement).style.display = 'none');
     const currentCard = activeProblems[currentIndex];
     if (currentCard) currentCard.style.display = 'block';
-    document.querySelectorAll('.hint-display').forEach((h) => { (h as HTMLElement).style.opacity = '0'; h.innerHTML = ''; });
   }
 
   (window as any).navigate = function(direction: number) {
@@ -508,20 +530,6 @@ if (problemContainer) {
       }
   };
 
-  (window as any).showHint = function(index: number) {
-    const currentCard = activeProblems[currentIndex];
-    const hintDiv = currentCard.querySelector('.hint-display') as HTMLElement;
-    if (hintDiv) {
-        if (hintDiv.style.opacity === "1") { 
-            hintDiv.style.opacity = "0"; 
-            setTimeout(() => { hintDiv.innerHTML = ""; }, 300); 
-        } else { 
-            hintDiv.innerHTML = `<span class="hint-icon">💡</span> <strong>İpucu:</strong> Hamleni yapmadan önce 2 adım sonrasını düşün.`; 
-            hintDiv.style.opacity = "1"; 
-        }
-    }
-  };
-
   (window as any).unlockNextButton = function() {
     const currentCard = activeProblems[currentIndex];
     if (currentCard) {
@@ -534,9 +542,7 @@ if (problemContainer) {
   };
 </script>
 
-
-
-  <style is:global>
+<style is:global>
   :root {
     /* --- KOYU MOD (VARSAYILAN) --- */
     --text-main: #ffffff;
@@ -744,7 +750,6 @@ if (problemContainer) {
   .nav-btn.icon-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; background-color: #95a5a6 !important; border-color: transparent !important; color: #ecf0f1 !important; }
   
   .prev-btn { color: var(--btn-text-muted); }
-  .hint-btn { color: #f1c40f; border-color: rgba(241, 196, 15, 0.5); }
   .next-btn { color: #3498db; border-color: rgba(52, 152, 219, 0.5); }
   
   .glow-animation { animation: pulse-green 2s infinite; }
