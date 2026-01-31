@@ -334,6 +334,94 @@ export const problemSet: Problem[] = [
       }
     ]
   }
+},
+{
+  id: "14",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Atari",
+  category: "Esir Alma 1",
+  description: "Siyahın iki taşını esir almaya çalışıyoruz",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,{\"color\":\"white\"},null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,null,null,{\"color\":\"white\"},null,null,{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,null,null,null,{\"color\":\"black\"},null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 4,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 4,
+            y: 4,
+            color: "black",
+            children: [
+              {
+                x: 5,
+                y: 4,
+                color: "white",
+                children: [],
+                status: null
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},{
+  id: "15",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Atari",
+  category: "Esir Alma 1",
+  description: "Köşedeki siyah grubu esir almaya çalışıyoruz",
+  initialState: "[[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,null,null,null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"}],[null,null,null,null,null,null,null,{\"color\":\"black\"},null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 2,
+        y: 7,
+        color: "white",
+        children: [
+          {
+            x: 1,
+            y: 8,
+            color: "black",
+            children: [
+              {
+                x: 2,
+                y: 8,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 1,
+        y: 8,
+        color: "white",
+        children: [
+          {
+            x: 2,
+            y: 7,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
 }
 
 ];
