@@ -36,9 +36,15 @@ const { problem, isTeacher = false } = Astro.props;
                 <button class="size-btn" data-size="13">13x13</button>
                 <button class="size-btn" data-size="19">19x19</button>
                 <button class="control-btn labelBtn tooltip" data-tip="Numara Ekle (1-2-3)">
-    <span style="font-weight:bold; font-size: 0.9em;">123</span>
-</button>
+                    <span style="font-weight:bold; font-size: 0.9em;">123</span>
+                </button>
             </div>
+
+            <div class="divider"></div>
+            
+            <button class="control-btn lastMoveBtn tooltip" data-tip="Son Hamleyi İşaretle">
+                👣
+            </button>
 
             <div class="divider"></div>
 
@@ -74,176 +80,48 @@ const { problem, isTeacher = false } = Astro.props;
 </div>
 
 <style>
-  /* --- TEMA RENKLERİ --- */
-  :root {
-    --status-text: #ffffff; 
-    --status-shadow: 0 1px 3px rgba(0,0,0,0.8);
-  }
-
-  /* Açık Mod Algılaması */
-  :global(body.light) .go-app {
-    --status-text: #2c3e50;
-    --status-shadow: none;
-  }
-
-  .go-app { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: flex-start; /* Mobilde üstten başlasın */
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 10px 0;
-    box-sizing: border-box;
-    /* Mobilde içerik taşarsa yatay kaydırmayı engelle */
-    overflow-x: hidden; 
-  }
-  
-  .status { 
-    font-size: 1rem; 
-    font-weight: bold; 
-    margin-bottom: 8px; 
-    min-height: 1.5em; /* Titremeyi önlemek için min-height */
-    color: var(--status-text); 
-    text-shadow: var(--status-shadow); 
-    transition: color 0.3s ease; 
-  }
-
+  /* --- STİLLER (AYNI KALIYOR) --- */
+  :root { --status-text: #ffffff; --status-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+  :global(body.light) .go-app { --status-text: #2c3e50; --status-shadow: none; }
+  .go-app { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; max-width: 100%; margin: 0 auto; padding: 10px 0; box-sizing: border-box; overflow-x: hidden; }
+  .status { font-size: 1rem; font-weight: bold; margin-bottom: 8px; min-height: 1.5em; color: var(--status-text); text-shadow: var(--status-shadow); transition: color 0.3s ease; }
   .top-info-bar { margin-bottom: 5px; display: flex; justify-content: center; width: 100%; }
-  
-  .turn-badge { 
-    display: flex; align-items: center; gap: 8px; 
-    background: #2c3e50; 
-    border: 1px solid #34495e; 
-    padding: 4px 12px; border-radius: 15px; 
-    color: #fff; 
-    font-weight: 600; font-size: 0.85rem; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3); 
-  }
-
-  /* --- TAHTA (MOBİL UYUMLU & KARE) --- */
-  .go-container { 
-    display: block; 
-    padding: 0; /* Çerçeve içinde dolgu olmamalı */
-    box-sizing: border-box;
-    
-    /* GÖRSELDEKİ RENK VE DOKU */
-    background-color: #d4a76a; /* Daha sıcak, turuncumsu-kahverengi */
-    /* Ahşap damar dokusu (CSS gradyanları ile simülasyon) */
-    background-image: 
-        repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 2px, transparent 2px, transparent 6px),
-        repeating-linear-gradient(-45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px),
-        linear-gradient(to bottom, rgba(0,0,0,0.05), transparent);
-    background-size: 120px 120px, 120px 120px, auto;
-
-    border-radius: 2px; /* Daha keskin köşeler */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Daha hafif gölge */
-    border: 3px solid #8c5e2a; /* Görüntüdeki gibi koyu, belirgin çerçeve */
-    position: relative; 
-    z-index: 10; 
-    
-    /* --- ESNEME VE KAYMA ÖNLEYİCİ AYARLAR --- */
-    width: 96vw; /* Mobilde ekranın %96'sını kapla */
-    max-width: 480px; /* Masaüstü maksimum genişlik */
-    
-    aspect-ratio: 1 / 1; /* KESİN KARE ORANI (Esnemeyi engeller) */
-    
-    /* Yükseklik sınırlandırması: Ekranın %60-65'inden büyük olma */
-    max-height: 65vh;
-    
-    /* Eğer yükseklik sınırlanırsa genişliği otomatik daralt */
-    height: auto; 
-    margin: 0 auto; 
-  }
-  
-  /* Ekran çok basıksa (landscape mobile) tahtayı daha da küçült */
-  @media (max-height: 600px) {
-      .go-container {
-          max-height: 80vh; /* Yaty ekranda biraz daha yer kaplayabilir */
-          width: auto;      /* Yüksekliğe göre genişlik al */
-          aspect-ratio: 1 / 1;
-      }
-  }
-
-  canvas { 
-    display: block; 
-    width: 100% !important; 
-    height: 100% !important; 
-    touch-action: none; /* ÖNEMLİ: Tahtaya dokunurken sayfanın kaymasını engeller */
-  }
-
-  /* --- KONTROLLER --- */
-  .bottom-controls {
-    margin-top: 15px; 
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 20px; 
-  }
-
-  .teacher-group { 
-      display: flex; 
-      gap: 10px; 
-      align-items: center; 
-      flex-wrap: wrap; 
-      justify-content: center; 
-      background: rgba(44, 62, 80, 0.95); 
-      padding: 10px 15px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      max-width: 95%; /* Mobilde taşmayı önle */
-  }
-  
+  .turn-badge { display: flex; align-items: center; gap: 8px; background: #2c3e50; border: 1px solid #34495e; padding: 4px 12px; border-radius: 15px; color: #fff; font-weight: 600; font-size: 0.85rem; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+  .go-container { display: block; padding: 0; box-sizing: border-box; background-color: #d4a76a; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 2px, transparent 2px, transparent 6px), repeating-linear-gradient(-45deg, rgba(0,0,0,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 8px), linear-gradient(to bottom, rgba(0,0,0,0.05), transparent); background-size: 120px 120px, 120px 120px, auto; border-radius: 2px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 3px solid #8c5e2a; position: relative; z-index: 10; width: 96vw; max-width: 480px; aspect-ratio: 1 / 1; max-height: 65vh; height: auto; margin: 0 auto; }
+  @media (max-height: 600px) { .go-container { max-height: 80vh; width: auto; aspect-ratio: 1 / 1; } }
+  canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; }
+  .bottom-controls { margin-top: 15px; width: 100%; display: flex; justify-content: center; padding-bottom: 20px; }
+  .teacher-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; background: rgba(44, 62, 80, 0.95); padding: 10px 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 4px 15px rgba(0,0,0,0.3); max-width: 95%; }
   .divider { width: 1px; height: 24px; background: rgba(255,255,255,0.2); margin: 0 4px; }
-
-  /* BUTONLAR */
-  .control-btn { 
-    width: 42px; height: 42px; /* Mobilde parmakla basmak kolay olsun */
-    border-radius: 50%; 
-    background: transparent; 
-    border: 1px solid transparent; 
-    color: #ecf0f1; 
-    display: flex; align-items: center; justify-content: center; 
-    cursor: pointer; transition: all 0.2s ease; 
-    flex-shrink: 0; 
-  }
-  
+  .control-btn { width: 42px; height: 42px; border-radius: 50%; background: transparent; border: 1px solid transparent; color: #ecf0f1; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; }
   .control-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.05); color: #fff; }
   .control-btn.active { background: #3498db; border-color: #2980b9; box-shadow: 0 0 12px rgba(52, 152, 219, 0.6); }
-
-  /* BOYUT SEÇİCİ */
   .size-selector { display: flex; gap: 4px; margin-right: 4px; }
-  .size-btn {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #bdc3c7;
-      border-radius: 4px;
-      padding: 6px 8px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s;
-  }
+  .size-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #bdc3c7; border-radius: 4px; padding: 6px 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
   .size-btn:hover { color: #fff; background: rgba(255,255,255,0.2); }
   .size-btn.active { background: #3498db; color: #fff; border-color: #3498db; font-weight: bold; }
-
   .turn-indicator { width: 18px; height: 18px; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
   .turn-indicator.black { background: #000; border: 1px solid rgba(255,255,255,0.3); }
   .turn-indicator.white { background: #fff; border: 1px solid #999; }
-
   .tooltip { position: relative; }
   .tooltip:hover::after { content: attr(data-tip); position: absolute; bottom: 135%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.95); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; white-space: nowrap; pointer-events: none; opacity: 0; animation: fadeIn 0.2s forwards; z-index: 20; }
   @keyframes fadeIn { to { opacity: 1; } }
 </style>
 
 <script>
+  // --- SES DOSYASI ---
+  const clickSound = new Audio('/sounds/stone.mp3');
+  clickSound.volume = 0.8;
+
   const setupBoard = () => {
-    document.querySelectorAll('.go-app').forEach(app => {
+    document.querySelectorAll('.go-app').forEach(appElement => {
+      const app = appElement as HTMLElement;
       if (app.getAttribute('data-initialized')) return;
       
       const canvas = app.querySelector('.goBoard') as HTMLCanvasElement;
       const statusDiv = app.querySelector('.status') as HTMLElement;
+      if (!canvas) return;
+
       const isTeacher = app.getAttribute('data-teacher') === 'true';
       const ctx = canvas.getContext('2d', { alpha: false });
       if (!ctx) return;
@@ -254,12 +132,12 @@ const { problem, isTeacher = false } = Astro.props;
       let padding = 30 * resolution; 
       let mode = isTeacher ? 'SETUP' : 'SOLVE';
 
-      let boardHistory: any[]= [];
-      let labels: any[] = []; 
+      let boardHistory: any[] = [];
+      let labels: any[][] = []; 
       let isLabelMode = false; 
       let labelCounter = 1;  
 
-      let stones: any[] = []; 
+      let stones: any[][] = []; 
       let currentColor = 'black'; 
       let initialStonesState = ""; 
       let recordingStartColor = 'black'; 
@@ -272,28 +150,27 @@ const { problem, isTeacher = false } = Astro.props;
       let hoverPos = { x: -1, y: -1 };
       let isLocked = false;
 
+      // --- YENİ DEĞİŞKENLER: SON HAMLE İÇİN ---
+      let lastMove: { x: number, y: number, color: string } | null = null;
+      let isLastMoveMode = false;
+
       const updateCanvasSize = () => {
           canvas.width = boardDisplaySize * resolution; 
           canvas.height = boardDisplaySize * resolution;
       };
       updateCanvasSize();
 
-      const initStones = (newSize) => { 
+      const initStones = (newSize: number) => { 
           stones = Array(newSize).fill(0).map(() => Array(newSize).fill(null)); 
           labels = Array(newSize).fill(0).map(() => Array(newSize).fill(null));
       };
       
-      // --- GÜNCELLENMİŞ KİLİT AÇMA (Daha Israrcı) ---
       const safeUnlock = () => {
-        // Event fırlat (React/Vue tarafı dinliyorsa)
         window.dispatchEvent(new CustomEvent('unlock-next-problem'));
-
-        // Butonu bulup açmayı 5 kez dene (Zamanlama hatasını önler)
         let attempts = 0;
         const interval = setInterval(() => {
             attempts++;
             const nextButtons = document.querySelectorAll('#nextBtn, .next-problem-btn, [data-action="next"]');
-            
             let found = false;
             nextButtons.forEach(btn => {
                 if (btn instanceof HTMLElement) {
@@ -306,19 +183,46 @@ const { problem, isTeacher = false } = Astro.props;
                     found = true;
                 }
             });
-
-            // Eğer buton bulunduysa veya 10 deneme bittiyse durdur
             if (found || attempts > 10) clearInterval(interval);
         }, 100);
 
         try {
-            if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(true);
+            if ((window as any).handleMoveResult) (window as any).handleMoveResult(true);
         } catch(e) { console.log("Eski fonksiyon bulunamadı"); }
       };
 
-      function updateStatusText(text, color) {
+      function updateStatusText(text: string, color: string) {
           if (statusDiv) { statusDiv.innerText = text; statusDiv.style.color = color; }
       }
+
+      // --- SON HAMLE ANİMASYONU ---
+      // Bu fonksiyon taşı siler, bekler ve ses efektiyle geri koyar
+      const animateLastMove = () => {
+          if (!lastMove) return;
+          const { x, y, color } = lastMove;
+          
+          // Eğer o koordinatta taş yoksa (hatalı durum), bir şey yapma
+          if (!stones[x][y]) {
+              // Eğer öğretmen modundaysak taşı biz koyalım
+              if (!isTeacher) stones[x][y] = { color };
+          }
+          
+          // 1. Taşı geçici olarak kaldır
+          const originalStone = stones[x][y];
+          stones[x][y] = null;
+          drawBoard(); // Tahtayı çiz (taşsız)
+
+          // 2. Bekle ve taşı koy
+          setTimeout(() => {
+              stones[x][y] = originalStone; // Taşı geri getir
+              
+              if (clickSound) {
+                  clickSound.currentTime = 0;
+                  clickSound.play().catch(e => console.log(e));
+              }
+              drawBoard(); // Tahtayı çiz (taşlı ve işaretli)
+          }, 600); // 600ms bekleme süresi
+      };
 
       // --- VERİ YÜKLEME ---
       const savedData = app.getAttribute('data-problem');
@@ -329,10 +233,13 @@ const { problem, isTeacher = false } = Astro.props;
           size = prob.size || 9;
           initStones(size);
           
-          if (prob.labels) {
-            labels = typeof prob.labels === 'string' ? JSON.parse(prob.labels) : prob.labels;
-          }
+          if (prob.labels) labels = typeof prob.labels === 'string' ? JSON.parse(prob.labels) : prob.labels;
           if (prob.turn) currentColor = prob.turn; else currentColor = 'black';
+
+          // Kayıtlı "Son Hamle" verisini al
+          if (prob.lastMove) {
+              lastMove = prob.lastMove;
+          }
 
           if (prob.initialState) {
              initialStonesState = prob.initialState;
@@ -343,10 +250,8 @@ const { problem, isTeacher = false } = Astro.props;
              }
           }
 
-          // Çözüm Ağacını Yükle
           if (prob.solution) {
               if (Array.isArray(prob.solution)) {
-                  // Dizi boş değilse yükle
                   if (prob.solution.length > 0) {
                       let ptr = moveTree;
                       prob.solution.forEach((move: any) => {
@@ -354,42 +259,37 @@ const { problem, isTeacher = false } = Astro.props;
                           ptr.children.push(newNode);
                           ptr = newNode;
                       });
-                      // Sadece çözüm varsa sonunu işaretle!
                       ptr.status = 'correct';
                       hasSolution = true;
-                  } else {
-                      // Dizi boşsa çözüm YOKTUR
-                      hasSolution = false;
-                  }
+                  } else { hasSolution = false; }
               } else if (prob.solution.children && prob.solution.children.length > 0) {
                   moveTree = prob.solution;
                   hasSolution = true;
-              } else {
-                  hasSolution = false;
-              }
-          } else {
-              hasSolution = false;
-          }
+              } else { hasSolution = false; }
+          } else { hasSolution = false; }
 
           currentNode = moveTree; 
-          if (!isTeacher) mode = 'SOLVE';
+          if (!isTeacher) {
+              mode = 'SOLVE';
+              // Öğrenci modundaysa ve son hamle varsa animasyonu başlat
+              if (lastMove) {
+                  setTimeout(animateLastMove, 300);
+              }
+          }
         } catch (e) { console.error(e); }
       } else {
           initStones(size);
           hasSolution = false;
       }
 
-      // --- ANALİZ MODU KONTROLÜ (Kesin Yer) ---
-      // Eğer öğretmen değilse ve çözüm yoksa -> ANALİZ MODU
       if (!isTeacher && !hasSolution) {
-          // DOM'un tamamen hazır olduğundan emin olmak için setTimeout
           setTimeout(() => {
               updateStatusText("Analiz Modu (Cevap gerekmez)", '#3498db');
               safeUnlock(); 
           }, 100);
       }
 
-      const changeBoardSize = (newSize) => {
+      const changeBoardSize = (newSize: number) => {
           size = newSize;
           initStones(size);
           moveTree = { children: [] };
@@ -397,9 +297,10 @@ const { problem, isTeacher = false } = Astro.props;
           currentPathStack = [];
           initialStonesState = "";
           currentColor = 'black';
+          lastMove = null; // Boyut değişince son hamleyi sıfırla
           
-          document.querySelectorAll('.size-btn').forEach(btn => {
-              if(btn.getAttribute('data-size') == newSize) btn.classList.add('active');
+          app.querySelectorAll('.size-btn').forEach(btn => {
+              if(btn.getAttribute('data-size') == String(newSize)) btn.classList.add('active');
               else btn.classList.remove('active');
           });
           
@@ -410,16 +311,16 @@ const { problem, isTeacher = false } = Astro.props;
       if (isTeacher) {
           app.querySelectorAll('.size-btn').forEach(btn => {
               btn.addEventListener('click', (e) => {
-                  const s = parseInt((e.target as HTMLElement).getAttribute('data-size') || "9");
+                  const target = e.target as HTMLElement;
+                  const s = parseInt(target.getAttribute('data-size') || "9");
                   changeBoardSize(s);
               });
           });
       }
 
-      // --- GO OYUN MANTIĞI ---
-      const isOnBoard = (x, y) => x >= 0 && x < size && y >= 0 && y < size;
+      const isOnBoard = (x: number, y: number) => x >= 0 && x < size && y >= 0 && y < size;
 
-      const getLiberties = (x, y, color, checked = new Set()) => {
+      const getLiberties = (x: number, y: number, color: string, checked = new Set()) => {
           const key = `${x},${y}`;
           if (checked.has(key)) return 0;
           checked.add(key);
@@ -434,7 +335,7 @@ const { problem, isTeacher = false } = Astro.props;
           return liberties;
       };
 
-      const removeGroup = (x, y, color) => {
+      const removeGroup = (x: number, y: number, color: string) => {
           const stone = stones[x][y];
           if (!stone || stone.color !== color) return;
           stones[x][y] = null;
@@ -444,7 +345,7 @@ const { problem, isTeacher = false } = Astro.props;
           });
       };
 
-      const playMove = (x, y, color) => {
+      const playMove = (x: number, y: number, color: string) => {
         if (stones[x][y]) return false;
 
         const originalStones = JSON.stringify(stones);
@@ -478,10 +379,16 @@ const { problem, isTeacher = false } = Astro.props;
         boardHistory.push(originalStones);
         if (boardHistory.length > 2) boardHistory.shift(); 
 
+        if (clickSound) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(e => console.log("Ses hatası:", e));
+        }
+
         return true;
       };
 
       const drawBoard = () => {
+        if (!canvas) return; 
         ctx.fillStyle = "#eebb66"; ctx.fillRect(0, 0, canvas.width, canvas.height);
         const cellSize = (canvas.width - padding * 2) / (size - 1);
 
@@ -506,8 +413,7 @@ const { problem, isTeacher = false } = Astro.props;
         
         ctx.fillStyle = "#000"; 
         ctx.font = `bold ${cellSize * 0.5}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
 
         for (let x = 0; x < size; x++) {
             for (let y = 0; y < size; y++) {
@@ -519,9 +425,26 @@ const { problem, isTeacher = false } = Astro.props;
             }
         }
 
-        stones.forEach((row: any, x) => row.forEach((stone: any, y) => { 
+        stones.forEach((row, x) => row.forEach((stone: any, y: number) => { 
             if (stone) drawStone(x, y, stone.color, cellSize, 1); 
         }));
+
+        // --- SON HAMLE İŞARETÇİSİ ---
+        // Eğer lastMove varsa, üzerine üçgen veya daire çizerek belli et
+        if (lastMove && stones[lastMove.x][lastMove.y]) {
+            const posX = padding + lastMove.x * cellSize;
+            const posY = padding + lastMove.y * cellSize;
+            const markerColor = stones[lastMove.x][lastMove.y].color === 'black' ? '#fff' : '#000';
+            
+            ctx.beginPath();
+            ctx.arc(posX, posY, cellSize * 0.15, 0, 2 * Math.PI); // Küçük bir daire
+            ctx.fillStyle = markerColor;
+            ctx.fill();
+            // İsteğe bağlı: Etrafına halka (vurgu için)
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = markerColor;
+            ctx.stroke();
+        }
         
         if (!isLocked && hoverPos.x >= 0 && hoverPos.x < size && hoverPos.y >= 0 && hoverPos.y < size) {
           if (!stones[hoverPos.x][hoverPos.y]) {
@@ -530,7 +453,7 @@ const { problem, isTeacher = false } = Astro.props;
         }
       };
 
-      const drawStone = (x, y, color, cellSize, opacity) => {
+      const drawStone = (x: number, y: number, color: string, cellSize: number, opacity: number) => {
         const posX = padding + x * cellSize; const posY = padding + y * cellSize; const radius = cellSize * 0.45;
         ctx.save(); ctx.globalAlpha = opacity;
         if (opacity === 1) { ctx.shadowColor = "rgba(0,0,0,0.3)"; ctx.shadowBlur = 3 * resolution; ctx.shadowOffsetX = 1 * resolution; ctx.shadowOffsetY = 1 * resolution; }
@@ -547,11 +470,8 @@ const { problem, isTeacher = false } = Astro.props;
         ctx.restore();
       };
 
-      canvas.addEventListener('mousemove', (e) => {
-        if (mode === 'SOLVE' && isLocked) {
-            canvas.style.cursor = 'default';
-            return;
-        }
+      canvas.addEventListener('mousemove', (e: MouseEvent) => {
+        if (mode === 'SOLVE' && isLocked) { canvas.style.cursor = 'default'; return; }
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width; const scaleY = canvas.height / rect.height;
         const mouseX = (e.clientX - rect.left) * scaleX - padding;
@@ -563,21 +483,32 @@ const { problem, isTeacher = false } = Astro.props;
       });
       canvas.addEventListener('mouseleave', () => { hoverPos = { x: -1, y: -1 }; drawBoard(); });
 
-      canvas.addEventListener('click', (e) => {
+      canvas.addEventListener('click', (e: MouseEvent) => {
         if (mode === 'SOLVE' && isLocked) {
-            updateStatusText("Tekrar denemek için 'Yenile' butonuna basın.", '#e74c3c');
+            updateStatusText("Tekrar deneyebilirsiniz..", '#e74c3c');
             return; 
         }
 
         if (hoverPos.x === -1) return;
         const x = hoverPos.x; const y = hoverPos.y;
+
+        // --- ÖĞRETMEN MODU: SON HAMLE BELİRLEME ---
+        if (isLastMoveMode) {
+            if (stones[x][y]) {
+                lastMove = { x, y, color: stones[x][y].color };
+                updateStatusText("Son hamle işaretlendi!", '#2ecc71');
+                drawBoard();
+            } else {
+                updateStatusText("Lütfen dolu bir taşa tıklayın.", '#e74c3c');
+            }
+            return; // Normal işleyişe devam etme
+        }
+        // ------------------------------------------
+
+        if (stones[x][y]) { return; }
         
         if (isLabelMode) {
-            if (labels[x][y]) {
-                labels[x][y] = null;
-            } else {
-                labels[x][y] = labelCounter++;
-            }
+            if (labels[x][y]) labels[x][y] = null; else labels[x][y] = labelCounter++;
             drawBoard();
             return; 
         }
@@ -587,7 +518,7 @@ const { problem, isTeacher = false } = Astro.props;
             drawBoard();
         } 
         else if (mode === 'RECORD') { 
-            if (stones[x][y]) return; 
+            if (stones[x][y]) return;
             const stateBeforeMove = JSON.stringify(stones);
             const colorBeforeMove = currentColor;
 
@@ -610,7 +541,6 @@ const { problem, isTeacher = false } = Astro.props;
             drawBoard();
         } 
         else if (mode === 'SOLVE') {
-            // Eğer çözüm YOKSA, her zaman serbest hamleye izin ver ve ASLA kilitleme
             if (!hasSolution) {
                 if (playMove(x, y, currentColor)) {
                     currentColor = currentColor === 'black' ? 'white' : 'black';
@@ -630,10 +560,11 @@ const { problem, isTeacher = false } = Astro.props;
                 
                 checkNodeStatus(currentNode); 
 
-                // Bilgisayarın cevabı var mı?
                 if (currentNode.children && currentNode.children.length > 0 && !currentNode.status) {
                     setTimeout(() => {
-                        const responseNode = currentNode.children[0];
+                        const randomChildIndex = Math.floor(Math.random() * currentNode.children.length);
+                        const responseNode = currentNode.children[randomChildIndex];
+
                         playMove(responseNode.x, responseNode.y, responseNode.color);
                         currentNode = responseNode;
                         currentColor = currentColor === 'black' ? 'white' : 'black';
@@ -642,51 +573,45 @@ const { problem, isTeacher = false } = Astro.props;
                     }, 500); 
                 }
             } else {
-                updateStatusText("Tanımsız hamle. (Yanlış olabilir)", '#e74c3c');
+                updateStatusText("Tanımsız hamle.", '#e74c3c');
                 isLocked = true;
                 app.classList.add('locked'); 
-                if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(false);
+                if ((window as any).handleMoveResult) (window as any).handleMoveResult(false);
             }
         }
       });
 
-      function checkNodeStatus(node) {
-          if (node.status === 'correct') {
-              finalizeSuccess();
-              return;
-          } 
-          if (node.status === 'wrong') {
-              finalizeFail();
-              return;
-          }
-          if (!node.children || node.children.length === 0) {
-              finalizeSuccess();
-          }
+      function checkNodeStatus(node: any) {
+          if (node.status === 'correct') { finalizeSuccess(); return; } 
+          if (node.status === 'wrong') { finalizeFail(); return; }
+          if (!node.children || node.children.length === 0) { finalizeSuccess(); }
       }
 
       function finalizeSuccess() {
-          updateStatusText("Tebrikler! Doğru Çözüm.", '#2ecc71');
+          updateStatusText("Tebrikler!", '#2ecc71');
           isLocked = true;              
           app.classList.add('locked');  
           safeUnlock();
       }
 
       function finalizeFail() {
-          updateStatusText("Yanlış yol! (Yenile butonuna basınız)", '#e74c3c');
+          updateStatusText("Yanlış yol!", '#e74c3c');
           isLocked = true; 
           app.classList.add('locked');
-          if (typeof (window as any).handleMoveResult === 'function') (window as any).handleMoveResult(false);
+          if ((window as any).handleMoveResult) (window as any).handleMoveResult(false);
       }
 
       if (isTeacher) {
           app.querySelector('#undoBtn')?.addEventListener('click', () => {
               if (currentPathStack.length > 0) {
                   const lastStep = currentPathStack.pop();
-                  currentNode = lastStep.node; 
-                  stones = JSON.parse(lastStep.stonesSnapshot); 
-                  currentColor = lastStep.turn;
-                  updateStatusText("Geri alındı.", '#fff');
-                  drawBoard();
+                  if (lastStep) {
+                    currentNode = lastStep.node; 
+                    stones = JSON.parse(lastStep.stonesSnapshot); 
+                    currentColor = lastStep.turn;
+                    updateStatusText("Geri alındı.", '#fff');
+                    drawBoard();
+                  }
               }
           });
 
@@ -705,6 +630,21 @@ const { problem, isTeacher = false } = Astro.props;
           app.querySelector('.setupBtn')?.addEventListener('click', () => updateUI('SETUP'));
           app.querySelector('.recordBtn')?.addEventListener('click', () => updateUI('RECORD'));
           
+          // --- YENİ BUTON DİNLEYİCİSİ ---
+          const lastMoveBtn = app.querySelector('.lastMoveBtn');
+          if (lastMoveBtn) {
+              lastMoveBtn.addEventListener('click', () => {
+                  isLastMoveMode = !isLastMoveMode;
+                  if (isLastMoveMode) {
+                      lastMoveBtn.classList.add('active');
+                      updateStatusText("Tahtadaki 'Son Hamle' taşına tıklayın.", '#f1c40f');
+                  } else {
+                      lastMoveBtn.classList.remove('active');
+                      updateStatusText("Mod kapatıldı.", '#fff');
+                  }
+              });
+          }
+
           app.querySelector('.exportBtn')?.addEventListener('click', () => { 
             const title = prompt("Soru Başlığı (Title):", "Yeni Go Sorusu") || "İsimsiz Soru";
             const category = prompt("Kategori (örn: Yaşam/Ölüm):", "Genel") || "Genel";
@@ -718,6 +658,7 @@ const { problem, isTeacher = false } = Astro.props;
                 category: category,       
                 description: description,
                 initialState: initialStonesState || JSON.stringify(stones), 
+                lastMove: lastMove, // <-- YENİ EKLENDİ
                 solution: moveTree 
             }; 
             const jsonString = JSON.stringify(data, null, 2);
@@ -734,7 +675,7 @@ const { problem, isTeacher = false } = Astro.props;
           });
       }
 
-      const updateUI = (newMode) => {
+      const updateUI = (newMode: string) => {
         if (newMode === 'SETUP') {
             if (initialStonesState) {
                 const parsed = JSON.parse(initialStonesState);
@@ -771,11 +712,16 @@ const { problem, isTeacher = false } = Astro.props;
          app.querySelector('.labelBtn')?.classList.remove('active');
          boardHistory = []; 
          
-         if (isTeacher && mode === 'SETUP') { initStones(size); }
+         if (isTeacher && mode === 'SETUP') { 
+             initStones(size); 
+             lastMove = null; // Resetlenince son hamle de gitsin
+         }
          else { 
              const probData = savedData ? JSON.parse(savedData) : {};
-             if (probData.turn) currentColor = probData.turn; 
-             else currentColor = 'black';
+             if (probData.turn) currentColor = probData.turn; else currentColor = 'black';
+
+             // Resetleyince son hamle bilgisini veriden tekrar al
+             if (probData.lastMove) lastMove = probData.lastMove; else lastMove = null;
 
              if(initialStonesState) {
                  const parsed = JSON.parse(initialStonesState);
@@ -789,10 +735,16 @@ const { problem, isTeacher = false } = Astro.props;
              currentNode = moveTree; 
              currentPathStack = [];
              
-             // Reset işleminde de aynı mantık
-             if (!isTeacher && !hasSolution) {
-                 updateStatusText("Analiz Modu", '#3498db');
-                 safeUnlock();
+             if (!isTeacher) {
+                 // Eğer çözüm yoksa analiz modu
+                 if(!hasSolution) {
+                     updateStatusText("Analiz Modu", '#3498db');
+                     safeUnlock();
+                 }
+                 // Reset sonrası animasyonu tekrar oynat
+                 if (lastMove) {
+                     setTimeout(animateLastMove, 300);
+                 }
              }
          }
          drawBoard();
@@ -802,7 +754,6 @@ const { problem, isTeacher = false } = Astro.props;
       if (labelBtn) {
           labelBtn.addEventListener('click', () => {
               isLabelMode = !isLabelMode; 
-              
               if (isLabelMode) {
                   labelBtn.classList.add('active');
                   updateStatusText(`Etiket Modu: ${labelCounter}'den başlıyor`, '#000');
@@ -816,11 +767,21 @@ const { problem, isTeacher = false } = Astro.props;
       if (!(window as any).resetAllBoards) {
           (window as any).resetAllBoards = () => {
               const resetButtons = document.querySelectorAll('.resetBtn');
-              resetButtons.forEach((btn) => {
-                  if (btn instanceof HTMLElement) btn.click();
+              resetButtons.forEach(btn => {
+                if (btn instanceof HTMLElement) btn.click();
               });
           };
       }
+      app.addEventListener('play-enter-animation', () => {
+          // Önce tahtayı temizle/yenile (ki taş havada görünsün)
+          drawBoard(); 
+          
+          // Eğer son hamle verisi varsa animasyonu başlat
+          if (lastMove && !isTeacher) {
+               // Biraz bekle (geçiş efekti bitene kadar) sonra oynat
+               setTimeout(animateLastMove, 300);
+          }
+      });
 
       app.setAttribute('data-initialized', 'true');
       drawBoard();

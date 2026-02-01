@@ -323,15 +323,6 @@ const getCategoryStyle = (cat) => {
       
       const problemContainer = document.getElementById('problem-container');
 
-    if (problemContainer) {
-        problemContainer.addEventListener('mousedown', function(e: Event) {
-            const target = e.target as HTMLElement;
-            if (target.closest('.go-app.locked')) return;
-            if (target && target.tagName === 'CANVAS' && target.classList.contains('goBoard')) {
-                playSound('stone');
-            }
-        });
-    }
   }
 
   function attachGameListeners() {
