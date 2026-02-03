@@ -310,61 +310,139 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null }) => {
       return true;
   };
 
-  // --- ÇİZİM VE EVENTS ---
-  const drawBoard = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: false });
-    const state = gameState.current;
-    const size = state.size;
-    const dpr = window.devicePixelRatio || 2;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-    const W = rect.width; const padding = 30; const cellSize = (W - padding * 2) / (size - 1);
+ const drawBoard = () => {
+  const canvas = canvasRef.current;
+  if (!canvas) return;
 
-    ctx.fillStyle = "#f2b06d"; ctx.fillRect(0, 0, W, W);
-    ctx.lineWidth = 1; ctx.strokeStyle = '#2b1d0e'; ctx.beginPath();
-    for (let i = 0; i < size; i++) {
-        const p = Math.round(padding + i * cellSize) + 0.5;
-        ctx.moveTo(p, padding); ctx.lineTo(p, W - padding);
-        ctx.moveTo(padding, p); ctx.lineTo(W - padding, p);
-    }
-    ctx.stroke();
+  const ctx = canvas.getContext('2d');
+  const state = gameState.current;
+  const size = state.size;
 
-    const hoshiPoints = size === 19 ? [3, 9, 15] : size === 13 ? [3, 6, 9] : [2, 4, 6];
-    if (size >= 9) {
-        ctx.fillStyle = '#000';
-        hoshiPoints.forEach(hx => { hoshiPoints.forEach(hy => { ctx.beginPath(); ctx.arc(padding + hx * cellSize, padding + hy * cellSize, 3, 0, Math.PI * 2); ctx.fill(); }); });
-    }
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
 
-    state.stones.forEach((row, x) => { row.forEach((stone, y) => { if (stone) drawStone(ctx, x, y, stone.color, cellSize, padding, 1); }); });
-    
-    const { x, y } = state.hoverPos;
-    if (!state.isLocked && isOnBoard(x, y) && !state.stones[x][y]) {
-        drawStone(ctx, x, y, state.turn, cellSize, padding, 0.5);
-    }
-    if (state.lastMove && state.stones[state.lastMove.x][state.lastMove.y]) {
-        const lm = state.lastMove;
-        ctx.beginPath(); ctx.arc(padding + lm.x * cellSize, padding + lm.y * cellSize, cellSize * 0.15, 0, Math.PI * 2);
-        ctx.fillStyle = state.stones[lm.x][lm.y].color === 'black' ? 'white' : 'black'; ctx.fill();
-    }
-  };
+  // 🔒 Canvas boyutunu TAM piksele kilitle
+  const W = Math.floor(rect.width);
+
+  canvas.style.width = `${W}px`;
+  canvas.style.height = `${W}px`;
+
+  canvas.width = W * dpr;
+  canvas.height = W * dpr;
+
+  // 🔥 DPR transform (TEK KEZ)
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.imageSmoothingEnabled = false;
+
+  const padding = 36;
+  const cellSize = (W - padding * 2) / (size - 1);
+
+  // === ZEMİN ===
+  ctx.clearRect(0, 0, W, W);
+  ctx.fillStyle = "#f4b35f";
+  ctx.fillRect(0, 0, W, W);
+
+  // === GRID ÇİZGİLERİ (JİLET GİBİ) ===
+  ctx.strokeStyle = "#2b1d0e";
+  ctx.lineWidth = 1;
+
+  ctx.beginPath();
+for (let i = 0; i < size; i++) {
+  const raw = padding + i * cellSize;
+  const p = Math.round(raw) + 0.5; // 🔒 PİKSEL KİLİDİ
+
+  ctx.moveTo(p, padding + 0.5);
+  ctx.lineTo(p, W - padding + 0.5);
+
+  ctx.moveTo(padding + 0.5, p);
+  ctx.lineTo(W - padding + 0.5, p);
+}
+ctx.stroke();
+
+
+  // === HOSHI ===
+  const hoshi =
+    size === 19 ? [3, 9, 15] :
+    size === 13 ? [3, 6, 9] :
+    [2, 4, 6];
+
+  ctx.fillStyle = "#000";
+  hoshi.forEach(x =>
+    hoshi.forEach(y => {
+      ctx.beginPath();
+      ctx.arc(
+        padding + x * cellSize,
+        padding + y * cellSize,
+        3,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+    })
+  );
+
+  // === TAŞLAR ===
+  state.stones.forEach((row, x) => {
+    row.forEach((stone, y) => {
+      if (stone) {
+        drawStone(ctx, x, y, stone.color, cellSize, padding, 1);
+      }
+    });
+  });
+
+  // === SON HAMLE ===
+  if (state.lastMove) {
+    const { x, y } = state.lastMove;
+    ctx.beginPath();
+    ctx.arc(
+      padding + x * cellSize,
+      padding + y * cellSize,
+      cellSize * 0.15,
+      0,
+      Math.PI * 2
+    );
+    ctx.fillStyle =
+      state.stones[x][y].color === "black" ? "#fff" : "#000";
+    ctx.fill();
+  }
+};
+
+
+ 
 
   const drawStone = (ctx, x, y, color, cellSize, padding, opacity) => {
-      const posX = padding + x * cellSize; const posY = padding + y * cellSize; const radius = cellSize * 0.48;
-      ctx.save(); ctx.globalAlpha = opacity;
-      if (opacity === 1) { ctx.shadowColor = "rgba(0,0,0,0.4)"; ctx.shadowBlur = 4; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2; }
-      ctx.beginPath(); ctx.arc(posX, posY, radius, 0, Math.PI * 2);
-      if (color === 'black') {
-          const g = ctx.createRadialGradient(posX - radius*0.3, posY - radius*0.3, radius*0.1, posX, posY, radius);
-          g.addColorStop(0, "#666"); g.addColorStop(1, "#000"); ctx.fillStyle = g;
-      } else {
-          const g = ctx.createRadialGradient(posX - radius*0.3, posY - radius*0.4, radius*0.05, posX, posY, radius);
-          g.addColorStop(0, "#fff"); g.addColorStop(1, "#ccc"); ctx.fillStyle = g;
-      }
-      ctx.fill(); ctx.restore();
-  };
+  const cx = padding + x * cellSize;
+  const cy = padding + y * cellSize;
+  const r = cellSize * 0.48;
+
+  ctx.save();
+  ctx.globalAlpha = opacity;
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+
+  if (color === "black") {
+    const g = ctx.createRadialGradient(
+      cx - r * 0.25, cy - r * 0.25, r * 0.1,
+      cx, cy, r
+    );
+    g.addColorStop(0, "#555");
+    g.addColorStop(1, "#000");
+    ctx.fillStyle = g;
+  } else {
+    const g = ctx.createRadialGradient(
+      cx - r * 0.25, cy - r * 0.25, r * 0.1,
+      cx, cy, r
+    );
+    g.addColorStop(0, "#fff");
+    g.addColorStop(1, "#ddd");
+    ctx.fillStyle = g;
+  }
+
+  ctx.fill();
+  ctx.restore();
+};
+
 
   const handleMouseMove = (e) => {
       const state = gameState.current;

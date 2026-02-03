@@ -1,7 +1,0 @@
-import{s as r}from"./supabase.DgUM0jQD.js";const t={formContainer:document.getElementById("post-form-container"),loginWarning:document.getElementById("login-warning"),form:document.getElementById("forum-form"),titleInput:document.getElementById("post-title"),contentInput:document.getElementById("post-content"),feed:document.getElementById("posts-feed")};let o=null;async function i(){try{const{data:{user:e}}=await r.auth.getUser();o=e,e?t.formContainer&&(t.formContainer.style.display="block"):t.loginWarning&&(t.loginWarning.style.display="block"),await d()}catch(e){console.error("Başlatma hatası:",e)}}async function d(){const{data:e,error:n}=await r.from("forum_posts").select("*").order("created_at",{ascending:!1});if(n){console.error("Postlar çekilemedi:",n.message),t.feed&&(t.feed.innerHTML=`<p style="color:red">Veritabanı hatası: ${n.message}</p>`);return}e&&Array.isArray(e)&&l(e)}function l(e){if(t.feed){if(t.feed.innerHTML="",e.length===0){t.feed.innerHTML='<div style="text-align:center; padding:20px;">Henüz mesaj yok.</div>';return}e.forEach(n=>{const a=`
-        <div style="background:white; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #ddd; color:black;">
-          <small style="color:gray">${n.created_at?new Date(n.created_at).toLocaleDateString("tr-TR"):"..."}</small>
-          <h3 style="margin:5px 0">${n.title||"Başlıksız"}</h3>
-          <p>${n.content}</p>
-        </div>
-      `;t.feed&&(t.feed.innerHTML+=a)})}}i();

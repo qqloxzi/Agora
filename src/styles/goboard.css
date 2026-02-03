@@ -24,19 +24,21 @@
 }
 
 .go-container {
-    position: relative;
-    width: 90vw;
-    max-width: 500px; /* Maksimum tahta boyutu */
-    aspect-ratio: 1 / 1;
-    background-color: #f2b06d;
-    cursor: pointer;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  position: relative;
 }
 
 .goBoard {
-    width: 100%;
-    height: 100%;
-    display: block;
+  width: 100%;
+  height: 100%;
+  display: block;
+
+
+  transform: none !important;
+  image-rendering: pixelated;
 }
+
 
 /* Koordinatlar */
 .coords-layer {
