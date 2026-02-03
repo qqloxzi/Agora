@@ -1,0 +1,89 @@
+.go-app-react {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.status {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    min-height: 1.5em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.go-wrapper-shadow {
+    position: relative;
+    border-radius: 4px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    padding: 5px; /* Çerçeve kalınlığı */
+    background: #5d3a1a; /* Ahşap rengi */
+}
+
+.go-container {
+    position: relative;
+    width: 90vw;
+    max-width: 500px; /* Maksimum tahta boyutu */
+    aspect-ratio: 1 / 1;
+    background-color: #f2b06d;
+    cursor: pointer;
+}
+
+.goBoard {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Koordinatlar */
+.coords-layer {
+    position: absolute;
+    top: 30px; left: 30px; right: 30px; bottom: 30px; /* Padding ile eşleşmeli */
+    pointer-events: none;
+}
+
+.coord-label {
+    position: absolute;
+    font-size: 12px;
+    font-weight: bold;
+    color: #3e2723;
+    transform: translate(-50%, -50%);
+}
+.coord-label.col { top: -20px; }
+.coord-label.row { left: -20px; }
+
+/* Kontroller */
+.bottom-controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #34495e;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.control-btn:hover { background: #e74c3c; transform: scale(1.1); }
+
+.top-info-bar { margin-bottom: 10px; }
+.turn-badge {
+    background: rgba(0,0,0,0.6);
+    padding: 5px 15px;
+    border-radius: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.turn-indicator { width: 12px; height: 12px; border-radius: 50%; }
+.turn-indicator.black { background: black; border: 1px solid #555; }
+.turn-indicator.white { background: white; }

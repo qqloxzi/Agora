@@ -1,0 +1,326 @@
+/* src/styles/gametree-fixed.css */
+
+/* --- RENK PALETİ --- */
+:root {
+    /* Varsayılan (AÇIK MOD / LIGHT) */
+    --tree-bg: #f3f4f6;       /* Açık gri */
+    --tree-text: #1f2937;     /* Koyu gri yazı */
+    --tree-box-bg: #ffffff;   /* Beyaz kutular */
+    --tree-border: #e5e7eb;   /* Gri kenarlık */
+    --tree-accent: #3b82f6;   /* Mavi vurgu */
+    --tree-shadow: rgba(0, 0, 0, 0.1);
+    
+    --node-completed: #10b981;
+    --node-locked: #9ca3af;
+}
+
+
+html.dark {
+    --tree-bg: #111827;       
+    --tree-text: #f9fafb;    
+    --tree-box-bg: #1f2937;  
+    --tree-border: #374151;   
+    --tree-accent: #60a5fa;   
+    --tree-shadow: rgba(0, 0, 0, 0.5);
+}
+
+.game-manager-container {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--tree-bg);
+    color: var(--tree-text);
+    min-height: 100vh;
+    padding: 20px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    user-select: text !important;
+}
+
+/* --- AĞAÇ GÖRÜNÜMÜ --- */
+.tree-header h1 { color: var(--tree-accent); margin-bottom: 10px; text-align: center; }
+.tree-header p { text-align: center; opacity: 0.8; margin-bottom: 40px; }
+
+.columns-wrapper { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.tree-column { flex: 1; min-width: 250px; max-width: 350px; display: flex; flex-direction: column; align-items: center; }
+.column-title { 
+    border-bottom: 2px solid var(--tree-border); 
+    padding-bottom: 10px; width: 100%; text-align: center; 
+    margin-bottom: 30px; font-weight: 600; 
+}
+
+.nodes-container { display: flex; flex-direction: column; align-items: center; }
+.node-wrapper { display: flex; flex-direction: column; align-items: center; position: relative; margin-bottom: 30px; }
+
+/* Bağlantı Çizgisi */
+.connector { width: 4px; height: 50px; background-color: var(--tree-accent); margin-bottom: -5px; z-index: 0; }
+.connector.locked { background-color: var(--node-locked); opacity: 0.5; }
+
+/* Daireler (Level Node) */
+.level-node {
+    width: 80px; height: 80px; border-radius: 50%;
+    background-color: var(--tree-accent); 
+    border: 5px solid var(--tree-bg); /* Kenarlık sayfa rengiyle aynı olsun */
+    display: flex; justify-content: center; align-items: center;
+    font-size: 2rem; cursor: pointer; position: relative; z-index: 1;
+    box-shadow: 0 4px 6px var(--tree-shadow);
+    transition: transform 0.2s, border-color 0.3s;
+}
+
+.level-node:hover { transform: scale(1.1); }
+
+/* Kilitli Durum */
+.level-node.locked { 
+    background-color: var(--node-locked); 
+    cursor: not-allowed; 
+    opacity: 0.7; 
+    filter: grayscale(1); 
+}
+
+/* TAMAMLANMIŞ DURUM (Sadece Kenarlık Yeşil Olsun) */
+.level-node.completed { 
+    background-color: var(--tree-accent); /* İçi yine mavi kalsın veya istersen yeşil yap */
+    border-color: var(--node-completed);  /* Çerçeve YEŞİL */
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.6); /* Hafif yeşil parıltı */
+}
+
+.node-label { margin-top: 10px; font-weight: 600; color: var(--tree-text); }
+
+/* Sağ üstteki soru sayısı badge'i */
+.node-badge { 
+    position: absolute; top: -2px; right: -2px; 
+    background-color: #ef4444; color: white; 
+    width: 24px; height: 24px; border-radius: 50%; 
+    display: flex; justify-content: center; align-items: center; font-size: 0.75rem; 
+    border: 2px solid var(--tree-bg); 
+    z-index: 5;
+}
+
+/* OYUN ALANI VE DİĞERLERİ (Aynı kalıyor) */
+.playing-view { max-width: 1200px; margin: 0 auto; display: flex; justify-content: center; align-items: flex-start; }
+.game-layout { display: flex; flex-direction: row; gap: 30px; width: 100%; align-items: flex-start; }
+.board-section { flex: 2; display: flex; flex-direction: column; align-items: center; }
+.game-navbar { width: 100%; display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--tree-border); margin-bottom: 20px; }
+.exit-btn { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 5px 15px; border-radius: 6px; cursor: pointer; }
+.exit-btn:hover { background: #ef4444; color: white; }
+
+.info-section { flex: 1; min-width: 300px; position: sticky; top: 20px; display: flex; flex-direction: column; gap: 20px; margin-top: 60px; }
+.info-card-wrapper { min-height: 160px; width: 100%; position: relative; }
+.description-box { background-color: var(--tree-box-bg); border: 1px solid var(--tree-border); border-left: 5px solid var(--tree-accent); border-radius: 8px; padding: 20px; box-shadow: 0 10px 15px var(--tree-shadow); color: var(--tree-text); transform-origin: top center; will-change: transform, opacity; }
+.description-box h4 { margin: 0 0 10px 0; color: var(--tree-accent); font-size: 1.1rem; border-bottom: 1px solid var(--tree-border); padding-bottom: 5px; }
+.description-box p { margin: 0; line-height: 1.5; }
+
+@keyframes softPop { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.pop-animation { animation: softPop 0.4s ease-out forwards; }
+
+.nav-controls { display: flex; gap: 10px; }
+.nav-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; color: var(--tree-text); }
+.nav-btn.prev { background-color: var(--tree-border); }
+.nav-btn.next { background-color: var(--node-completed); color: white; opacity: 0.5; cursor: not-allowed; }
+.nav-btn.next:not(:disabled) { opacity: 1; cursor: pointer; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4); }
+@media (max-width: 900px) { .game-layout { flex-direction: column; } .board-section { order: 1; width: 100%; } .info-section { order: 2; width: 100%; position: static; margin-top: 20px; } .info-card-wrapper { min-height: auto; } }
+/* src/styles/gametree-fixed.css EN ALTINA EKLE */
+
+/* --- SONUÇ EKRANI (KARNE) --- */
+.result-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* Arkayı karart */
+    display: flex; justify-content: center; align-items: center;
+    z-index: 10000;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.result-card {
+    background: var(--tree-box-bg);
+    border: 1px solid var(--tree-border);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transform: scale(0.8);
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.result-title {
+    font-size: 2rem; margin-bottom: 10px;
+    color: var(--tree-text);
+}
+
+.result-subtitle {
+    font-size: 1.1rem; color: var(--tree-text); opacity: 0.8;
+    margin-bottom: 30px;
+}
+
+/* İstatistik Kutuları */
+.stats-row {
+    display: flex; gap: 20px; justify-content: center; margin-bottom: 30px;
+}
+
+.stat-box {
+    flex: 1; padding: 15px; border-radius: 12px;
+    display: flex; flex-direction: column; gap: 5px;
+    background: var(--tree-bg);
+    border: 2px solid transparent;
+}
+
+.stat-box.correct { border-color: #10b981; color: #059669; background: rgba(16, 185, 129, 0.1); }
+.stat-box.wrong { border-color: #ef4444; color: #b91c1c; background: rgba(239, 68, 68, 0.1); }
+
+.stat-number { font-size: 2rem; font-weight: 800; line-height: 1; }
+.stat-label { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Animasyonlar */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.progress-container {
+    width: 100%;
+    max-width: 600px; /* Tahta genişliği kadar */
+    height: 10px;
+    background-color: var(--tree-border);
+    border-radius: 5px;
+    margin: 0 auto 20px auto; /* Ortala ve alttan boşluk bırak */
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #10b981; /* Yeşil */
+    width: 0%; /* JS ile değişecek */
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+/* --- 2. YENİ ALT KONTROL PANELİ (butonlar yan yana) --- */
+.game-controls-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Butonların yeni stili */
+.control-pill-btn {
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px var(--tree-shadow);
+}
+
+.btn-prev { background-color: var(--tree-box-bg); color: var(--tree-text); border: 1px solid var(--tree-border); }
+.btn-prev:hover { transform: translateY(-2px); background-color: var(--tree-border); }
+
+.btn-restart { 
+    width: 50px; height: 50px; padding: 0; 
+    border-radius: 50%; justify-content: center; 
+    background-color: #f59e0b; color: white; /* Turuncu */
+    font-size: 1.5rem;
+}
+.btn-restart:hover { transform: rotate(180deg); background-color: #d97706; }
+
+.btn-next { background-color: #10b981; color: white; }
+.btn-next:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(16, 185, 129, 0.4); }
+.btn-next:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+
+/* --- 3. BİLGİ KUTUSU DÜZENLEMESİ --- */
+/* Artık butonlar yok, sadece metin kutusu sağda duracak */
+.info-only-section {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Dikeyde ortala */
+}
+
+/* src/styles/gametree-fixed.css - EN ALTA EKLE */
+
+/* --- TİTREME (JIGGLE) VE KAYDIRAÇ DÜZELTMESİ --- */
+
+/* 1. Restart Butonu Dönünce Taşmayı Engelle */
+.btn-restart {
+    /* Dönme işlemi sırasında tarayıcıya 'bu elementin şekli değişecek' bilgisini ver */
+    will-change: transform;
+    /* Butonun sınırlarını katılaştır */
+    transform: translateZ(0); 
+    /* Dönerken kenarların hafif taşmasını engelle */
+    backface-visibility: hidden; 
+}
+
+/* 2. Ana Konteyneri Kitle (Çift Dikiş) */
+body.fullscreen-mode .game-manager-container {
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow: hidden !important; /* İçerik ne yaparsa yapsın kaydırma çubuğu çıkarma */
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* 3. Alt Panele Güvenlik Boşluğu */
+.game-controls-bottom {
+    /* Butonlar en alta yapışıp taşma yapmasın diye biraz yukarı itiyoruz */
+    padding-bottom: 2px; 
+}
+/* src/styles/gametree-fixed.css - EN ALTA EKLE */
+
+/* --- TİTREME (JIGGLE) İÇİN KESİN ÇÖZÜM: FLEXBOX KİLİDİ --- */
+
+/* 1. Tüm Oyun Alanını Kitle */
+/* İçindeki hiçbir şeyin (buton dönmesi, tooltip vs.) dışarı taşmasına izin verme */
+.playing-view {
+    overflow: hidden !important;
+    width: 100%;
+    height: 100%;
+}
+
+.game-layout {
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important; /* Kritik satır: Taşmayı burada engelliyoruz */
+    align-items: center; /* Dikeyde her şeyi ortala */
+}
+
+/* 2. Sağdaki Kutuyu (Bilgi Kutusu) Ehlileştir */
+.info-only-section {
+    /* Bu kutunun genişliğinin esneyip diğerlerini itmesini engelle */
+    min-width: 250px; 
+    max-width: 350px; 
+    flex-shrink: 0; /* Asla küçülüp büyüme, sabit kal */
+    overflow: hidden; /* İçindeki metin taşarsa gizle (scroll çıkarma) */
+    
+    /* Sağ taraftan güvenli boşluk bırak ki scrollbar çıkmaya yeltenemesin */
+    margin-right: 10px; 
+}
+
+/* 3. Soldaki Kutuyu (Tahta Alanı) Ehlileştir */
+.board-section {
+    flex-grow: 1;
+    overflow: visible; /* Tooltip taşabilsin diye visible kalmalı ama... */
+    max-width: 100%; /* ...genişliği sınırlı olmalı */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 4. Alt Kontrol Panelindeki Butonun Etrafını Koru */
+.game-controls-bottom {
+    /* Buton dönerken etrafındaki boşluk (margin) sayesinde kimseyi itmesin */
+    padding: 10px; 
+    margin-top: 10px;
+    /* Panelin kendisi taşma yapmasın */
+    overflow: visible; 
+}

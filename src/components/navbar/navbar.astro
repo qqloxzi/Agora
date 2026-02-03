@@ -1,91 +1,105 @@
 ---
-import Container from "@components/container.astro";
 import { Astronav, MenuItems, MenuIcon } from "astro-navbar";
+import Dropdown from "./dropdown.astro"; 
 
+type MenuItem = {
+  title: string;
+  path?: string;      // ? işareti "opsiyonel" (isteğe bağlı) demektir
+  children?: { title: string; path: string; }[];
+};
 const menuitems = [
   { title: "Ligler", path: "/ligler" },
-  { title: "Kurs Planları", path: "/pricing" },
-  { title: "Hakkımızda", path: "/about" },
-  { title: "Kütüphane", path: "/blog" },
-  { title: "İletişim", path: "/contact" },
+  { title: "Planlar", path: "/pricing" },
+  { title: "Agora", path: "/agora" },
   { title: "Go Ağacı", path: "/goagaci" },
+  { title: "Kütüphane", path: "/blog" },
+  { title: "Hakkında", path: "/about" } // Dropdown kaldırıldı, düz link yapıldı
 ];
 ---
 
-<header class="fixed top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm transition-all">
-  <Container>
-    <div class="py-4 lg:py-5">
-      <Astronav>
-        <div class="flex flex-col lg:flex-row w-full items-center justify-between">
+<header class="fixed top-0 left-0 w-full z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm h-20 transition-all">
+  
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+    <Astronav>
+      
+      {/* 3 Sütunlu Yapı: Sol - Orta - Sağ */}
+      <div class="flex items-center justify-between w-full h-full">
+        
+        {/* 1. SOL: Logo (Sola yaslı) */}
+        <div class="flex-1 flex items-center justify-start">
+          <a href="/" class="flex items-center gap-2">
+            <img src="/transparentAgora.svg" alt="Agora Logo" class="h-10 w-auto object-contain" />
+          </a>
+        </div>
+
+        {/* 2. ORTA: Menü (Tam ortada) */}
+        <div class="hidden lg:flex flex-none justify-center">
+            <MenuItems class="hidden lg:flex">
+                <ul class="flex items-center gap-8"> 
+    {menuitems.map((item) => (
+      <li class="relative flex items-center">
+        <a href={item.path} class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-all hover:scale-105 whitespace-nowrap">
+            {item.title}
+        </a>
+      </li>
+    ))}
+</ul>
+            </MenuItems>
+        </div>
+
+        {/* 3. SAĞ: Butonlar (Sağa yaslı) */}
+        <div class="flex-1 flex items-center justify-end gap-4">
           
-          <div class="flex items-center justify-between w-full lg:w-1/4">
-            <a href="/" class="flex items-center">
-              <img src="/transparentAgora.svg" alt="Agora Logo" class="w-24 h-auto object-contain" />
-            </a>
-            <div class="block lg:hidden">
-              <MenuIcon class="w-6 h-6 text-gray-800 dark:text-gray-200" />
-            </div>
-          </div>
-
-          <MenuItems class="hidden w-full lg:flex lg:flex-1 justify-center mt-2 lg:mt-0">
-            <ul class="flex flex-col lg:flex-row lg:gap-8 items-center">
-              {menuitems.map((item) => (
-                <li>
-                  <a href={item.path} class="py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium transition-colors whitespace-nowrap">
-                    {item.title}
-                  </a>
-                </li>
-              ))}
-              
-              <li class="lg:hidden mt-2 pt-2 border-t border-gray-100 dark:border-gray-800 w-full text-center">
-                 <a href="/profile" class="block py-2 text-blue-600 dark:text-blue-400 font-bold">Profilim</a>
-              </li>
-            </ul>
-          </MenuItems>
-
-          <div class="hidden lg:flex lg:w-1/4 justify-end items-center gap-3">
-            
+          <div class="hidden lg:flex items-center gap-4">
             <div id="nav-auth-container" class="flex items-center">
-                
-                <a id="nav-login-btn" href="/signup" class="px-4 py-2 text-sm font-medium text-white bg-slate-800 hover:bg-slate-700 rounded-full transition-colors">
+                <a id="nav-login-btn" href="/signup" class="whitespace-nowrap px-6 py-2.5 text-sm font-medium text-white bg-slate-800 hover:bg-slate-700 rounded-full transition-colors shadow-sm hover:shadow-md">
                     Giriş Yap
                 </a>
 
-                <a id="nav-profile-btn" href="/profile" class="hidden flex items-center gap-2 p-1 pr-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-700 group">
+                <a id="nav-profile-btn" href="/profile" class="hidden flex items-center gap-2 p-1 pr-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all border border-transparent hover:border-gray-200">
                     <div class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                             <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
                         </svg>
                     </div>
-                    <span id="nav-user-name" class="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-black dark:group-hover:text-white">
-                        Profilim
-                    </span>
+                    <span id="nav-user-name" class="text-sm font-medium text-gray-700 dark:text-gray-200">Profilim</span>
                 </a>
             </div>
 
-            <div class="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1"></div>
+            <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
 
-            <button id="theme-toggle" class="p-2 rounded-full bg-transparent hover:bg-gray-200/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-300 transition-all focus:outline-none">
-              <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
-              </svg>
-              <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-              </svg>
+            <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-all focus:outline-none">
+              <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+              <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
             </button>
           </div>
-        </div>
-      </Astronav>
-    </div>
-  </Container>
-</header>
 
-<div class="h-20 lg:h-24"></div>
+          <div class="block lg:hidden">
+            <MenuIcon class="w-6 h-6 text-gray-800 dark:text-gray-200" />
+          </div>
+
+        </div>
+      </div>
+      
+      <MenuItems class="lg:hidden mt-4">
+        <ul class="flex flex-col gap-4 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-lg p-4 shadow-lg">
+           {menuitems.map((item) => (
+             <li><a href={item.path} class="block py-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white font-medium">{item.title}</a></li>
+           ))}
+           <li class="pt-2 border-t border-gray-100 dark:border-gray-800">
+              <a href="/signup" class="block py-2 text-center text-white bg-slate-800 rounded-full font-bold">Giriş Yap</a>
+           </li>
+        </ul>
+      </MenuItems>
+
+    </Astronav>
+  </div>
+</header>
+<div class="h-20"></div>
 
 <script>
   import { supabase } from 'lib/supabase';
 
-  // --- AUTH KONTROLÜ (Aynen korundu) ---
   async function checkNavbarAuth() {
     try {
       const loginBtn = document.getElementById('nav-login-btn');
@@ -127,12 +141,10 @@ const menuitems = [
 
   checkNavbarAuth();
 
-  // --- TEMA AYARLARI (GÜNCELLENEN KISIM) ---
   const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
   const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
   const themeToggleBtn = document.getElementById('theme-toggle');
 
-  // 1. Mevcut tercihi bul
   const currentTheme = (() => {
       if (typeof localStorage !== 'undefined' && localStorage.getItem('color-theme')) {
           return localStorage.getItem('color-theme');
@@ -143,31 +155,27 @@ const menuitems = [
       return 'light';
   })();
 
-  // 2. Sayfa yüklenirken doğru sınıfları ekle/çıkar
   if (currentTheme === 'dark') {
       document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light'); // Light varsa sil
+      document.documentElement.classList.remove('light'); 
       themeToggleLightIcon?.classList.remove('hidden');
   } else {
-      document.documentElement.classList.remove('dark');  // Dark varsa sil
-      document.documentElement.classList.add('light');    // Light EKLE
+      document.documentElement.classList.remove('dark');  
+      document.documentElement.classList.add('light');    
       themeToggleDarkIcon?.classList.remove('hidden');
   }
 
-  // 3. Butona tıklama olayı
   themeToggleBtn?.addEventListener('click', () => {
       themeToggleDarkIcon?.classList.toggle('hidden');
       themeToggleLightIcon?.classList.toggle('hidden');
 
-      // Eğer şu an dark ise -> light'a geç
       if (document.documentElement.classList.contains('dark')) {
           document.documentElement.classList.remove('dark');
-          document.documentElement.classList.add('light'); // Light sınıfını ekle
+          document.documentElement.classList.add('light'); 
           localStorage.setItem('color-theme', 'light');
       } 
-      // Eğer şu an light (veya boş) ise -> dark'a geç
       else {
-          document.documentElement.classList.remove('light'); // Light sınıfını sil
+          document.documentElement.classList.remove('light'); 
           document.documentElement.classList.add('dark');
           localStorage.setItem('color-theme', 'dark');
       }

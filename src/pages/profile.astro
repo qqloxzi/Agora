@@ -25,6 +25,30 @@ import Layout from '../layouts/Layout.astro';
         <p class="next-level-text">Sonraki seviyeye: <span id="xp-needed">100</span> XP</p>
       </div>
 
+      <div class="stats-grid">
+          <div class="stat-card">
+              <span class="stat-icon">🏆</span>
+              <div class="stat-content">
+                  <span class="stat-value" id="stat-completed">0</span>
+                  <span class="stat-label">Tamamlanan Set</span>
+              </div>
+          </div>
+          <div class="stat-card">
+              <span class="stat-icon">🔥</span>
+              <div class="stat-content">
+                  <span class="stat-value" id="stat-streak">0</span>
+                  <span class="stat-label">Günlük Seri</span>
+              </div>
+          </div>
+      </div>
+
+      <div class="achievements-section">
+          <h3>Rozetlerim</h3>
+          <div class="badges-grid" id="badges-container">
+              <div class="badge-item locked">🔒</div>
+          </div>
+      </div>
+
       <div class="profile-info">
         <div class="info-item">
           <label>Kullanıcı Adı</label>
@@ -58,28 +82,35 @@ import Layout from '../layouts/Layout.astro';
       return;
     }
 
-    // DOM Elemanlarını Seç ve Tip Dönüşümü Yap (HTMLElement olarak)
+    // DOM Elemanlarını Seç
     const els = {
         username: document.getElementById('display-username'),
         email: document.getElementById('display-email'),
         infoUsername: document.getElementById('info-username'),
         infoDate: document.getElementById('info-date'),
         avatarInitial: document.getElementById('avatar-initial'),
-        // Level Elemanları
         levelBadge: document.getElementById('display-level'),
         currentXp: document.getElementById('current-xp'),
         xpBar: document.getElementById('xp-bar'),
-        xpNeeded: document.getElementById('xp-needed')
+        xpNeeded: document.getElementById('xp-needed'),
+        statCompleted: document.getElementById('stat-completed'),
+        badgesContainer: document.getElementById('badges-container')
     };
 
     if (els.email) els.email.textContent = user.email || "";
 
-    // Veritabanından veriyi çek
+    // KULLANICI PROFİLİNİ ÇEK
     const { data: profile, error } = await supabase
       .from('agorasusers')
       .select('*')
       .eq('id', user.id)
       .single();
+
+    // TAMAMLANAN SETLERİ ÇEK
+    const { data: progressData, count: completedCount } = await supabase
+        .from('user_progress')
+        .select('category_id', { count: 'exact' })
+        .eq('user_id', user.id);
 
     if (error) console.error('Profil hatası:', error);
 
@@ -88,38 +119,51 @@ import Layout from '../layouts/Layout.astro';
     // Temel Bilgileri Yaz
     if (els.username) els.username.textContent = displayName;
     if (els.infoUsername) els.infoUsername.textContent = displayName;
-    if (els.infoDate && profile?.created_at) {
-        els.infoDate.textContent = new Date(profile.created_at).toLocaleDateString('tr-TR');
-    }
+    if (els.infoDate && profile?.created_at) els.infoDate.textContent = new Date(profile.created_at).toLocaleDateString('tr-TR');
     if (els.avatarInitial) els.avatarInitial.textContent = (displayName[0] || '?').toUpperCase();
 
-    // --- LEVEL ve XP HESAPLAMA ---
+    // --- LEVEL ve XP ---
     const totalXP = profile?.xp || 0;
     const currentLevel = profile?.level || 1;
-    
-    // Matematik
     const xpPerLevel = 100; 
     const xpInCurrentLevel = totalXP % xpPerLevel; 
     const progressPercent = (xpInCurrentLevel / xpPerLevel) * 100;
     const xpToNext = xpPerLevel - xpInCurrentLevel;
 
-    // Arayüzü Güncelle
-    // HATA ÇÖZÜMÜ 1: Sayıları String'e çevirdik (.toString())
     if (els.levelBadge) els.levelBadge.textContent = `Lvl ${currentLevel}`;
     if (els.currentXp) els.currentXp.textContent = totalXP.toString(); 
     if (els.xpNeeded) els.xpNeeded.textContent = xpToNext.toString();
     
-    // Bar Animasyonu
-    // HATA ÇÖZÜMÜ 2: Null kontrolünü kesinleştirdik
+    // XP Bar Animasyonu
     if (els.xpBar) {
-        const barElement = els.xpBar; // Elementi yerel bir değişkene aldık
-        setTimeout(() => {
-            barElement.style.width = `${progressPercent}%`;
+        const bar = els.xpBar;
+        setTimeout(() => { 
+            bar.style.width = `${progressPercent}%`; 
         }, 100);
     }
+
+    // --- İSTATİSTİKLER ---
+    if (els.statCompleted) els.statCompleted.textContent = (completedCount || 0).toString();
+
+    // --- ROZET MANTIĞI ---
+    const badgesHTML: string[] = []; 
+    const count = completedCount || 0;
+
+    // Rozet 1: İlk Adım (1 Set)
+    if (count >= 1) badgesHTML.push(`<div class="badge-item unlocked" title="İlk Adım: 1 Set Tamamlandı">🌱</div>`);
+    else badgesHTML.push(`<div class="badge-item locked" title="1 Set Tamamla">🔒</div>`);
+
+    // Rozet 2: Çırak (5 Set)
+    if (count >= 5) badgesHTML.push(`<div class="badge-item unlocked" title="Çırak: 5 Set Tamamlandı">🔨</div>`);
+    else badgesHTML.push(`<div class="badge-item locked" title="5 Set Tamamla">🔒</div>`);
+
+    // Rozet 3: Usta (10 Set)
+    if (count >= 10) badgesHTML.push(`<div class="badge-item unlocked" title="Usta: 10 Set Tamamlandı">⚔️</div>`);
+    else badgesHTML.push(`<div class="badge-item locked" title="10 Set Tamamla">🔒</div>`);
+
+    if (els.badgesContainer) els.badgesContainer.innerHTML = badgesHTML.join('');
   }
 
-  // Çıkış
   const logoutBtn = document.getElementById('logout-btn');
   if (logoutBtn) {
       logoutBtn.addEventListener('click', async () => {
@@ -135,53 +179,35 @@ import Layout from '../layouts/Layout.astro';
   /* GENEL STİLLER */
   .profile-container { max-width: 500px; margin: 5rem auto; padding: 0 1rem; font-family: 'Inter', sans-serif; }
   .profile-card { background: white; padding: 2.5rem; border-radius: 24px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); text-align: center; }
-  
-  /* AVATAR */
-  .avatar-circle { 
-    width: 80px; height: 80px; background: #2c3e50; margin: 0 auto 1rem; 
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 2.5rem; color: white; font-weight: bold;
-    box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3);
-  }
-  
+  .avatar-circle { width: 80px; height: 80px; background: #2c3e50; margin: 0 auto 1rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(44, 62, 80, 0.3); }
   h1 { font-size: 1.5rem; color: #1e293b; margin-bottom: 0.25rem; font-weight: 800; }
   .email-text { color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem; }
 
-  /* --- YENİ LEVEL BÖLÜMÜ --- */
-  .level-section {
-    background: #f1f5f9;
-    padding: 1.5rem;
-    border-radius: 16px;
-    margin-bottom: 2rem;
-    text-align: left;
-  }
-
-  .level-info {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
-  }
-
-  .level-badge {
-    background: #f59e0b; color: white; padding: 4px 12px;
-    border-radius: 20px; font-weight: 800; font-size: 0.9rem;
-    box-shadow: 0 2px 5px rgba(245, 158, 11, 0.4);
-  }
-
+  /* LEVEL BÖLÜMÜ */
+  .level-section { background: #f1f5f9; padding: 1.5rem; border-radius: 16px; margin-bottom: 2rem; text-align: left; }
+  .level-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .level-badge { background: #f59e0b; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(245, 158, 11, 0.4); }
   .xp-text { font-weight: 600; color: #475569; font-size: 0.9rem; }
+  .progress-track { width: 100%; height: 10px; background: #e2e8f0; border-radius: 10px; overflow: hidden; position: relative; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #f59e0b, #d97706); border-radius: 10px; width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+  .next-level-text { font-size: 0.8rem; color: #94a3b8; margin-top: 8px; text-align: right; }
 
-  .progress-track {
-    width: 100%; height: 10px; background: #e2e8f0;
-    border-radius: 10px; overflow: hidden; position: relative;
-  }
+  /* --- YENİ: İSTATİSTİK GRID --- */
+  .stats-grid { display: flex; gap: 15px; margin-bottom: 2rem; }
+  .stat-card { flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: transform 0.2s; }
+  .stat-card:hover { transform: translateY(-3px); border-color: #cbd5e1; }
+  .stat-icon { font-size: 1.5rem; margin-bottom: 5px; }
+  .stat-value { font-size: 1.5rem; font-weight: 800; color: #1e293b; line-height: 1; }
+  .stat-label { font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
 
-  .progress-fill {
-    height: 100%; background: linear-gradient(90deg, #f59e0b, #d97706);
-    border-radius: 10px; width: 0%;
-    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .next-level-text {
-    font-size: 0.8rem; color: #94a3b8; margin-top: 8px; text-align: right;
-  }
+  /* --- YENİ: ROZETLER --- */
+  .achievements-section { text-align: left; margin-bottom: 2rem; }
+  .achievements-section h3 { font-size: 1rem; color: #475569; margin-bottom: 10px; font-weight: 700; }
+  .badges-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge-item { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: help; transition: transform 0.2s; }
+  .badge-item:hover { transform: scale(1.1); }
+  .badge-item.locked { background: #e2e8f0; opacity: 0.5; filter: grayscale(1); }
+  .badge-item.unlocked { background: #dbeafe; border: 2px solid #3b82f6; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); }
 
   /* BİLGİ KARTLARI */
   .profile-info { text-align: left; margin-bottom: 2rem; }
@@ -190,18 +216,17 @@ import Layout from '../layouts/Layout.astro';
   label { font-weight: 600; color: #64748b; font-size: 0.9rem; }
   span { color: #1e293b; font-size: 0.95rem; font-weight: 500; }
 
-  /* BUTON */
-  .btn-danger {
-    width: 100%; padding: 0.85rem; border: none; border-radius: 12px;
-    background: #ef4444; color: white; font-weight: 600; cursor: pointer;
-    transition: all 0.2s;
-  }
+  .btn-danger { width: 100%; padding: 0.85rem; border: none; border-radius: 12px; background: #ef4444; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s; }
   .btn-danger:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
 
-  /* DARK MODE */
-  :global(body.dark) .profile-card { background: #1e293b; }
+  /* DARK MODE UYUMLULUĞU */
+  :global(body.dark) .profile-card { background: #1e293b; border: 1px solid #334155; }
   :global(body.dark) h1 { color: #f1f5f9; }
   :global(body.dark) .level-section { background: #0f172a; }
   :global(body.dark) .progress-track { background: #334155; }
   :global(body.dark) span, :global(body.dark) label { color: #cbd5e1; }
+  :global(body.dark) .stat-card { background: #0f172a; border-color: #334155; }
+  :global(body.dark) .stat-value { color: #f1f5f9; }
+  :global(body.dark) .badge-item.locked { background: #334155; }
+  :global(body.dark) .info-item { border-bottom-color: #334155; }
 </style>

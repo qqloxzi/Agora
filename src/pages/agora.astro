@@ -1,0 +1,266 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Agora Meydanı | Agora Go Akademisi">
+  <div class="forum-container">
+    
+    <header class="forum-header">
+      <h1>Agora Meydanı 🏛️</h1>
+      <p>Toplulukla tartış, soru sor ve fikirlerini paylaş.</p>
+    </header>
+
+    <div class="create-post-card" id="post-form-container" style="display: none;">
+      <form id="forum-form">
+        <input type="text" id="post-title" placeholder="Konu Başlığı (Opsiyonel)" class="form-input title-input" />
+        <textarea id="post-content" placeholder="Aklından neler geçiyor? Go hakkında bir şeyler söyle..." required class="form-input content-input"></textarea>
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Paylaş 🚀</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="login-warning" class="login-warning" style="display: none;">
+        <p>Paylaşım yapmak için <a href="/signup">giriş yapmalısınız</a>.</p>
+    </div>
+
+    <div class="posts-feed" id="posts-feed">
+        <div class="loading-spinner">Yükleniyor...</div>
+    </div>
+
+  </div>
+</Layout>
+
+<script>
+  import { supabase } from '../lib/supabase';
+  import type { User } from '@supabase/supabase-js'; // User tipini ekledik
+
+  // DOM Elementlerini Seçimi
+  const els = {
+    formContainer: document.getElementById('post-form-container'),
+    loginWarning: document.getElementById('login-warning'),
+    form: document.getElementById('forum-form') as HTMLFormElement | null,
+    titleInput: document.getElementById('post-title') as HTMLInputElement | null,
+    contentInput: document.getElementById('post-content') as HTMLTextAreaElement | null,
+    feed: document.getElementById('posts-feed')
+  };
+
+  // HATA ÇÖZÜMÜ 1: Değişkenin hem User hem null olabileceğini belirttik
+  let currentUser: User | null = null;
+
+  async function initForum() {
+    // 1. Kullanıcıyı Kontrol Et
+    const { data: { user } } = await supabase.auth.getUser();
+    currentUser = user;
+
+    if (user) {
+      if(els.formContainer) els.formContainer.style.display = 'block';
+    } else {
+      if(els.loginWarning) els.loginWarning.style.display = 'block';
+    }
+
+    // 2. Gönderileri Çek
+    await fetchPosts();
+  }
+
+  async function fetchPosts() {
+    const { data, error } = await supabase
+      .from('forum_posts')
+      .select(`
+        *,
+        agorasusers ( username )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Postlar çekilemedi:", error);
+      if(els.feed) els.feed.innerHTML = `<p class="error-text">Veriler yüklenirken hata oluştu.</p>`;
+      return;
+    }
+
+    // Gelen veriyi render fonksiyonuna gönder
+    if (data) {
+        renderPosts(data);
+    }
+  }
+
+  // HATA ÇÖZÜMÜ 2: 'posts' parametresinin herhangi bir dizisi (any[]) olabileceğini söyledik.
+  // Bu sayede 'never' hatası çözüldü.
+  function renderPosts(posts: any[]) {
+    // HATA ÇÖZÜMÜ 3: els.feed null mu diye kontrol ediyoruz
+    if (!els.feed) return;
+    
+    els.feed.innerHTML = '';
+
+    if (posts.length === 0) {
+      els.feed.innerHTML = `<div class="empty-state">Henüz kimse bir şey yazmamış. İlk sen ol! 🎤</div>`;
+      return;
+    }
+
+    posts.forEach(post => {
+      const date = new Date(post.created_at).toLocaleDateString('tr-TR', { 
+        day: 'numeric', month: 'long', hour: '2-digit', minute:'2-digit' 
+      });
+
+      // Kullanıcı adı güvenliği
+      // agorasusers dizisi veya objesi gelebilir, kontrol ediyoruz
+      let authorName = 'Bilinmeyen Oyuncu';
+      
+      // Supabase bazen tekli ilişkiyi obje, bazen dizi olarak döndürebilir.
+      if (post.agorasusers) {
+          if (Array.isArray(post.agorasusers) && post.agorasusers.length > 0) {
+              authorName = post.agorasusers[0].username;
+          } else if (post.agorasusers.username) {
+              authorName = post.agorasusers.username;
+          }
+      }
+
+      const initial = authorName[0] ? authorName[0].toUpperCase() : '?';
+
+      const html = `
+        <div class="post-card">
+          <div class="post-header">
+            <div class="author-avatar">${initial}</div>
+            <div class="author-info">
+              <span class="author-name">@${authorName}</span>
+              <span class="post-date">${date}</span>
+            </div>
+          </div>
+          
+          ${post.title ? `<h3 class="post-title">${escapeHtml(post.title)}</h3>` : ''}
+          <div class="post-body">
+            ${formatContent(escapeHtml(post.content))}
+          </div>
+        </div>
+      `;
+      
+      // HATA ÇÖZÜMÜ 3 (Devamı): Yukarıda !els.feed kontrolü yaptığımız için burada güvenle kullanabiliriz.
+      // Ancak TypeScript bazen callback içinde bunu unutabilir, tekrar ? koymak sağlam olur.
+      if (els.feed) els.feed.innerHTML += html;
+    });
+  }
+
+  function escapeHtml(text: string) {
+    if(!text) return "";
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+  }
+
+  function formatContent(text: string) {
+      return text.replace(/\n/g, '<br>');
+  }
+
+  // --- GÖNDERİ PAYLAŞMA ---
+  if (els.form) {
+    els.form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!currentUser) return alert("Lütfen giriş yapın.");
+
+      // Inputların null olmadığını kontrol et
+      if (!els.titleInput || !els.contentInput) return;
+
+      const title = els.titleInput.value.trim();
+      const content = els.contentInput.value.trim();
+
+      if (!content) return alert("İçerik boş olamaz!");
+
+      const { error } = await supabase
+        .from('forum_posts')
+        .insert({
+          user_id: currentUser.id,
+          title: title || null,
+          content: content
+        });
+
+      if (error) {
+        alert("Paylaşım başarısız: " + error.message);
+      } else {
+        if (els.form) els.form.reset();
+        await fetchPosts();
+      }
+    });
+  }
+
+  initForum();
+</script>
+
+<style>
+  /* GENEL DÜZEN */
+  .forum-container { max-width: 700px; margin: 0 auto; padding: 2rem 1rem; font-family: 'Inter', sans-serif; }
+  
+  .forum-header { text-align: center; margin-bottom: 3rem; }
+  .forum-header h1 { font-size: 2.5rem; color: #1e293b; margin-bottom: 0.5rem; font-weight: 800; }
+  .forum-header p { color: #64748b; font-size: 1.1rem; }
+
+  /* FORM KARTI */
+  .create-post-card { 
+    background: white; padding: 1.5rem; border-radius: 16px; 
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 3rem; 
+    border: 1px solid #e2e8f0;
+  }
+  
+  .form-input { 
+    width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; 
+    padding: 12px; font-family: inherit; margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { outline: none; border-color: #3b82f6; ring: 2px solid #3b82f6; }
+  
+  .title-input { font-weight: 700; font-size: 1.1rem; }
+  .content-input { min-height: 100px; resize: vertical; }
+
+  .form-actions { text-align: right; }
+  .btn-submit {
+    background: #2563eb; color: white; padding: 10px 24px; border-radius: 8px;
+    font-weight: 600; border: none; cursor: pointer; transition: transform 0.1s;
+  }
+  .btn-submit:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+  /* GİRİŞ UYARISI */
+  .login-warning {
+      text-align: center; padding: 20px; background: #eff6ff; 
+      border-radius: 12px; border: 1px solid #dbeafe; color: #1e40af;
+      margin-bottom: 2rem;
+  }
+  .login-warning a { color: #2563eb; font-weight: bold; text-decoration: underline; }
+
+  /* GÖNDERİ LİSTESİ */
+  .posts-feed { display: flex; flex-direction: column; gap: 20px; }
+  
+  .post-card { 
+    background: white; padding: 1.5rem; border-radius: 16px; 
+    border: 1px solid #e2e8f0; transition: box-shadow 0.2s;
+  }
+  .post-card:hover { box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); }
+
+  .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+  .author-avatar {
+    width: 40px; height: 40px; background: linear-gradient(135deg, #475569, #1e293b);
+    color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 1.1rem;
+  }
+  .author-info { display: flex; flex-direction: column; }
+  .author-name { font-weight: 700; color: #0f172a; font-size: 0.95rem; }
+  .post-date { font-size: 0.75rem; color: #94a3b8; }
+
+  .post-title { margin: 0 0 8px 0; color: #1e293b; font-size: 1.2rem; }
+  .post-body { color: #334155; line-height: 1.6; font-size: 1rem; }
+
+  .empty-state { text-align: center; color: #94a3b8; padding: 40px; font-style: italic; }
+  .error-text { text-align: center; color: #ef4444; }
+
+  /* DARK MODE */
+  :global(body.dark) .forum-header h1 { color: #f1f5f9; }
+  :global(body.dark) .forum-header p { color: #94a3b8; }
+  :global(body.dark) .create-post-card, :global(body.dark) .post-card { background: #1e293b; border-color: #334155; }
+  :global(body.dark) .form-input { background: #0f172a; border-color: #334155; color: white; }
+  :global(body.dark) .post-title { color: #f1f5f9; }
+  :global(body.dark) .post-body { color: #cbd5e1; }
+  :global(body.dark) .author-name { color: #e2e8f0; }
+  :global(body.dark) .login-warning { background: #172554; border-color: #1e3a8a; color: #bfdbfe; }
+</style>

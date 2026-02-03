@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import GoBoardReact from "../components/GoBoardReact.jsx";
+
+// Öğretmen modu için varsayılan boş bir tahta ayarı
+const initialConfig = {
+  id: "teacher-playground",
+  size: 19, // Varsayılan olarak 19x19 açılır (Setup modunda değiştirebilirsin)
+  turn: 'black',
+  title: "Yeni Soru Şablonu",
+  description: "Taşları dizmek için SETUP, hamleleri kaydetmek için RECORD moduna geçin.",
+  initialState: "[]", // Boş tahta
+  solution: { children: [] } // Boş çözüm ağacı
+};
+---
+
+<Layout title="Öğretmen Masası">
+  {/* Arka planı koyu yapıyoruz ki beyaz tahta ve yazılar net görünsün */}
+  <div style="background-color: #2c3e50; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: 40px;">
+    
+    <div style="text-align: center; margin-bottom: 30px;">
+      <h1 style="color: #f1c40f; margin: 0;">🎓 Öğretmen Masası</h1>
+      <p style="color: #ecf0f1; margin-top: 10px; max-width: 600px; line-height: 1.5;">
+        Bu sayfada soruları hazırlayıp JSON formatında indirebilirsin. <br/>
+        <span style="opacity: 0.7; font-size: 0.9em;">(Önce taşları diz, sonra <b>🔴 Kayıt Başlat</b> diyerek hamleleri oyna ve <b>✅/❌</b> ile işaretle.)</span>
+      </p>
+    </div>
+
+    {/* Öğretmen Modu Bileşeni */}
+    <GoBoardReact 
+      client:only="react" 
+      problem={initialConfig} 
+      isTeacher={true} 
+    />
+
+  </div>
+</Layout>
