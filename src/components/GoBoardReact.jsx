@@ -1,7 +1,8 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import '../styles/goboard.css'; 
 
-const GoBoardReact = ({ problem, isTeacher = false, onSolve = null }) => {
+const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description = '' }) => {
   const canvasRef = useRef(null);
   const wrapperRef = useRef(null);
   
@@ -318,21 +319,19 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null }) => {
   const state = gameState.current;
   const size = state.size;
 
-  const dpr = window.devicePixelRatio || 1;
+  const dpr = Math.max(2, window.devicePixelRatio || 1);
   const rect = canvas.getBoundingClientRect();
-
-  // 🔒 Canvas boyutunu TAM piksele kilitle
   const W = Math.floor(rect.width);
 
   canvas.style.width = `${W}px`;
   canvas.style.height = `${W}px`;
-
   canvas.width = W * dpr;
   canvas.height = W * dpr;
 
-  // 🔥 DPR transform (TEK KEZ)
+  ctx.save();
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = true;
+  if (ctx.imageSmoothingQuality) ctx.imageSmoothingQuality = 'high';
 
   const padding = 36;
   const cellSize = (W - padding * 2) / (size - 1);
@@ -342,22 +341,23 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null }) => {
   ctx.fillStyle = "#f4b35f";
   ctx.fillRect(0, 0, W, W);
 
-  // === GRID ÇİZGİLERİ (JİLET GİBİ) ===
+  // === GRID ÇİZGİLERİ - keskin ve net ===
   ctx.strokeStyle = "#2b1d0e";
   ctx.lineWidth = 1;
+  ctx.lineCap = 'butt';
+  ctx.lineJoin = 'miter';
 
   ctx.beginPath();
-for (let i = 0; i < size; i++) {
-  const raw = padding + i * cellSize;
-  const p = Math.round(raw) + 0.5; // 🔒 PİKSEL KİLİDİ
+  for (let i = 0; i < size; i++) {
+    const raw = padding + i * cellSize;
+    const p = Math.round(raw) + 0.5;
 
-  ctx.moveTo(p, padding + 0.5);
-  ctx.lineTo(p, W - padding + 0.5);
-
-  ctx.moveTo(padding + 0.5, p);
-  ctx.lineTo(W - padding + 0.5, p);
-}
-ctx.stroke();
+    ctx.moveTo(p, padding + 0.5);
+    ctx.lineTo(p, W - padding + 0.5);
+    ctx.moveTo(padding + 0.5, p);
+    ctx.lineTo(W - padding + 0.5, p);
+  }
+  ctx.stroke();
 
 
   // === HOSHI ===
@@ -405,15 +405,22 @@ ctx.stroke();
       state.stones[x][y].color === "black" ? "#fff" : "#000";
     ctx.fill();
   }
+
+  // === HOVER ÖNİZLEME (boş karede yarı saydam taş) ===
+  const { x: hx, y: hy } = state.hoverPos;
+  if (hx >= 0 && hy >= 0 && !state.stones[hx][hy] && !state.isLocked) {
+    const previewColor = state.turn;
+    drawStone(ctx, hx, hy, previewColor, cellSize, padding, 0.45);
+  }
+
+  ctx.restore();
 };
 
-
- 
 
   const drawStone = (ctx, x, y, color, cellSize, padding, opacity) => {
   const cx = padding + x * cellSize;
   const cy = padding + y * cellSize;
-  const r = cellSize * 0.48;
+  const r = cellSize * 0.47;
 
   ctx.save();
   ctx.globalAlpha = opacity;
@@ -423,19 +430,21 @@ ctx.stroke();
 
   if (color === "black") {
     const g = ctx.createRadialGradient(
-      cx - r * 0.25, cy - r * 0.25, r * 0.1,
+      cx - r * 0.3, cy - r * 0.3, 0,
       cx, cy, r
     );
-    g.addColorStop(0, "#555");
+    g.addColorStop(0, "#666");
+    g.addColorStop(0.5, "#333");
     g.addColorStop(1, "#000");
     ctx.fillStyle = g;
   } else {
     const g = ctx.createRadialGradient(
-      cx - r * 0.25, cy - r * 0.25, r * 0.1,
+      cx - r * 0.3, cy - r * 0.3, 0,
       cx, cy, r
     );
     g.addColorStop(0, "#fff");
-    g.addColorStop(1, "#ddd");
+    g.addColorStop(0.6, "#f5f5f5");
+    g.addColorStop(1, "#e0e0e0");
     ctx.fillStyle = g;
   }
 
@@ -448,7 +457,7 @@ ctx.stroke();
       const state = gameState.current;
       if (state.isLocked && state.mode === 'SOLVE') { canvasRef.current.style.cursor = 'default'; return; }
       const rect = canvasRef.current.getBoundingClientRect();
-      const padding = 30;
+      const padding = 36;
       const cellSize = (rect.width - padding * 2) / (state.size - 1);
       const mouseX = e.clientX - rect.left - padding; const mouseY = e.clientY - rect.top - padding;
       const x = Math.round(mouseX / cellSize); const y = Math.round(mouseY / cellSize);
@@ -607,8 +616,12 @@ ctx.stroke();
         </div>
       )}
 
+      {/* İpucu: Tahtanın hemen üstünde, minimal */}
+      {description && !isTeacher && (
+        <div className="go-hint-box">{description}</div>
+      )}
+
       {/* Durum Mesajı (Tebrikler vs.) */}
-      {/* NOT: GameManager zaten sonuç ekranı gösteriyor, istersen burayı da !isTeacher ile gizleyebilirsin ama anlık geri bildirim için kalabilir. */}
       <div className="status" style={{color: statusColor}}>{statusMsg}</div>
 
       <div className="go-wrapper-shadow">

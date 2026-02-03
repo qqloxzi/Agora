@@ -993,6 +993,38 @@ export const problemSet: Problem[] = [
     ]
   }
 },
-
+{
+  id: "prob-1770146632596",
+  size: 19,
+  labels: "[[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "deneme 19",
+  category: "Joseki",
+  description: "asdasda",
+  initialState: "[[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,{\"color\":\"black\"},null,null,null,null,null,{\"color\":\"black\"},null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,{\"color\":\"white\"},null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null],[null,null,null,{\"color\":\"white\"},null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]]",
+  lastMove: {
+    x: 9,
+    y: 8,
+    color: "white"
+  },
+  solution: {
+    children: [
+      {
+        x: 9,
+        y: 9,
+        color: "white",
+        children: [],
+        status: "correct"
+      },
+      {
+        x: 9,
+        y: 8,
+        color: "white",
+        children: [],
+        status: "correct"
+      }
+    ]
+  }
+}
 
 ]

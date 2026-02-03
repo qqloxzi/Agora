@@ -8,19 +8,22 @@
 }
 
 .status {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    min-height: 1.5em;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    min-height: 1.2em;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 .go-wrapper-shadow {
     position: relative;
     border-radius: 4px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-    padding: 5px; /* Çerçeve kalınlığı */
-    background: #5d3a1a; /* Ahşap rengi */
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    padding: 0;
+    background: transparent;
+    min-width: 360px;
+    max-width: 560px;
+    width: 100%;
 }
 
 .go-container {
@@ -33,29 +36,29 @@
   width: 100%;
   height: 100%;
   display: block;
-
-
-  transform: none !important;
-  image-rendering: pixelated;
+  transform: translateZ(0);
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
 }
 
 
-/* Koordinatlar */
+/* Koordinatlar - tahtanın üzerinde görünür */
 .coords-layer {
     position: absolute;
-    top: 30px; left: 30px; right: 30px; bottom: 30px; /* Padding ile eşleşmeli */
+    top: 36px; left: 36px; right: 36px; bottom: 36px;
     pointer-events: none;
+    z-index: 2;
 }
 
 .coord-label {
     position: absolute;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 11px;
+    font-weight: 600;
     color: #3e2723;
     transform: translate(-50%, -50%);
 }
-.coord-label.col { top: -20px; }
-.coord-label.row { left: -20px; }
+.coord-label.col { top: -32px; }
+.coord-label.row { left: -32px; }
 
 /* Kontroller */
 .bottom-controls {
@@ -76,7 +79,19 @@
 }
 .control-btn:hover { background: #e74c3c; transform: scale(1.1); }
 
-.top-info-bar { margin-bottom: 10px; }
+.top-info-bar { margin-bottom: 6px; }
+.go-hint-box {
+    font-size: 0.78rem;
+    color: var(--tree-text, #374151);
+    background: var(--tree-border, #e5e7eb);
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    max-width: 100%;
+    line-height: 1.3;
+    text-align: center;
+    opacity: 0.9;
+}
 .turn-badge {
     background: rgba(0,0,0,0.6);
     padding: 5px 15px;

@@ -3,37 +3,127 @@ import GoBoardReact from './GoBoardReact';
 import '../styles/gametree-fixed.css';
 import { supabase } from '../lib/supabase'; 
 
-// ... (treeStructure AYNI KALSIN) ...
+// --- 1. VERİ YAPISI (YENİ NODLAR EKLENDİ) ---
 const treeStructure = [
-  {
-    title: "Başlangıç (20-18k)",
+  { 
+    title: "(20 kyu-18 kyu)Başlangıç", 
     levels: [
+      // Kök
       { id: 'Kurallar', label: 'Kurallar', icon: '📖', parent: null },
+      
+      // Dal 1
       { id: 'Esir Alma 1', label: 'Esir Alma 1', icon: '🌑', parent: 'Kurallar' },
-      { id: 'İki Göz Kavramı', label: 'İki Göz', icon: '👀', parent: 'Esir Alma 1' },
-      { id: 'Nefes Yarışı', label: 'Nefes Yarışı', icon: '🏃', parent: 'İki Göz Kavramı' },
+      { id: 'Bağlanma & Kesme', label: 'Bağlanma & Kesme', icon: '🎯', parent: 'Esir Alma 1' }, // Yeni
+      { id: 'Nefes Yarışı', label: 'Nefes Yarışı', icon: '🚫', parent: 'Bağlanma & Kesme' }, // Yeni
+      
+      // Dal 2
+      { id: 'Yaşam & Ölüm 1', label: 'Yaşam & Ölüm 1', icon: '👀', parent: 'Kurallar' },
+      { id: 'Nefes Yarışı', label: 'Nefes Yarışı', icon: '🏃', parent: 'Yaşam & Ölüm 1' },
+      { id: 'Ko Kuralı', label: 'Ko Kuralı', icon: '🔄', parent: 'Yaşam & Ölüm 1' }, // Yeni
+      
+      // Dal 3 (Nefes Yarışından devam)
       { id: 'Tesuji 1', label: 'Tesuji 1', icon: '⚡', parent: 'Nefes Yarışı' },
+      { id: 'Merdiven', label: 'Merdiven', icon: '🪜', parent: 'Tesuji 1' }, // Yeni
+      { id: 'File (Net)', label: 'File (Net)', icon: '🕸️', parent: 'Tesuji 1' }, // Yeni
     ]
   },
-  {
-    title: "Temel Taşlar (17-12k)",
+  { 
+    title: "🧱 Usta Adayı (Temel Taşlar)", 
     levels: [
+      // Kök
       { id: 'Ölüm & Kalım 1', label: 'Ölüm & Kalım', icon: '💀', parent: null },
+      
+      // Dal 1
       { id: 'Açılış Prensipleri 1', label: 'Açılış 1', icon: '🌟', parent: 'Ölüm & Kalım 1' },
-      { id: 'Sente', label: 'Sente', icon: '🗡️', parent: 'Açılış Prensipleri 1' },
+      { id: 'Köşe Kapmaca', label: 'Köşe Kapmaca', icon: '📐', parent: 'Açılış Prensipleri 1' }, // Yeni
+      { id: 'Kenar Açılışı', label: 'Kenar Açılışı', icon: '📏', parent: 'Açılış Prensipleri 1' }, // Yeni
+
+      // Dal 2
+      { id: 'Sente', label: 'Sente', icon: '🗡️', parent: 'Ölüm & Kalım 1' },
+      { id: 'Gote', label: 'Gote', icon: '🛡️', parent: 'Sente' }, // Yeni
       { id: 'Şekil', label: 'Şekil', icon: '🔺', parent: 'Sente' },
+      
+      // Dal 3 (Şekil altı)
+      { id: 'Kesme & Bağlama', label: 'Kesme', icon: '✂️', parent: 'Şekil' }, // Yeni
+      { id: 'Bambu Bağı', label: 'Bambu Bağı', icon: '🎋', parent: 'Şekil' }, // Yeni
     ]
   },
-  {
-    title: "İleri Seviye (11-6k)",
+  { 
+    title: "🐉 Usta Seviyesi (İleri)", 
     levels: [
+      // Kök
       { id: 'Joseki', label: 'Joseki', icon: '📚', parent: null },
+      
+      // Dal 1
       { id: 'İstila', label: 'İstila', icon: '🏰', parent: 'Joseki' },
-      { id: 'Saldırı', label: 'Saldırı', icon: '⚔️', parent: 'İstila' },
+      { id: 'Sabaki', label: 'Sabaki', icon: '🦋', parent: 'İstila' }, // Yeni
+      { id: 'Miai', label: 'Miai', icon: '⚖️', parent: 'İstila' }, // Yeni
+
+      // Dal 2
+      { id: 'Saldırı', label: 'Saldırı', icon: '⚔️', parent: 'Joseki' },
+      { id: 'Ağır Taşlar', label: 'Ağır Taşlar', icon: '🪨', parent: 'Saldırı' }, // Yeni
+      
+      // Dal 3
       { id: 'Sayma', label: 'Sayma', icon: '🧮', parent: 'Saldırı' },
+      { id: 'Yose (Son Oyun)', label: 'Yose', icon: '🏁', parent: 'Sayma' }, // Yeni
+      { id: 'Ko Tehdidi', label: 'Ko Tehdidi', icon: '💣', parent: 'Sayma' }, // Yeni
     ]
   }
 ];
+
+// --- 2. LOGIC: Düz listeyi hiyerarşik (iç içe) yapıya çevirir ---
+const buildHierarchy = (flatLevels) => {
+  const nodes = flatLevels.map(n => ({...n, children: []}));
+  const map = {};
+  nodes.forEach(n => map[n.id] = n);
+  const roots = [];
+  
+  nodes.forEach(n => {
+    if (n.parent && map[n.parent]) {
+      map[n.parent].children.push(n);
+    } else {
+      roots.push(n);
+    }
+  });
+  return roots;
+};
+
+// --- 3. BİLEŞEN: Recursive Tree Node (Kendi kendini çağıran yapı) ---
+const TreeNode = ({ node, completedLevels, startLevel, allProblems }) => {
+    const isLocked = node.parent && !completedLevels.includes(node.parent);
+    const isCompleted = completedLevels.includes(node.id);
+    const questionCount = allProblems.filter(p => p.category === node.id).length;
+  
+    return (
+      <div className="tree-node-container">
+        {/* Node Görünümü */}
+        <div 
+          className={`level-node ${isLocked ? 'locked' : ''} ${isCompleted ? 'completed' : ''}`}
+          onClick={() => startLevel(node.id, isLocked)}
+          title={node.label}
+        >
+          <div className="node-icon">{node.icon}</div>
+          {questionCount > 0 && <span className="node-badge">{questionCount}</span>}
+          <span className="node-label">{node.label}</span>
+        </div>
+  
+        {/* Çocukları (Varsa çiz) */}
+        {node.children && node.children.length > 0 && (
+          <div className="node-children">
+            {node.children.map(child => (
+              <TreeNode 
+                key={child.id} 
+                node={child} 
+                completedLevels={completedLevels}
+                startLevel={startLevel}
+                allProblems={allProblems}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+};
 
 const GameManager = ({ allProblems }) => {
   const [activeCategory, setActiveCategory] = useState(null);
@@ -45,11 +135,8 @@ const GameManager = ({ allProblems }) => {
   const [isNextActive, setIsNextActive] = useState(false);
   const [levelStats, setLevelStats] = useState({ correct: 0, wrong: 0 });
   const [currentProblemHasError, setCurrentProblemHasError] = useState(false);
-  
-  // TAHTAYI SIFIRLAMAK İÇİN KEY
   const [resetKey, setResetKey] = useState(0);
 
-  // ... (useEffect kısımları AYNI KALSIN) ...
   useEffect(() => {
     const initProgress = async () => {
         const localSaved = localStorage.getItem('goProgress');
@@ -104,7 +191,7 @@ const GameManager = ({ allProblems }) => {
     setCurrentIndex(0);
     setLevelStats({ correct: 0, wrong: 0 }); 
     setCurrentProblemHasError(false);
-    setResetKey(0); // Reset sayacını sıfırla
+    setResetKey(0); 
     setGameMode('playing');
   };
 
@@ -112,16 +199,15 @@ const GameManager = ({ allProblems }) => {
     if (activeCategory && currentIndex < activeCategory.problems.length - 1) {
       setCurrentIndex(c => c + 1);
       setCurrentProblemHasError(false);
-      setResetKey(prev => prev + 1); // Yeni soruya geçerken tahtayı tazelemek için
+      setResetKey(prev => prev + 1); 
     } else {
       handleLevelComplete(activeCategory.id);
     }
   };
 
   const handleRestart = () => {
-    // Sadece tahtayı sıfırla (State'i resetlemeden key'i değiştir)
     setResetKey(prev => prev + 1);
-    setCurrentProblemHasError(false); // Hatayı sıfırla, tekrar denesin
+    setCurrentProblemHasError(false); 
   };
 
   const handleProblemSolve = (success) => {
@@ -137,75 +223,69 @@ const GameManager = ({ allProblems }) => {
   };
 
   const activeProblem = activeCategory ? activeCategory.problems[currentIndex] : null;
-  
-  // İlerleme Yüzdesi Hesapla
   const progressPercent = activeCategory ? ((currentIndex + 1) / activeCategory.problems.length) * 100 : 0;
 
   return (
     <div className="game-manager-container">
-      {/* ... (TREE VIEW KISMI AYNI KALSIN) ... */}
+      {/* --- AĞAÇ GÖRÜNÜMÜ --- */}
       {gameMode === 'tree' && (
         <div className="tree-view">
           <header className="tree-header">
-            <h1>Go Yetenek Ağacı</h1>
-            <p>Usta bir oyuncu olmak için yolu takip et.</p>
+            <h1>🌳 Go Yetenek Ağacı</h1>
+            <p>Yukarıdan başla, kökleri salarak ilerle.</p>
             {!currentUser && <p style={{color:'#ef4444', fontSize:'0.9rem'}}>⚠️ İlerlemenizin kaydedilmesi için giriş yapmalısınız.</p>}
           </header>
-          <div className="columns-wrapper">
-            {treeStructure.map((col, colIndex) => (
-              <div key={colIndex} className="tree-column">
-                <h3 className="column-title">{col.title}</h3>
-                <div className="nodes-container">
-                  {col.levels.map((level) => {
-                    const isLocked = level.parent && !completedLevels.includes(level.parent);
-                    const isCompleted = completedLevels.includes(level.id);
-                    const questionCount = allProblems.filter(p => p.category === level.id).length;
-                    return (
-                      <div key={level.id} className="node-wrapper">
-                        {level.parent && <div className={`connector ${isLocked ? 'locked' : ''}`}></div>}
-                        <div className={`level-node ${isLocked ? 'locked' : ''} ${isCompleted ? 'completed' : ''}`} onClick={() => startLevel(level.id, isLocked)}>
-                          <div className="node-icon">{level.icon}</div>
-                          <span className="node-badge">{questionCount}</span>
+          
+          <div className="tree-scroll-container">
+            {/* 3 Farklı Set İçin Döngü */}
+            {treeStructure.map((categoryGroup, index) => {
+                // Her kategori grubu için veriyi o an hiyerarşik hale getiriyoruz
+                const hierarchy = buildHierarchy(categoryGroup.levels);
+
+                return (
+                    <div key={index} className="tree-section">
+                        <h2 className="section-title" style={{textAlign:'center', marginTop:'40px', color:'#2c3e50'}}>{categoryGroup.title}</h2>
+                        <div className="org-tree">
+                            {hierarchy.map((rootNode) => (
+                                <TreeNode 
+                                    key={rootNode.id} 
+                                    node={rootNode}
+                                    completedLevels={completedLevels}
+                                    startLevel={startLevel}
+                                    allProblems={allProblems}
+                                />
+                            ))}
                         </div>
-                        <span className="node-label">{level.label}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
+                        {/* Bölümler arasına ayırıcı çizgi (sonuncusu hariç) */}
+                        {index !== treeStructure.length - 1 && <hr style={{margin:'40px auto', width:'50%', opacity:0.3}}/>}
+                    </div>
+                );
+            })}
           </div>
         </div>
       )}
 
-      {/* --- OYUN GÖRÜNÜMÜ (YENİ TASARIM) --- */}
+      {/* --- OYUN GÖRÜNÜMÜ --- */}
       {gameMode === 'playing' && activeProblem && (
         <div className="playing-view">
             <div className="game-layout">
-                
-                {/* SOL TARAF: TAHTA VE KONTROLLER */}
-                <div className="board-section">
-                    
-                    {/* 1. ÜST BİLGİ VE ÇIKIŞ */}
+                <div className="board-section board-section-full">
                     <div className="game-navbar">
                         <h3>{activeCategory.id} <span style={{opacity:0.6, fontSize:'0.8em'}}>({currentIndex + 1} / {activeCategory.problems.length})</span></h3>
                         <button className="exit-btn" onClick={() => setGameMode('tree')}>✕ Çıkış</button>
                     </div>
 
-                    {/* 2. İLERLEME ÇUBUĞU (BAR) */}
                     <div className="progress-container">
                         <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
                     </div>
                     
-                    {/* 3. GO TAHTASI */}
-                    {/* Key olarak currentIndex ve resetKey veriyoruz, böylece sıfırlanabiliyor */}
                     <GoBoardReact 
                         key={`${currentIndex}-${resetKey}`} 
                         problem={activeProblem}
-                        onSolve={handleProblemSolve} 
+                        onSolve={handleProblemSolve}
+                        description={activeProblem.description || "Bu hamleyi dikkatli düşün."}
                     />
 
-                    {/* 4. ALT KONTROLLER (HİZALI BUTONLAR) */}
                     <div className="game-controls-bottom">
                         <button 
                             className="control-pill-btn btn-prev"
@@ -235,22 +315,11 @@ const GameManager = ({ allProblems }) => {
                         </button>
                     </div>
                 </div>
-
-                {/* SAĞ TARAF: SADECE BİLGİ KUTUSU */}
-                <div className="info-only-section">
-                    <div className="info-card-wrapper">
-                        <div key={currentIndex} className="description-box pop-animation">
-                            <h4>💡 İpucu</h4>
-                            <p>{activeProblem.description || "Bu hamleyi dikkatli düşün."}</p>
-                        </div>
-                    </div>
-                    {/* Butonlar buradan kaldırıldı */}
-                </div>
             </div>
         </div>
       )}
 
-      {/* ... (SONUÇ EKRANI AYNI KALSIN) ... */}
+      {/* --- SONUÇ EKRANI --- */}
       {gameMode === 'result' && (
           <div className="result-overlay">
               <div className="result-card">
