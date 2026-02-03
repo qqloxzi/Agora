@@ -33,9 +33,8 @@ import Layout from '../layouts/Layout.astro';
 
 <script>
   import { supabase } from '../lib/supabase';
-  import type { User } from '@supabase/supabase-js'; // User tipini ekledik
+  import type { User } from '@supabase/supabase-js';
 
-  // DOM Elementlerini Seçimi
   const els = {
     formContainer: document.getElementById('post-form-container'),
     loginWarning: document.getElementById('login-warning'),
@@ -45,144 +44,64 @@ import Layout from '../layouts/Layout.astro';
     feed: document.getElementById('posts-feed')
   };
 
-  // HATA ÇÖZÜMÜ 1: Değişkenin hem User hem null olabileceğini belirttik
   let currentUser: User | null = null;
 
   async function initForum() {
-    // 1. Kullanıcıyı Kontrol Et
-    const { data: { user } } = await supabase.auth.getUser();
-    currentUser = user;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      currentUser = user;
 
-    if (user) {
-      if(els.formContainer) els.formContainer.style.display = 'block';
-    } else {
-      if(els.loginWarning) els.loginWarning.style.display = 'block';
+      if (user) {
+        if(els.formContainer) els.formContainer.style.display = 'block';
+      } else {
+        if(els.loginWarning) els.loginWarning.style.display = 'block';
+      }
+
+      await fetchPosts();
+    } catch (e) {
+      console.error("Başlatma hatası:", e);
     }
-
-    // 2. Gönderileri Çek
-    await fetchPosts();
   }
 
   async function fetchPosts() {
+    // ÖNEMLİ: Tablo ilişkisi yoksa hata almamak için önce düz çekelim
     const { data, error } = await supabase
       .from('forum_posts')
-      .select(`
-        *,
-        agorasusers ( username )
-      `)
+      .select('*') // Şimdilik ilişkisiz çekiyoruz ki kilitlenme çözülsün
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error("Postlar çekilemedi:", error);
-      if(els.feed) els.feed.innerHTML = `<p class="error-text">Veriler yüklenirken hata oluştu.</p>`;
+      console.error("Postlar çekilemedi:", error.message);
+      if(els.feed) els.feed.innerHTML = `<p style="color:red">Veritabanı hatası: ${error.message}</p>`;
       return;
     }
 
-    // Gelen veriyi render fonksiyonuna gönder
-    if (data) {
+    if (data && Array.isArray(data)) {
         renderPosts(data);
     }
   }
 
-  // HATA ÇÖZÜMÜ 2: 'posts' parametresinin herhangi bir dizisi (any[]) olabileceğini söyledik.
-  // Bu sayede 'never' hatası çözüldü.
   function renderPosts(posts: any[]) {
-    // HATA ÇÖZÜMÜ 3: els.feed null mu diye kontrol ediyoruz
     if (!els.feed) return;
-    
     els.feed.innerHTML = '';
 
     if (posts.length === 0) {
-      els.feed.innerHTML = `<div class="empty-state">Henüz kimse bir şey yazmamış. İlk sen ol! 🎤</div>`;
+      els.feed.innerHTML = `<div style="text-align:center; padding:20px;">Henüz mesaj yok.</div>`;
       return;
     }
 
     posts.forEach(post => {
-      const date = new Date(post.created_at).toLocaleDateString('tr-TR', { 
-        day: 'numeric', month: 'long', hour: '2-digit', minute:'2-digit' 
-      });
-
-      // Kullanıcı adı güvenliği
-      // agorasusers dizisi veya objesi gelebilir, kontrol ediyoruz
-      let authorName = 'Bilinmeyen Oyuncu';
+      // Güvenli tarih ve içerik kontrolü
+      const date = post.created_at ? new Date(post.created_at).toLocaleDateString('tr-TR') : "...";
       
-      // Supabase bazen tekli ilişkiyi obje, bazen dizi olarak döndürebilir.
-      if (post.agorasusers) {
-          if (Array.isArray(post.agorasusers) && post.agorasusers.length > 0) {
-              authorName = post.agorasusers[0].username;
-          } else if (post.agorasusers.username) {
-              authorName = post.agorasusers.username;
-          }
-      }
-
-      const initial = authorName[0] ? authorName[0].toUpperCase() : '?';
-
       const html = `
-        <div class="post-card">
-          <div class="post-header">
-            <div class="author-avatar">${initial}</div>
-            <div class="author-info">
-              <span class="author-name">@${authorName}</span>
-              <span class="post-date">${date}</span>
-            </div>
-          </div>
-          
-          ${post.title ? `<h3 class="post-title">${escapeHtml(post.title)}</h3>` : ''}
-          <div class="post-body">
-            ${formatContent(escapeHtml(post.content))}
-          </div>
+        <div style="background:white; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #ddd; color:black;">
+          <small style="color:gray">${date}</small>
+          <h3 style="margin:5px 0">${post.title || 'Başlıksız'}</h3>
+          <p>${post.content}</p>
         </div>
       `;
-      
-      // HATA ÇÖZÜMÜ 3 (Devamı): Yukarıda !els.feed kontrolü yaptığımız için burada güvenle kullanabiliriz.
-      // Ancak TypeScript bazen callback içinde bunu unutabilir, tekrar ? koymak sağlam olur.
       if (els.feed) els.feed.innerHTML += html;
-    });
-  }
-
-  function escapeHtml(text: string) {
-    if(!text) return "";
-    return text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-  }
-
-  function formatContent(text: string) {
-      return text.replace(/\n/g, '<br>');
-  }
-
-  // --- GÖNDERİ PAYLAŞMA ---
-  if (els.form) {
-    els.form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      if (!currentUser) return alert("Lütfen giriş yapın.");
-
-      // Inputların null olmadığını kontrol et
-      if (!els.titleInput || !els.contentInput) return;
-
-      const title = els.titleInput.value.trim();
-      const content = els.contentInput.value.trim();
-
-      if (!content) return alert("İçerik boş olamaz!");
-
-      const { error } = await supabase
-        .from('forum_posts')
-        .insert({
-          user_id: currentUser.id,
-          title: title || null,
-          content: content
-        });
-
-      if (error) {
-        alert("Paylaşım başarısız: " + error.message);
-      } else {
-        if (els.form) els.form.reset();
-        await fetchPosts();
-      }
     });
   }
 
