@@ -104,3 +104,27 @@
 .turn-indicator { width: 12px; height: 12px; border-radius: 50%; }
 .turn-indicator.black { background: black; border: 1px solid #555; }
 .turn-indicator.white { background: white; }
+
+.go-app-react {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;}
+
+/* Sadece mobil cihazlar için ayar */
+@media (max-width: 600px) {
+    .go-wrapper-shadow {
+        min-width: unset; /* 360px zorlamasını kaldır */
+        width: 95%;       /* Kenarlardan taşmayı önle */
+        margin: 0 auto;   /* Ortala */
+    }
+
+    .bottom-controls {
+        position: relative;
+        z-index: 10;
+        margin-top: 15px;
+        padding-bottom: 50px; /* Mobilde parmakla basmak için ekstra alan */
+    }
+}

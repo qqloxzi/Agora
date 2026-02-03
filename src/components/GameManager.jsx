@@ -6,69 +6,89 @@ import { supabase } from '../lib/supabase';
 // --- 1. VERİ YAPISI (YENİ NODLAR EKLENDİ) ---
 const treeStructure = [
   { 
-    title: "(20 kyu-18 kyu)Başlangıç", 
+    title: "(20-18 kyu) Başlangıç", 
     levels: [
       // Kök
-      { id: 'Kurallar', label: 'Kurallar', icon: '📖', parent: null },
+      { id: 'Kurallar', label: 'Kurallar', icon: '📜', parent: null },
       
       // Dal 1
-      { id: 'Esir Alma 1', label: 'Esir Alma 1', icon: '🌑', parent: 'Kurallar' },
-      { id: 'Bağlanma & Kesme', label: 'Bağlanma & Kesme', icon: '🎯', parent: 'Esir Alma 1' }, // Yeni
-      { id: 'Nefes Yarışı', label: 'Nefes Yarışı', icon: '🚫', parent: 'Bağlanma & Kesme' }, // Yeni
+      { id: 'Esir Alma 1', label: 'Esir Alma 1', icon: '✊', parent: 'Kurallar' },
+      { id: 'Bağlanma & Kesme', label: 'Bağlanma & Kesme', icon: '🔗', parent: 'Esir Alma 1' }, 
+      { id: 'Nefes Yarışı 1', label: 'Nefes Yarışı 1', icon: '🌬️', parent: 'Bağlanma & Kesme' }, 
       
       // Dal 2
-      { id: 'Yaşam & Ölüm 1', label: 'Yaşam & Ölüm 1', icon: '👀', parent: 'Kurallar' },
-      { id: 'Nefes Yarışı', label: 'Nefes Yarışı', icon: '🏃', parent: 'Yaşam & Ölüm 1' },
-      { id: 'Ko Kuralı', label: 'Ko Kuralı', icon: '🔄', parent: 'Yaşam & Ölüm 1' }, // Yeni
+      { id: 'Yaşam & Ölüm 1', label: 'Yaşam & Ölüm 1', icon: '👁️', parent: 'Kurallar' },
+      { id: 'Kaçış Yolu', label: 'Kaçış Yolu', icon: '🏃', parent: 'Yaşam & Ölüm 1' },
+      { id: 'Oyunu Sona Erdirme', label: 'Oyunu Sona Erdirme', icon: '🏁', parent: 'Yaşam & Ölüm 1' }, 
       
       // Dal 3 (Nefes Yarışından devam)
-      { id: 'Tesuji 1', label: 'Tesuji 1', icon: '⚡', parent: 'Nefes Yarışı' },
-      { id: 'Merdiven', label: 'Merdiven', icon: '🪜', parent: 'Tesuji 1' }, // Yeni
-      { id: 'File (Net)', label: 'File (Net)', icon: '🕸️', parent: 'Tesuji 1' }, // Yeni
+      { id: 'Tesuji 1', label: 'Tesuji 1', icon: '💡', parent: 'Kaçış Yolu' },
+      { id: 'Merdiven ile Esir Alma', label: 'Merdiven ile Esir Alma', icon: '🪜', parent: 'Tesuji 1' }, 
+      { id: 'Ağ ile Esir Alma', label: 'Ağ ile Esir Alma', icon: '🕸️', parent: 'Tesuji 1' }, 
     ]
   },
   { 
-    title: "🧱 Usta Adayı (Temel Taşlar)", 
+    title: "(17-12 kyu) Temel Taşlar", 
     levels: [
       // Kök
-      { id: 'Ölüm & Kalım 1', label: 'Ölüm & Kalım', icon: '💀', parent: null },
+      { id: 'Yaşam & Ölüm 2', label: 'Yaşam & Ölüm 2', icon: '☠️', parent: null },
       
       // Dal 1
-      { id: 'Açılış Prensipleri 1', label: 'Açılış 1', icon: '🌟', parent: 'Ölüm & Kalım 1' },
-      { id: 'Köşe Kapmaca', label: 'Köşe Kapmaca', icon: '📐', parent: 'Açılış Prensipleri 1' }, // Yeni
-      { id: 'Kenar Açılışı', label: 'Kenar Açılışı', icon: '📏', parent: 'Açılış Prensipleri 1' }, // Yeni
+      { id: 'Güçlü & Zayıf Şekiller', label: 'Güçlü & Zayıf Şekiller', icon: '🔷', parent: 'Yaşam & Ölüm 2' },
+      { id: 'Güçlü & Zayıf Gruplar', label: 'Güçlü & Zayıf Gruplar', icon: '🏰', parent: 'Güçlü & Zayıf Şekiller' }, 
+      { id: 'Büyük & Acil Hamleler', label: 'Büyük & Acil Hamleler', icon: '🚨', parent: 'Güçlü & Zayıf Şekiller' }, 
 
       // Dal 2
-      { id: 'Sente', label: 'Sente', icon: '🗡️', parent: 'Ölüm & Kalım 1' },
-      { id: 'Gote', label: 'Gote', icon: '🛡️', parent: 'Sente' }, // Yeni
-      { id: 'Şekil', label: 'Şekil', icon: '🔺', parent: 'Sente' },
+      { id: 'Açılış Safhası', label: 'Açılış Safhası', icon: '🌅', parent: 'Yaşam & Ölüm 2' },
+      { id: 'Joseki 1', label: 'Joseki 1', icon: '🧩', parent: 'Açılış Safhası' }, 
+      { id: 'Oyun Yönü 1', label: 'Oyun Yönü 1', icon: '🧭', parent: 'Açılış Safhası' },
       
       // Dal 3 (Şekil altı)
-      { id: 'Kesme & Bağlama', label: 'Kesme', icon: '✂️', parent: 'Şekil' }, // Yeni
-      { id: 'Bambu Bağı', label: 'Bambu Bağı', icon: '🎋', parent: 'Şekil' }, // Yeni
+      { id: 'Oyun Ortası 1', label: 'Oyun Ortası 1', icon: '⚔️', parent: 'Oyun Yönü 1' }, 
+      { id: 'Oyun Sonu 1', label: 'Oyun Sonu 1', icon: '📐', parent: 'Oyun Yönü 1' }, 
     ]
   },
   { 
-    title: "🐉 Usta Seviyesi (İleri)", 
+    title: "(11-6 kyu) Gelişim", 
     levels: [
       // Kök
-      { id: 'Joseki', label: 'Joseki', icon: '📚', parent: null },
+      { id: 'Yaşam & Ölüm 3', label: 'Yaşam & Ölüm 3', icon: '🚑', parent: null },
       
       // Dal 1
-      { id: 'İstila', label: 'İstila', icon: '🏰', parent: 'Joseki' },
-      { id: 'Sabaki', label: 'Sabaki', icon: '🦋', parent: 'İstila' }, // Yeni
-      { id: 'Miai', label: 'Miai', icon: '⚖️', parent: 'İstila' }, // Yeni
+      { id: 'Oyun Yönü 2', label: 'Oyun Yönü 2', icon: '🔭', parent: 'Yaşam & Ölüm 3' },
+      { id: 'Oyun Ortası 2', label: 'Oyun Ortası 2', icon: '🔥', parent: 'Oyun Yönü 2' }, 
+      { id: 'Oyun Sonu 2', label: 'Oyun Sonu 2', icon: '🧮', parent: 'Oyun Yönü 2' }, 
 
       // Dal 2
-      { id: 'Saldırı', label: 'Saldırı', icon: '⚔️', parent: 'Joseki' },
-      { id: 'Ağır Taşlar', label: 'Ağır Taşlar', icon: '🪨', parent: 'Saldırı' }, // Yeni
+      { id: 'Tesuji 2', label: 'Tesuji 2', icon: '⚡', parent: 'Yaşam & Ölüm 3' },
+      { id: 'Ko', label: 'Ko', icon: '🔁', parent: 'Tesuji 2' }, 
+      { id: 'Joseki 2', label: 'Joseki 2', icon: '📚', parent: 'Ko' },
       
       // Dal 3
-      { id: 'Sayma', label: 'Sayma', icon: '🧮', parent: 'Saldırı' },
-      { id: 'Yose (Son Oyun)', label: 'Yose', icon: '🏁', parent: 'Sayma' }, // Yeni
-      { id: 'Ko Tehdidi', label: 'Ko Tehdidi', icon: '💣', parent: 'Sayma' }, // Yeni
+      { id: 'Sente & Gote', label: 'Sente & Gote', icon: '⏩', parent: 'Tesuji 2' },
+      { id: 'İstila & Küçültme', label: 'İstila & Küçültme', icon: '🪂', parent: 'Sente & Gote' }, 
+      { id: 'Saldırı & Savunma', label: 'Saldırı & Savunma', icon: '🛡️', parent: 'Sente & Gote' }, 
     ]
-  }
+  },
+
+ { 
+    title: "(5kyu-1dan) Aydınlanma", 
+    levels: [
+      // Kök
+      { id: 'Oyun Yönü 2', label: 'Oyun Yönü 2', icon: '🪐', parent: null },
+      
+      // Dal 1
+      { id: 'Tesuji 3', label: 'Tesuji 3', icon: '💎', parent: 'Oyun Yönü 2' },
+      { id: 'Joseki 3', label: 'Joseki 3', icon: '🗿', parent: 'Tesuji 3' }, 
+      { id: 'Yaşam & Ölüm 4', label: 'Yaşam & Ölüm 4', icon: '👻', parent: 'Joseki 3' }, 
+      
+      // Dal 2
+      { id: 'Hamle Değerleri', label: 'Hamle Değerleri', icon: '⚖️', parent: 'Oyun Yönü 2' },
+      { id: 'Pro Kavrayışı', label: 'Pro Kavrayışı', icon: '🥋', parent: 'Hamle Değerleri' },
+      { id: 'Yapay Zeka', label: 'Yapay Zeka', icon: '🤖', parent: 'Hamle Değerleri' },
+      
+    ]
+  },
 ];
 
 // --- 2. LOGIC: Düz listeyi hiyerarşik (iç içe) yapıya çevirir ---
