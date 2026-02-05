@@ -222,7 +222,6 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
           category: category,
           description: description,
           initialState: state.initialStateStr || JSON.stringify(state.stones),
-          lastMove: state.lastMove,
           solution: cleanSolution,
           
       };
@@ -293,7 +292,7 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
           }
       });
 
-      if (!captured && getLiberties(x, y, color, newStones) === 0) { showMessage("İntihar Yasak!", "#e74c3c"); return false; }
+      if (!captured && getLiberties(x, y, color, newStones) === 0) { showMessage("Tanımsız Hamle", "#e74c3c"); return false; }
       
       const newBoardStr = JSON.stringify(newStones);
       if (state.history.includes(newBoardStr)) {
@@ -333,7 +332,7 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
   ctx.imageSmoothingEnabled = true;
   if (ctx.imageSmoothingQuality) ctx.imageSmoothingQuality = 'high';
 
-  const padding = 36;
+  const padding = W * 0.05; 
   const cellSize = (W - padding * 2) / (size - 1);
 
   // === ZEMİN ===
@@ -627,11 +626,36 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
       <div className="go-wrapper-shadow">
           <div className="go-container">
              <div className="coords-layer">
+                 {/* FORMÜL MANTIĞI:
+                    Başlangıç: %4 (PADDING_RATIO * 100)
+                    Kalan Alan: %92 (100 - 4*2)
+                    Adım Aralığı: 92 / (size - 1)
+                 */}
+                 
                  {coordinateLabels.col.map((lbl, i) => (
-                     <span key={`c-${i}`} className="coord-label col" style={{left: `${(i * 100) / (gameState.current.size - 1)}%`}}>{lbl}</span>
+                     <span 
+                        key={`c-${i}`} 
+                        className="coord-label col" 
+                        style={{
+                            left: `${4 + (i * 92) / (gameState.current.size - 1)}%`,
+                            top: '2%' /* Harfleri biraz yukarıda tut */
+                        }}
+                     >
+                        {lbl}
+                     </span>
                  ))}
+                 
                  {coordinateLabels.row.map((lbl, i) => (
-                     <span key={`r-${i}`} className="coord-label row" style={{top: `${(i * 100) / (gameState.current.size - 1)}%`}}>{lbl}</span>
+                     <span 
+                        key={`r-${i}`} 
+                        className="coord-label row" 
+                        style={{
+                            top: `${4 + (i * 92) / (gameState.current.size - 1)}%`,
+                            left: '2%' /* Sayıları biraz solda tut */
+                        }}
+                     >
+                        {lbl}
+                     </span>
                  ))}
              </div>
              <canvas ref={canvasRef} className="goBoard" onMouseMove={handleMouseMove} onMouseLeave={() => { gameState.current.hoverPos = {x:-1, y:-1}; drawBoard(); }} onClick={handleClick} />

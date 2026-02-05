@@ -12,35 +12,44 @@ export interface Problem {
   turn: 'black' | 'white'; 
   title: string;
   initialState: string;
-  lastMove?: { x: number; y: number; color: string } | null;
   solution: SolutionNode[] | { children: SolutionNode[] };
   category: string;
   description: string;
 }
 
 export const problemSet: Problem[] = [
- 
+ {
+  id: "1",
+  size: 19,
+  labels: "[[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]]",
+  turn: "black",
+  title: "Go",
+  category: "Kurallar",
+  description: "Go, basit kuralları ile düşünce ve duygusal derinliği arasındaki karşıtlıkla öğrenmesi basit, ustalaşması zor bir oyun, üstelik bir sanattır. Fakat tahmin edeceğiniz üzere keyif almak için usta olmaktan ziyade Go'yu sevmek gerekiyor. Lafı daha fazla uzatmadan sizi kurallar setini öğrenmeye davet ediyoruz. İyi eğlenceler! ",
+  initialState: "[[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]]",
+  solution: []
+},
+
   {
-    id: "1",
+    id: "2",
     category: "Kurallar",
     size: 9,
     labels:'[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,1,null,null,null,null],[null,null,null,2,null,4,null,null,null],[null,null,null,null,3,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]',
-    description: "Bir taşın veya grubun yatay ve dikey düzlemde komşusu olan tüm boş kesişim noktaları, o taşın nefesidir.",
+    description: "Oyun boş bir tahta ve siyahın hamlesi ile başlar. Sırayla dizilen taşlar neticesinde iki tarafın 'pas' demesi oyunu sonlandırır. Taşlar, çizgilerin kesişim noktalarına yerleştirilir. Bir taşın yatay ve dikey düzlemde komşusu olan tüm boş kesişim noktaları o taşın nefeslerini oluşturur.",
     turn: "white",
     title: "Kurallar",
-    lastMove: null,
     initialState: '[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"black\"},null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]',      
      solution: []
     
 },
   
  {
-    id: "2",
+    id: "3",
     category: "Kurallar",
     size: 9,
     labels:'[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]',
-    description: "Eğer bir taşın veya grubun etrafındaki tüm nefes yolları rakip taşlarca kapatılırsa tahtadan kaldırılır",
-    turn: "white",
+    description: "Eğer bir taşın etrafındaki tüm nefes yolları diğer renk taşlarla kapatılırsa tahtadan kaldırılır",
+    turn: "white",  
     title: "Kurallar",
     initialState: '[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"white\"},null,null,null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]', 
        solution:{
@@ -52,27 +61,6 @@ export const problemSet: Problem[] = [
       }
     ]
   }
-},
-{
-  id: "3",
-  category: "Kurallar",
-  size: 9,
-  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,1,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,2,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  description: "Beyaz, sol taraftaki siyah grubun ortasına oynamak isterse nefesi olmadığı için oraya oynayamaz. Fakat sağ taraftaki gruba oynamak isterse  siyah taşları esir alıp kendine nefes açabildiği için bu hamleyi yapabilir.",
-  turn: "white",
-  title: "Kurallar",
-  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"black\"},null,null,null,null],[null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},null,null,null],[null,null,null,null,{\"color\":\"black\"},null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,{\"color\":\"black\"},null,{\"color\":\"white\"},{\"color\":\"black\"},null,null,null],[null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},null,null,null,null]]",
-  solution: {
-    "children": [
-      {
-        "x": 7,
-        "y": 3,
-        "color": "white",
-        "children": [],
-        "status": "correct"
-      }
-    ]
-  }
 },{
   id: "4",
   size: 9,
@@ -80,13 +68,8 @@ export const problemSet: Problem[] = [
   turn: "white",
   title: "Atari",
   category: "Kurallar",
-  description: "Beyaz, siyah grubun toplam 7 nefesinden 6 tanesini kapatmış durumda, son nefesini de kapatıp siyah taşları esir olarak alabilir.",
+  description: "Bir taş için geçerli olan durum taş grupları için de geçerlidir. Beyaz, siyah grubun toplam 7 nefesinden 6 tanesini kapatmış durumda, son nefesini de kapatması durumunda siyah grubu esir ederek tahtadan kaldırabilir.",
   initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,null,{\"color\":\"white\"},null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  lastMove: {
-    x: 4,
-    y: 3,
-    color: "white"
-  },
   solution: {
     children: [
       {
@@ -98,38 +81,34 @@ export const problemSet: Problem[] = [
       }
     ]
   }},
-
   {
   id: "5",
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
-  title: "İki Göz",
+  title: "Tanımsız Hamle",
   category: "Kurallar",
-  description: "Siyahın soldaki grubunun 1 gözü var beyaz oraya oynayarak siyahı öldürebilir. Fakat köşedeki grubun 2 gözü var. Beyazın o grubu öldürebilmesi için aynı anda iki noktaya oynayabilmesi gerek, fakat beyaz bunu yapamaycağına göre, siyah grup yaşıyordur.",
-  initialState: "[[null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}]]",
-  solution: {
-    children: []
-  }
+  description: "Tahtada yalnızca nefesimiz olduğu noktalara oynayabiliriz. Siyah grubun ortasında beyazın tüm nefeslerinin kapalı olmasından dolayı oraya hamle yapılamaz.",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,{\"color\":\"black\"},null,null,null,null,null],[null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},null,null,null,null],[null,null,null,{\"color\":\"black\"},null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: []
 },
-
 {
   id: "6",
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
-  title: "İki Göz",
+  title: "Nefes Tutma",
   category: "Kurallar",
-  description: "Beyazın yaşayabilmesi için iki göze ihtiyacı var.",
-  initialState: "[[null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  description: "Taşlarımızın nefesi olmayan bir noktaya oynayabilmesinin bir şartı vardır: o noktaya oynadığımızda karşı renkteki taşları esir edip tahtanın dışına çıkarabiliyor ve dolayısı ile kendimize nefes açabiliyorsak o noktaya oynayabiliriz.",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   solution: {
     children: [
       {
-        x: 0,
-        y: 7,
+        x: 3,
+        y: 3,
         color: "white",
         children: [],
-        status: null
+        status: "correct"
       }
     ]
   }
@@ -138,63 +117,22 @@ export const problemSet: Problem[] = [
   id: "7",
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  turn: "black",
-  title: "İki Göz",
+  turn: "white",
+  title: "Ko",
   category: "Kurallar",
-  description: "Eğer sıra siyahta olsaydı beyazın iki gözünü bozmaya çalışırdı.",
-  initialState: "[[null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  solution: {
-    children: [
-      {
-        x: 0,
-        y: 7,
-        color: "black",
-        children: [],
-        status: "correct"
-      }
-    ]
-  }
+  description: "コウ or 劫 (kō), taşların sürekli birbirini yiyerek tahtanın aynı duruma dönmesini ve oyunun sonsuz bir döngüye girmesini engelleyen bir kuraldır.Beyaz F5 taşını yerse, siyah hemen E5 taşını esir olarak alamaz. Bu kuraldan dolayı tahtanın başka bir noktasına oynamak zorunda veya pas diyebilir. Böylece beyaz isterse F5 Oynayarak Ko'yu bitirebilir veya başka bir noktaya oynayarak siyahın E5'teki taşı almasına izin verebilir. Merak etmeyin ileride bununla iligili çok daha açıklayıcı pozisyonlar göreceğiz. ",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"black\"},null,null,null,null],[null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},null,null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,null,{\"color\":\"white\"},null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution:  [],
+  
 },
 {
   id: "8",
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
-  title: "Yalancı Göz",
-  category: "Kurallar",
-  description: "Siyah grubun iki gözü var gibi gözükse de aslında sağdaki boşluk göz değil: Çünkü beyaz orayı bozabiliyor.",
-  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"}],[null,null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"}],[null,null,null,null,null,null,null,null,null]]",
-  solution: {
-    children: [
-      {
-        x: 5,
-        y: 8,
-        color: "white",
-        children: [],
-        status: "correct"
-      }
-    ]
-  }
-},{
-  id: "9",
-  size: 9,
-  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  turn: "white",
-  title: "ko",
-  category: "Kurallar",
-  description: "ko",
-  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"black\"},null,null,null,null],[null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},null,null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,null,{\"color\":\"white\"},null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  solution:  [],
-  
-},
-{
-  id: "10",
-  size: 9,
-  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  turn: "white",
   title: "Ko",
   category: "Kurallar",
-  description: "Beyaz siyah taşı esir ettiğinde,siyah ko kuralından dolayı en az 1 hamle beklemek zorunda. Bu sayede beyaz diğer taşı yiyerek gruplarını bağlayabilir ve siyah grubu parçalayabilir.",
+  description: "Ko kuralına bir örnek. Ko sayesinde ayrı kalmış iki grubumuzu bağlayabiliriz.",
   initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,{\"color\":\"black\"},null,null],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"black\"},null],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,null,null,null,{\"color\":\"black\"},null,null],[null,null,null,null,null,null,{\"color\":\"black\"},null,null],[null,null,null,null,null,null,null,null,null]]",
   solution: {
     children: [
@@ -253,56 +191,22 @@ export const problemSet: Problem[] = [
       }
     ]
   }
+},{
+  id: "9",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Oyunun Sonlandırılması",
+  category: "Kurallar",
+  description: "dfsdfs",
+  initialState: "[[null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"}],[{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null],[null,{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,{\"color\":\"black\"}],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"}],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}]]",
+  solution: {
+    children: []
+  }
 },
+
 {
   id: "11",
-  size: 9,
-  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  turn: "black",
-  title: "Oyun Sonu",
-  category: "Kurallar",
-  description: "Kendi alanımıza oynarsak: Kendi puanımızı (boşluğumuzu) doldurur, 1 puan kaybederiz. Rakibin alanına oynarsak: Taşımız orada yaşayamaz, rakibe bedavadan esir (puan) veririz.Yapacak kârlı hamlemiz kalmadığında: İkimiz de sırayla Pas deriz ve oyun biter, sayıma geçeriz.",
-  initialState: "[[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null],[{\"color\":\"black\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null,null]]",
-  solution: {
-    children: []
-  }
-},
-{
-  id: "12",
-  size: 9,
-  labels: "[[null,null,null,null,null,null,1,3,5],[null,null,null,null,null,null,2,4,6],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,8,7,null,null,null,null],[null,null,9,null,null,null,null,null,null],[12,11,10,null,null,null,null,null,null]]",
-  turn: "white",
-  title: "Oyun Sonu Alan",
-  category: "Kurallar",
-  description: " Oyun sonunda buna benzer tahtalar göreceğiz. Taşlarınla etrafını tamamen çevirdiğin her boş nokta sana 1 puan kazandırır. Amaç en çok taşı yemek değil, en geniş boş alanı kuşatmaktır ",
-  initialState: "[[null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null],[{\"color\":\"black\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null,null]]",
-  solution: {
-    children: []
-  }
-},
-{
-  id: "13",
-  size: 9,
-  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
-  turn: "white",
-  title: "Teşekkürler",
-  category: "Kurallar",
-  description: "Go'yu öğrenmenin en doğal yolu oyun onamaktan geçiyor, isterseniz kütüphaneden oyun oynayabileceğiniz web sitelere, mobil uygulamalara bakabilirsiniz. ",
-  initialState: "[[null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"}],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,null,null,null]]",
-  solution: {
-    children: [
-      {
-        x: 4,
-        y: 4,
-        color: "white",
-        children: [],
-        status: "correct"
-      }
-    ]
-  }
-},
-{
-  id: "14",
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
@@ -907,11 +811,6 @@ export const problemSet: Problem[] = [
   category: "Esir Alma 1",
   description: "Beyaz siyah taşları 2 gruba ayırmaya çalışıyor. Siyah nasıl bağlanabilir?",
   initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,null],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,null,null,null,{\"color\":\"black\"},null,null],[null,null,null,null,null,{\"color\":\"black\"},null,null,null],[null,null,null,null,null,null,{\"color\":\"white\"},null,null],[null,null,null,null,null,null,null,null,null]]",
-  lastMove: {
-    x: 4,
-    y: 6,
-    color: "white"
-  },
   solution: {
     children: [
       {
@@ -1002,11 +901,6 @@ export const problemSet: Problem[] = [
   category: "Joseki",
   description: "asdasda",
   initialState: "[[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,{\"color\":\"black\"},null,null,null,null,null,{\"color\":\"black\"},null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,{\"color\":\"white\"},null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null],[null,null,null,{\"color\":\"white\"},null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,{\"color\":\"white\"},null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]]",
-  lastMove: {
-    x: 9,
-    y: 8,
-    color: "white"
-  },
   solution: {
     children: [
       {

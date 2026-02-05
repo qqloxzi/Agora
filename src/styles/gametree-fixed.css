@@ -3,7 +3,7 @@
 /* --- 1. RENK PALETİ VE TEMEL AYARLAR --- */
 :root {
     /* Varsayılan (AÇIK MOD / LIGHT) */
-    --tree-bg: #f3f4f6;       /* Arka plan rengi */
+    --tree-bg: 	#ffffff;       /* Arka plan rengi */
     --tree-text: #1f2937;     /* Ana metin */
     --tree-box-bg: #ffffff;   /* Kutu/Kart arka planı */
     --tree-border: #e2e8f0;   /* İnce kenarlıklar */
@@ -108,118 +108,134 @@ html.dark {
     margin-top: 10px;
 }
 
+/* --- AĞAÇ YAPISI (KESİN HİZALAMA ÇÖZÜMÜ) --- */
 
-/* --- AĞAÇ YAPISI (RECURSIVE) --- */
-.org-tree {
-    display: inline-block;
-    padding-top: 10px;
+/* 1. KAPSAYICILARI SIFIRLA */
+.org-tree, 
+.org-tree ul, 
+.org-tree li, 
+.node-children,
+.tree-node-container {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
 }
 
+/* 2. ANA AĞAÇ KUTUSU */
+.org-tree {
+    display: flex;
+    justify-content: center; /* Ağacı sayfanın tam ortasına koy */
+    width: 100%;
+    padding-top: 20px;
+}
+
+/* 3. DÜĞÜM KAPSAYICISI (EN KRİTİK KISIM) */
+/* Her bir node ve onun altındaki tüm çocukları kapsayan kutu */
 .tree-node-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 12px; 
+    flex-direction: column;      /* Yukarıdan aşağı dizilim */
+    align-items: center !important; /* İkonu ve çocukları yatayda TAM ORTALA */
+    width: max-content;          /* Genişlik sadece içerik kadar olsun (Sola yaslamayı engeller) */
     position: relative;
+    margin: 0 auto;              /* Kendini ortala */
 }
 
+/* 4. ÇOCUKLARIN BULUNDUĞU GRUP */
+/* Alt yana yana dizilen nodlar */
 .node-children {
     display: flex;
-    flex-direction: row; 
-    justify-content: center;
-    padding-top: 50px; 
-    position: relative;
+    flex-direction: row;          /* Yan yana diz */
+    justify-content: center !important; /* Çocukları ortalayarak diz */
+    align-items: flex-start;      /* Üstten hizala */
+    
+    padding-top: 45px;          
+    gap: 80px;                    
+    
+    width: auto;                  
+    min-width: 100%;              
 }
 
-/* Bağlantı Çizgileri */
-.node-children::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%;
-    border-left: 2px solid var(--tree-border);
-    height: 35px; 
-    transform: translateX(-50%);
-    z-index: 0; 
-}
 
-.tree-node-container::before {
-    content: '';
-    position: absolute;
-    top: -30px; left: 50%;
-    border-left: 2px solid var(--tree-border);
-    height: 30px; width: 0;
-    transform: translateX(-50%);
-}
-
-.tree-node-container::after {
-    content: '';
-    position: absolute;
-    top: -30px; left: 0;
-    width: 100%;
-    border-top: 2px solid var(--tree-border);
-}
-
-/* Çizgi Düzeltmeleri */
-.tree-node-container:first-child::after { left: 50%; width: 50%; }
-.tree-node-container:last-child::after { width: 50%; }
-.tree-node-container:only-child::after { display: none; }
-.tree-node-container:only-child::before { height: 30px; top: -30px; }
-.org-tree > .tree-node-container::before,
-.org-tree > .tree-node-container::after { display: none; }
-
-
-/* --- LEVEL NODE (DAİRELER) --- */
 .level-node {
-    width: 72px; height: 72px; 
+    width: 72px; height: 72px;
     border-radius: 50%;
-    background-color: var(--tree-box-bg); 
+    background-color: var(--tree-box-bg);
     border: 3px solid var(--tree-border);
     display: flex; justify-content: center; align-items: center;
-    cursor: pointer; position: relative; z-index: 10;
+    position: relative; 
+    z-index: 10;
+    cursor: pointer;
     box-shadow: 0 4px 6px var(--tree-shadow);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.2s ease-in-out;
 }
 
-.level-node:hover { 
-    transform: scale(1.1);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    border-color: var(--tree-accent);
+/* Üzerine Gelince (Hover) */
+.level-node:hover {
+    transform: scale(1.1); /* Hafifçe büyüsün */
+    border-color: var(--tree-accent); /* Çerçeve mavi olsun */
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1); /* Gölge derinleşsin */
 }
 
-/* Durumlar */
-.level-node.completed { 
-    background-color: #ecfdf5; 
-    border-color: var(--node-completed); 
+/* --- DURUMLAR --- */
+
+/* Tamamlanmış (Yeşil ve Temiz) */
+.level-node.completed .node-icon {
     color: var(--node-completed);
 }
 
-.level-node.locked { 
-    background-color: var(--tree-bg);
-    border-color: var(--tree-border);
-    opacity: 0.6; 
-    filter: grayscale(1); 
+.level-node.completed:hover {
+    box-shadow: 0 10px 15px rgba(16, 185, 129, 0.2);
+}
+
+/* Kilitli (Gri ve Pasif) */
+.level-node.locked .node-icon {
+    color: #9ca3af;
     cursor: not-allowed;
 }
 
-.node-icon { font-size: 1.8rem; }
+.level-node.locked:hover {
+    transform: none; /* Büyüme efekti yok */
+    border-color: var(--tree-border);
+    cursor: not-allowed;
+}
 
+/* --- İÇERİK ELEMENTLERİ --- */
+
+.node-icon { 
+    font-size: 1.8rem; /* İkon boyutu */
+    z-index: 11;
+    display: flex;       /* İkonu kutu içinde ortala */
+    align-items: center;
+    justify-content: center;
+    color: var(--tree-text); /* Varsayılan renk */
+    transition: color 0.3s ease;
+}
+
+/* ETİKET (YAZI) */
 .node-label { 
     position: absolute;
-    top: 110%; 
+    top: 115%; /* Dairenin hemen altı */
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.8rem;
+    
+    font-size: 0.85rem;
     font-weight: 700;
     color: var(--tree-text);
-    width: 120px; 
+    
+    width: 140px; 
     text-align: center;
-    line-height: 1.3;
+    line-height: 1.2;
     z-index: 20; 
-    padding: 4px 6px;
+    
+    padding: 4px 8px;
     background: var(--tree-box-bg);
     border-radius: 6px;
     border: 1px solid transparent;
-    transition: border-color 0.2s;
+    
+    /* Yazı kutusuna hafif gölge */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s;
 }
 
 .level-node:hover .node-label {
@@ -227,18 +243,71 @@ html.dark {
     color: var(--tree-accent);
 }
 
+/* BİLDİRİM ROZETİ (Sağ Üst) */
 .node-badge { 
-    position: absolute; top: -2px; right: -2px; 
-    background-color: #ef4444; color: white; 
-    width: 22px; height: 22px; border-radius: 50%; 
+    position: absolute; 
+    top: -2px; 
+    right: -2px; 
+    
+    background-color: #ef4444; 
+    color: white; 
+    
+    width: 22px; height: 22px; 
+    border-radius: 50%; 
+    
     display: flex; justify-content: center; align-items: center; 
     font-size: 0.7rem; font-weight: bold;
     border: 2px solid var(--tree-box-bg); 
     z-index: 15;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* --- 3. OYUN ALANI (DEĞİŞMEDİ) --- */
+.node-icon { 
+    font-size: 1.8rem; 
+    z-index: 11;
+    /* İkonları kalkanın üzerine "kazınmış" veya boyanmış gibi göstermek için */
+    filter: drop-shadow(0 1px 1px rgba(255,255,255,0.4)) drop-shadow(0 -1px 1px rgba(0,0,0,0.2));
+    opacity: 0.9;
+}
+
+
+
+/* SAĞ ÜST ROZET (Bildirim Sayısı) */
+.node-badge { 
+    position: absolute; 
+    top: -2px; 
+    right: -2px; 
+    
+    background-color: #ef4444; 
+    color: white; 
+    
+    width: 24px; height: 24px; 
+    border-radius: 50%; 
+    
+    display: flex; justify-content: center; align-items: center; 
+    font-size: 0.75rem; font-weight: bold;
+    border: 2px solid white; 
+    z-index: 15;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+/* SAĞ ÜSTTEKİ KIRMIZI ROZET */
+.node-badge { 
+    position: absolute; 
+    top: -5px; 
+    right: -5px; 
+    
+    background-color: #ef4444; 
+    color: white; 
+    
+    width: 24px; height: 24px; 
+    border-radius: 50%; 
+    
+    display: flex; justify-content: center; align-items: center; 
+    font-size: 0.75rem; font-weight: bold;
+    border: 2px solid var(--tree-box-bg); 
+    z-index: 15;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
 .playing-view, .game-layout {
         height: auto !important;
         overflow: visible !important;
