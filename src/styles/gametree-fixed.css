@@ -149,8 +149,8 @@ html.dark {
     justify-content: center !important; /* Çocukları ortalayarak diz */
     align-items: flex-start;      /* Üstten hizala */
     
-    padding-top: 45px;          
-    gap: 80px;                    
+    padding-top: 60px;          
+    gap: 85px;                    
     
     width: auto;                  
     min-width: 100%;              

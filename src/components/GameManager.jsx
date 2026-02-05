@@ -34,8 +34,8 @@ const treeStructure = [
       
       // Dal 3
       { id: 'Tesuji 1', label: 'Tesuji 1', icon: <BiBulb />, parent: 'Kaçış Yolu' },
-      { id: 'Merdiven ile Esir Alma', label: 'Merdiven', icon: <GiLadder />, parent: 'Tesuji 1' }, 
-      { id: 'Ağ ile Esir Alma', label: 'Ağ', icon: <GiSpiderWeb />, parent: 'Tesuji 1' }, 
+      { id: 'Merdiven', label: 'Merdiven ile Esir Alma', icon: <GiLadder />, parent: 'Bağlanma & Kesme' }, 
+      { id: 'Ağ', label: 'Ağ ile Esir Alma', icon: <GiSpiderWeb />, parent: 'Merdiven' }, 
     ]
   },
   { 
@@ -393,11 +393,8 @@ const GameManager = ({ allProblems }) => {
           <div className="result-overlay">
               <div className="result-card">
                   <div style={{fontSize:'4rem', marginBottom:'10px'}}>🍵</div>
-                  <h2 className="result-title">Tebrikler! Diğer konu başlığına hazır hissdeyiorsanız devam edebilirsiniz.</h2>
-                  <p className="result-subtitle">"{activeCategory?.id}" seviyesini tamamladın.</p>
-                  <div className="stats-row">
-                      <div className="stat-box correct"><span className="stat-number">{levelStats.correct}</span><span className="stat-label">Doğru</span></div>
-                  </div>
+                  <h2 className="result-title">Tebrikler!</h2>
+                  <p className="result-subtitle">"{activeCategory?.id}" seviyesini tamamladınız. Diğer konu başlığına hazır olduğunuzu düşünüyorsanız devam edebilirsiniz.</p>
                   <button className="nav-btn" style={{background:'var(--tree-accent)', color:'white', width:'100%', padding:'15px', fontSize:'1.1rem'}} onClick={() => setGameMode('tree')}>Ağaca Dön ve Devam Et →</button>
               </div>
           </div>
