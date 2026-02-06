@@ -19,17 +19,20 @@ publishedBlogEntries.sort(function (a, b) {
 <Layout title="Blog">
   <Container>
     <Sectionhead>
-      <Fragment slot="title">Kütüphane</Fragment>
+      <Fragment slot="title">
+        <span class="text-gray-900 dark:text-white">Kütüphane</span>
+      </Fragment>
       <Fragment slot="desc">
-        Yazı göndermek için bizimle iletişime geçebilirsiniz
+        <span class="text-gray-600 dark:text-gray-300">Yazı göndermek için bizimle iletişime geçebilirsiniz</span>
       </Fragment>
     </Sectionhead>
+    
     <main class="mt-16">
       <ul class="grid gap-16 max-w-4xl mx-auto">
         {
           publishedBlogEntries.map((blogPostEntry, index) => (
             <li>
-              <a href={`/blog/${blogPostEntry.slug}`}>
+              <a href={`/blog/${blogPostEntry.slug}`} class="group block">
                 <div class="grid md:grid-cols-2 gap-5 md:gap-10 items-center">
                   <Picture
                     src={blogPostEntry.data.image.src}
@@ -39,25 +42,24 @@ publishedBlogEntries.sort(function (a, b) {
                     height={600}
                     loading={index <= 2 ? "eager" : "lazy"}
                     decoding={index <= 2 ? "sync" : "async"}
-                    class="w-full rounded-md object-cover object-center bg-white"
+                    class="w-full rounded-md object-cover object-center bg-gray-100 dark:bg-gray-800 transition-colors"
                   />
                   <div>
-                    <span class="text-blue-400 uppercase tracking-wider text-sm font-medium">
+                    <span class="text-blue-500 dark:text-blue-400 uppercase tracking-wider text-sm font-medium">
                       {blogPostEntry.data.category}
                     </span>
 
-                    <h2 class="text-3xl font-semibold leading-snug tracking-tight mt-1 ">
+                    <h2 class="text-3xl font-semibold leading-snug tracking-tight mt-1 text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       {blogPostEntry.data.title}
                     </h2>
 
-                    <div class="flex gap-2 mt-3">
-                      <span class="text-gray-400">
+                    <div class="flex gap-2 mt-3 text-gray-500 dark:text-gray-400">
+                      <span>
                         {blogPostEntry.data.author}
                       </span>
-                      <span class="text-gray-400">• </span>
+                      <span>• </span>
                       
                       <time
-                        class="text-gray-400"
                         datetime={blogPostEntry.data.publishDate.toISOString()}>
                         {blogPostEntry.data.publishDate.toLocaleDateString("tr-TR", {
                           year: "numeric",

@@ -4,7 +4,7 @@ import Dropdown from "./dropdown.astro";
 
 type MenuItem = {
   title: string;
-  path?: string;      // ? işareti "opsiyonel" (isteğe bağlı) demektir
+  path?: string;
   children?: { title: string; path: string; }[];
 };
 const menuitems = [
@@ -12,7 +12,7 @@ const menuitems = [
   { title: "Planlar", path: "/pricing" },
   { title: "Go Ağacı", path: "/goagaci" },
   { title: "Kütüphane", path: "/blog" },
-  { title: "Hakkında", path: "/about" } // Dropdown kaldırıldı, düz link yapıldı
+  { title: "Hakkında", path: "/about" }
 ];
 ---
 
@@ -24,10 +24,24 @@ const menuitems = [
       {/* 3 Sütunlu Yapı: Sol - Orta - Sağ */}
       <div class="flex items-center justify-between w-full h-full">
         
-        {/* 1. SOL: Logo (Sola yaslı) */}
+        {/* 1. SOL: Logo (DÜZELTİLDİ: Çift Logo Mantığı Buraya Eklendi) */}
         <div class="flex-1 flex items-center justify-start">
           <a href="/" class="flex items-center gap-2">
-            <img src="/transparentAgora.svg" alt="Agora Logo" class="h-10 w-auto object-contain" />
+            
+            {/* AÇIK MOD LOGOSU: dark modda gizlenir (dark:hidden) */}
+            <img 
+              src="/for-light-logo.svg" 
+              alt="Agora Logo" 
+              class="h-10 w-auto object-contain block dark:hidden" 
+            />
+
+            {/* KARANLIK MOD LOGOSU: dark modda görünür (dark:block) */}
+            <img 
+              src="/for-dark-logo.svg"  
+              alt="Agora Dark Logo" 
+              class="h-10 w-auto object-contain hidden dark:block" 
+            />
+
           </a>
         </div>
 
@@ -35,13 +49,29 @@ const menuitems = [
         <div class="hidden lg:flex flex-none justify-center">
             <MenuItems class="hidden lg:flex">
                 <ul class="flex items-center gap-8"> 
-    {menuitems.map((item) => (
-      <li class="relative flex items-center">
-        <a href={item.path} class="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-all hover:scale-105 whitespace-nowrap">
-            {item.title}
-        </a>
-      </li>
-    ))}
+    {menuitems.map((item) => {
+      // Sadece "Go Ağacı" başlığını yakalıyoruz
+      const isSpecial = item.title === "Go Ağacı";
+      
+      return (
+        <li class="relative flex items-center">
+          <a 
+            href={item.path} 
+            class={`
+              transition-all duration-300 whitespace-nowrap
+              ${isSpecial 
+                /* ÖZEL STİL (Go Ağacı): Daha büyük, Kalın, Kontrast Renk (Indigo), Hafif Gölge */
+                ? "text-lg font-extrabold text-indigo-600 dark:text-indigo-400 scale-110 hover:scale-125 drop-shadow-sm" 
+                /* NORMAL STİL (Diğerleri): Standart gri ve hover efekti */
+                : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium hover:scale-105"
+              }
+            `}
+          >
+              {item.title}
+          </a>
+        </li>
+      )
+    })}
 </ul>
             </MenuItems>
         </div>
