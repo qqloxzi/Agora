@@ -1,5 +1,3 @@
-/* --- GO BOARD & OYUN ALANI STİLLERİ --- */
-
 .go-app-react {
     display: flex;
     flex-direction: column;
@@ -7,9 +5,13 @@
     width: 100%;
     position: relative;
     font-family: 'Inter', 'Segoe UI', sans-serif;
-}
 
-/* Durum Yazısı (Sıra kimde, hamle vs.) */
+    /* --- DÜZELTME YAPILAN KISIM --- */
+    height: auto;          /* Yüksekliği içeriğe göre serbest bırak */
+    min-height: unset;     /* Zorla tam ekran yapma */
+    overflow: visible;     /* Scroll barı bileşene değil sayfaya bırak */
+    padding-bottom: 80px;  /* Zoom yapıldığında en alttaki butonların sıkışmaması için alt boşluk */
+}
 .status {
     font-size: 1rem;
     font-weight: 600;
@@ -119,14 +121,20 @@
     box-shadow: none;
 }
 
-/* İpucu Kutusu */
-.go-hint-box {
+/* İpucu Kutusu ve Üst Bilgi Barı */
+.go-hint-box, 
+.top-info-bar { 
+    width: 100%;              /* Kapsayıcının tamamını kapla */
+    max-width: 560px;         /* Tahtanın max-width değeriyle AYNI olmalı */
+    box-sizing: border-box;   /* Padding'i genişliğe dahil et (Taşmayı önler) */
+    
+    /* Görsel düzenlemeler */
     font-size: 0.9rem;
     color: var(--tree-text);
     background: var(--tree-box-bg);
     border: 1px solid var(--tree-border);
     padding: 8px 16px;
-    border-radius: 20px;
+    border-radius: 8px;       /* Tahta köşeleriyle uyumlu olsun diye biraz kıstım */
     margin-bottom: 12px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);

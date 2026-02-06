@@ -5,7 +5,8 @@ import '../styles/goboard.css';
 const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description = '' }) => {
   const canvasRef = useRef(null);
   const wrapperRef = useRef(null);
-  
+  const isComputing = useRef(false);
+
   const gameState = useRef({
     size: 9,
     stones: [], 
@@ -142,44 +143,60 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
       setTeacherMode(newMode);
   };
 
-  // --- YENİ FONKSİYON: ADIM GERİ AL (UNDO) ---
-  const handleStepBack = () => {
+ const handleStepBack = () => {
       const state = gameState.current;
-      // Kök düğümdeysek geri gidemeyiz
+
+      // --- DURUM 1: ANALİZ MODU (Değişiklik yok) ---
+      if (!state.hasSolution) {
+          // ... (önceki kodun aynısı)
+          if (state.history.length === 0) { showMessage("Başlangıçtasınız", "#e74c3c"); return; }
+          const prevBoard = state.history.pop();
+          state.stones = JSON.parse(prevBoard);
+          state.turn = state.turn === 'black' ? 'white' : 'black';
+          setTurnIndicator(state.turn);
+          state.lastMove = null; 
+          showMessage("Hamle geri alındı.", "#f1c40f"); // Burası kalabilir
+          drawBoard();
+          return;
+      }
+
+      // --- DURUM 2: SORU ÇÖZME (Güncellendi) ---
       if (!state.currentNode || state.currentNode === state.moveTree) {
           showMessage("Başlangıçtasınız, geri alınamaz.", "#e74c3c");
           return;
       }
 
-      // 1. Taşları eski haline getir (History'den al)
       if (state.history.length > 0) {
-          const prevBoard = state.history.pop(); // Son durumu çıkar
-          state.stones = JSON.parse(prevBoard);  // Tahtaya uygula
-      } else {
-          // Eğer history boşsa ve setup durumuna dönmemiz gerekiyorsa
-          if (state.initialStateStr) state.stones = JSON.parse(state.initialStateStr);
+          const prevBoard = state.history.pop(); 
+          state.stones = JSON.parse(prevBoard);  
+      } else if (state.initialStateStr) {
+          state.stones = JSON.parse(state.initialStateStr);
       }
 
-      // 2. Ağaçta yukarı çık (Parent varsa)
       if (state.currentNode.parent) {
           state.currentNode = state.currentNode.parent;
       } else {
-          // Parent yoksa kök düğüme dön
           state.currentNode = state.moveTree;
       }
 
-      // 3. Sırayı geri çevir
       state.turn = state.turn === 'black' ? 'white' : 'black';
       setTurnIndicator(state.turn);
 
-      // 4. Son hamle göstergesini güncelle
       if (state.currentNode && state.currentNode !== state.moveTree) {
           state.lastMove = { x: state.currentNode.x, y: state.currentNode.y, color: state.currentNode.color };
       } else {
           state.lastMove = null;
       }
 
-      showMessage("Hamle geri alındı.", "#f1c40f");
+      // --- KRİTİK EKLEMELER BURADA ---
+      
+      // 1. Eğer oyun bitmiş ve kilitlenmişse kilidi aç
+      state.isLocked = false; 
+      
+      // 2. "Tebrikler" veya "Yanlış" mesajını temizle ki öğrenci devam edebilsin
+      setStatusMsg(''); 
+      setStatusColor('#fff');
+
       drawBoard();
   };
 
@@ -292,7 +309,7 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
           }
       });
 
-      if (!captured && getLiberties(x, y, color, newStones) === 0) { showMessage("Tanımsız Hamle", "#e74c3c"); return false; }
+      if (!captured && getLiberties(x, y, color, newStones) === 0) { showMessage("Yasak Hamle", "#e74c3c"); return false; }
       
       const newBoardStr = JSON.stringify(newStones);
       if (state.history.includes(newBoardStr)) {
@@ -301,9 +318,6 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
       }
 
       state.history.push(currentBoardSnapshot); 
-      // Teacher modunda history limiti kaldırdık ki geri alabilsin
-      // Normal mod için limit koymak istersen buraya if(!isTeacher) ekleyebilirsin.
-      
       state.stones = newStones;
       state.lastMove = { x, y, color };
       if (clickSound.current) { clickSound.current.currentTime = 0; clickSound.current.play().catch(()=>{}); }
@@ -469,6 +483,7 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
 
   const handleClick = () => {
       const state = gameState.current;
+      if (isComputing.current) return;
       const { x, y } = state.hoverPos;
       
       if (!isOnBoard(x, y) || state.isLocked) return;
@@ -508,56 +523,52 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
           return;
       }
 
-      // 3. SOLVE MODU (DÜZELTİLEN KISIM)
       if (state.mode === 'SOLVE') {
-          // Oyuncunun tıkladığı hamle ağaçta var mı?
           const nextNode = state.currentNode.children?.find(c => c.x === x && c.y === y);
           
           if (nextNode) {
-              // 1. Oyuncunun hamlesini oynat
-              playMove(x, y, nextNode.color);
-              state.currentNode = nextNode;
-              state.turn = state.turn === 'black' ? 'white' : 'black';
-              setTurnIndicator(state.turn); // Sıra göstergesini güncelle
-              drawBoard();
+              // DÜZELTME: playMove true dönerse (hamle yasak değilse) işlem yap
+              if (playMove(x, y, nextNode.color)) {
+                  state.currentNode = nextNode;
+                  state.turn = state.turn === 'black' ? 'white' : 'black';
+                  setTurnIndicator(state.turn);
+                  drawBoard();
 
-              // 2. KRİTİK KONTROL: Devamı var mı?
-              if (nextNode.children && nextNode.children.length > 0) {
-                  // Devamı varsa STATÜYE BAKMA, tahtayı kilitleme.
-                  // Bilgisayarın cevap vermesini bekle.
-                  
-                  setTimeout(() => {
-                      // Bilgisayar genelde ana varyasyonu (ilk çocuğu) oynar
-                      const responseNode = nextNode.children[0]; 
+                  // Bilgisayar Hamlesi
+                  if (nextNode.children && nextNode.children.length > 0) {
+                      isComputing.current = true; // KİLİTLE
                       
-                      playMove(responseNode.x, responseNode.y, responseNode.color);
-                      state.currentNode = responseNode;
-                      
-                      // Sırayı tekrar oyuncuya ver
-                      state.turn = state.turn === 'black' ? 'white' : 'black';
-                      setTurnIndicator(state.turn); 
-                      drawBoard();
-                      
-                      // Bilgisayar hamlesinden sonra durumu kontrol et
-                      // (Belki bilgisayar "seni öldürdüm yanlış yaptın" demiştir)
-                      checkStatus(responseNode);
-                  }, 500); // Yarım saniye düşünme payı
-
-              } else {
-                  // Devamı yoksa (Yaprak Düğüm), o zaman sonucu kontrol et.
-                  checkStatus(nextNode);
+                      setTimeout(() => {
+                          const responseNode = nextNode.children[0]; 
+                          
+                          // Bilgisayarın hamlesini oynat
+                          if (playMove(responseNode.x, responseNode.y, responseNode.color)) {
+                              state.currentNode = responseNode;
+                              state.turn = state.turn === 'black' ? 'white' : 'black';
+                              setTurnIndicator(state.turn); 
+                              drawBoard();
+                              checkStatus(responseNode);
+                          }
+                          
+                          isComputing.current = false; // KİLİDİ AÇ
+                      }, 500); 
+                  } else {
+                      checkStatus(nextNode);
+                  }
               }
-
+              // else: Hamle yasaksa (örn: intihar) hiçbir şey yapma, sıra değişmesin.
           } else {
-              // Ağaçta olmayan bir yere tıkladı
+              // Ağaçta olmayan hamle
               if(!state.hasSolution) { 
-                 // Analiz modu (Serbest)
-                 playMove(x, y, state.turn);
-                 state.turn = state.turn === 'black' ? 'white' : 'black';
-                 setTurnIndicator(state.turn); 
-                 drawBoard();
+                 // Analiz Modu (Serbest)
+                 // DÜZELTME: Burası da if içine alındı. Yasak hamleyse sıra değişmez.
+                 if (playMove(x, y, state.turn)) {
+                     state.turn = state.turn === 'black' ? 'white' : 'black';
+                     setTurnIndicator(state.turn); 
+                     drawBoard();
+                 }
               } else {
-                 // Yanlış hamle
+                 // Yanlış Hamle (Burada taş koydurmuyoruz zaten, sadece uyarı)
                  showMessage("Yanlış Hamle", "#e74c3c"); 
                  state.isLocked = true;
                  if(onSolve) onSolve(false);
@@ -567,34 +578,41 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
   };
 
   const checkStatus = (node) => {
-      // Eğer node'un çocukları varsa, oyun daha bitmemiştir, "Tebrikler" deme.
-      // Sadece çocuklar YOKSA (oyun sonu) durumu değerlendir.
+      // Hala devam yolu varsa (oyun bitmediyse)
       if (node.children && node.children.length > 0) {
-          // Özel durum: Eğer "Wrong" işaretlenmişse ve devamı olsa bile bu bir cezalandırma dalıysa:
           if (node.status === 'wrong') {
              showMessage("Yanlış Yol", "#e74c3c"); 
-             // Kilitlemek istemiyorsan burayı yorum satırı yapabilirsin, 
-             // ama yanlış yola girince genelde kilitlenir.
-             // gameState.current.isLocked = true; 
              if(onSolve) onSolve(false);
           }
           return;
       }
 
+      // 1. DOĞRU CEVAP
       if (node.status === 'correct') {
-          showMessage("Tebrikler! Doğru Çözüm.", "#2ecc71"); 
-          gameState.current.isLocked = true;
+          showMessage("Tebrikler! Çözdünüz. Serbest analiz modu aktif.", "#2ecc71"); 
+          
+          // DÜZELTME: Tahtayı kilitlemek yerine, hasSolution'ı false yapıyoruz.
+          // Böylece handleClick fonksiyonu "Analysis Mode" bloğuna düşer.
+          gameState.current.isLocked = false;
+          gameState.current.hasSolution = false; 
+
           if(onSolve) onSolve(true);
-      } else if (node.status === 'wrong') {
+      } 
+      // 2. YANLIŞ CEVAP
+      else if (node.status === 'wrong') {
           showMessage("Yanlış Yol", "#e74c3c"); 
-          gameState.current.isLocked = true;
+          gameState.current.isLocked = true; // Yanlışta kilitlemeye devam et
           if(onSolve) onSolve(false);
-      } else {
-          // Status null ise ve çocuklar yoksa, varsayılan olarak doğru kabul edilebilir
-          // veya "Devam et" denebilir. Genelde yaprak düğümse bitmiştir.
+      } 
+      // 3. YAPRAK DÜĞÜM (Varsayılan Doğru)
+      else {
           if(!node.children || node.children.length === 0) {
-              showMessage("Tebrikler!", "#2ecc71");
-              gameState.current.isLocked = true;
+              showMessage("Tebrikler! Çözdünüz. Serbest analiz modu aktif.", "#2ecc71");
+              
+              // DÜZELTME: Burada da analiz moduna geçiriyoruz
+              gameState.current.isLocked = false;
+              gameState.current.hasSolution = false;
+
               if(onSolve) onSolve(true);
           }
       }
@@ -661,6 +679,18 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
              <canvas ref={canvasRef} className="goBoard" onMouseMove={handleMouseMove} onMouseLeave={() => { gameState.current.hoverPos = {x:-1, y:-1}; drawBoard(); }} onClick={handleClick} />
           </div>
       </div>
+      {/* Öğrenci Analiz Modu Kontrolleri */}
+{!isTeacher && (
+    <div className="student-controls" style={{marginTop: '10px', textAlign: 'center'}}>
+        <button 
+            className="control-btn" 
+            style={{background:'#e67e22', padding: '8px 15px', borderRadius: '5px', color: 'white', border: 'none', cursor: 'pointer'}} 
+            onClick={handleStepBack}
+        >
+            ↩ Geri Al
+        </button>
+    </div>
+)}
 
       {/* --- DÜZELTME BURADA: ARTIK SADECE ÖĞRETMEN GÖREBİLİR --- */}
       {isTeacher && (
