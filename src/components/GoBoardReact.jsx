@@ -551,7 +551,7 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
                           }
                           
                           isComputing.current = false; // KİLİDİ AÇ
-                      }, 500); 
+                      }, 200); 
                   } else {
                       checkStatus(nextNode);
                   }
@@ -589,7 +589,7 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
 
       // 1. DOĞRU CEVAP
       if (node.status === 'correct') {
-          showMessage("Tebrikler! Çözdünüz. Serbest analiz modu aktif.", "#2ecc71"); 
+          showMessage("Tebrikler! Serbest mod aktif.", "#2ecc71"); 
           
           // DÜZELTME: Tahtayı kilitlemek yerine, hasSolution'ı false yapıyoruz.
           // Böylece handleClick fonksiyonu "Analysis Mode" bloğuna düşer.
@@ -681,16 +681,16 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
       </div>
       {/* Öğrenci Analiz Modu Kontrolleri */}
 {!isTeacher && (
-    <div className="student-controls" style={{marginTop: '10px', textAlign: 'center'}}>
+    <div className="student-controls" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
         <button 
-            className="control-btn" 
-            style={{background:'#e67e22', padding: '8px 15px', borderRadius: '5px', color: 'white', border: 'none', cursor: 'pointer'}} 
+            className="control-pill-btn btn-undo" 
             onClick={handleStepBack}
         >
             ↩ Geri Al
         </button>
     </div>
 )}
+
 
       {/* --- DÜZELTME BURADA: ARTIK SADECE ÖĞRETMEN GÖREBİLİR --- */}
       {isTeacher && (

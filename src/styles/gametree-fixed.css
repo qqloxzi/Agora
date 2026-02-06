@@ -339,17 +339,21 @@ html.dark {
 .game-controls-bottom {
     position: relative;
     width: 100%;
-    margin-top: 24px;
-
+    
+    /* DEĞİŞİKLİK BURADA: Boşlukları sıfırladık */
+    margin-top: 0 !important;      /* Dış üst boşluğu kaldır */
+    padding-top: 0 !important;     /* İç üst boşluğu kaldır */
+    
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 16px;
-
-    padding: 15px 20px 30px;
-    background: transparent;
-
+    padding-bottom: 20px;          /* Sadece alt boşluk kalsın */
+    
     z-index: 10;
+    
+    /* Eğer hala yeterince yakın değilse bu satırı açarak yukarı zorla itebilirsin: */
+    /* transform: translateY(-20px); */ 
 }
 
 .control-pill-btn {
@@ -395,7 +399,17 @@ html.dark {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-body.fullscreen-mode .game-manager-container { height: 100vh !important; width: 100vw !important; overflow: hidden !important; position: fixed; top: 0; left: 0; }
+
+/* EKRAN KİLİDİNİ AÇAN KOD */
+body.fullscreen-mode .game-manager-container {
+    height: auto !important;          /* Sabit yüksekliği iptal et, içeriğe göre uzasın */
+    min-height: 100vh;                /* En az ekran boyu kadar olsun */
+    width: 100vw !important;
+    overflow-y: auto !important;      /* Dikeyde scroll'a İZİN VER */
+    position: relative !important;    /* Fixed yerine relative yap ki akışa girsin */
+    padding-bottom: 50px !important;  /* En alta biraz pay bırak, butonlar sıkışmasın */
+}
+
 .nav-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; color: var(--tree-text); }
 @media (max-width: 900px) {
     /* 1. Ekranı kilitleyen özellikleri iptal et (Scroll aç) */
@@ -441,14 +455,20 @@ body.fullscreen-mode .game-manager-container { height: 100vh !important; width: 
 
     }
 
-    /* 4. Navbar (Üst) */
-    .game-navbar {
-        flex: 0 0 auto; /* Boyutunu koru, küçülme */
-        width: 100%;
-        padding: 10px 15px;
-        z-index: 10;
-        background: transparent;
-    }
+   /* --- MEVCUT KODU SİL, BUNU YAPIŞTIR --- */
+.game-navbar {
+    display: flex;                  /* İçerikleri yan yana diz */
+    justify-content: space-between; /* Başlık sol uçta, buton sağ uçta */
+    align-items: center;            /* Dikey olarak ortala */
+    
+    width: 100%;
+    max-width: 500px;               /* ÖNEMLİ: Burayı oyun tahtanın genişliğiyle aynı yap */
+    margin: 0 auto 10px auto;       /* '0 auto' bloğu sayfanın ortasına sabitler */
+    
+    position: relative;
+    z-index: 100;
+    padding: 0 5px;                 /* Kenarlardan hafif boşluk */
+}
 
     
     
@@ -492,14 +512,4 @@ body.fullscreen-mode .game-manager-container { height: 100vh !important; width: 
         display: block;
     }
 
-    /* BUTONLAR – TAHTAYA YAPIŞIK */
-    .game-controls-bottom {
-        position: relative;
-        margin-top: 8px;
-        padding: 12px 16px 20px;
-        display: flex;
-        justify-content: center;
-        gap: 14px;
-        background: transparent;
-    }
 }
