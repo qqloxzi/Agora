@@ -605,7 +605,7 @@ export const problemSet: Problem[] = [
   }
 },
 {
-  id: "prob-1770421721690",
+  id: "14",
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
@@ -676,9 +676,143 @@ export const problemSet: Problem[] = [
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
+  title: "Atari",
+  category: "Esir alma 1",
+  description: "Siyahın iki grubunu atari çekerek ayırabilir miyiz?",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"}],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"white\"}],[null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},null,null,{\"color\":\"white\"},null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 4,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 3,
+            y: 6,
+            color: "black",
+            children: [
+              {
+                x: 4,
+                y: 6,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          },
+          {
+            x: 4,
+            y: 6,
+            color: "black",
+            children: [
+              {
+                x: 3,
+                y: 6,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 3,
+        y: 6,
+        color: "white",
+        children: [
+          {
+            x: 4,
+            y: 6,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},
+{
+  id: "15",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Çifte Atari",
+  category: "Esir Alma 1",
+  description: "Çifte atari çekerek siyahın iki grubundan birinini kesin olarak esir alabiliriz.",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"black\"},null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,null,{\"color\":\"black\"},null],[null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,null,null,null,null,{\"color\":\"white\"},null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 3,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 3,
+            y: 6,
+            color: "black",
+            children: [
+              {
+                x: 2,
+                y: 5,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 3,
+        y: 6,
+        color: "white",
+        children: [
+          {
+            x: 3,
+            y: 5,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      },
+      {
+        x: 2,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 3,
+            y: 5,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},
+{
+  id: "16",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
   title: "Esir Alma",
   category: "Esir Alma 1",
-  description: "Beyaz grupları ayıran siyah gruplardan birisini esir almaya çalışıyoruz.",
+  description: "Beyaz grupları ayıran siyah gruplardan birisini esir almaya çalışıyoruz. Siyahın diğer taşlarına bağlanmasını engellemenin şık bir yolu var, bulabilir misiniz?",
   initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null],[null,null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,{\"color\":\"black\"},null,null,{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,{\"color\":\"black\"},null,null,null,{\"color\":\"black\"},null],[null,null,null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   solution: {
     children: [
@@ -723,4 +857,198 @@ export const problemSet: Problem[] = [
     ]
   }
 },
+{
+  id: "17",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Atari",
+  category: "Esir Alma 1",
+  description: "Altaki iki siyah taşı esir almanın birçok yolu var, hangi yolu tercih edersiniz?",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,{\"color\":\"white\"},null],[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"}],[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 2,
+        y: 8,
+        color: "white",
+        children: [
+          {
+            x: 3,
+            y: 8,
+            color: "black",
+            children: [
+              {
+                x: 5,
+                y: 8,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 3,
+        y: 8,
+        color: "white",
+        children: [
+          {
+            x: 2,
+            y: 8,
+            color: "black",
+            children: [
+              {
+                x: 1,
+                y: 8,
+                color: "white",
+                children: [
+                  {
+                    x: 3,
+                    y: 8,
+                    color: "black",
+                    children: [
+                      {
+                        x: 5,
+                        y: 8,
+                        color: "white",
+                        children: [],
+                        status: "correct"
+                      }
+                    ],
+                    status: null
+                  }
+                ],
+                status: null
+              }
+            ],
+            status: null
+          },
+          {
+            x: 5,
+            y: 8,
+            color: "black",
+            children: [
+              {
+                x: 2,
+                y: 8,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},{
+  id: "18",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Snapback",
+  category: "Esir Alma 1",
+  description: "Siyahın üç taşını bağlamasına izin vermeden, doğru hamle sırasıyla atari çekmeliyiz.",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,{\"color\":\"white\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"}],[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 4,
+        y: 8,
+        color: "white",
+        children: [
+          {
+            x: 3,
+            y: 8,
+            color: "black",
+            children: [
+              {
+                x: 4,
+                y: 8,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 3,
+        y: 8,
+        color: "white",
+        children: [
+          {
+            x: 4,
+            y: 8,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},
+{
+  id: "19",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "black",
+  title: "Atari",
+  category: "Esir Alma 1",
+  description: "Siyah, doğru taraftan atari çekerek kendi taşlarını kurtarabilir mi?",
+  initialState: "[[null,null,null,null,null,{\"color\":\"black\"},null,null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null],[null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},null,null],[null,null,null,null,null,null,{\"color\":\"white\"},null,null],[null,null,null,null,null,{\"color\":\"white\"},null,null,null],[null,{\"color\":\"black\"},null,{\"color\":\"black\"},null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 1,
+        y: 3,
+        color: "black",
+        children: [
+          {
+            x: 0,
+            y: 4,
+            color: "white",
+            children: [
+              {
+                x: 0,
+                y: 3,
+                color: "black",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 0,
+        y: 4,
+        color: "black",
+        children: [
+          {
+            x: 1,
+            y: 3,
+            color: "white",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+}
 ]
