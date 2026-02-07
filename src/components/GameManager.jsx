@@ -242,41 +242,47 @@ const GameManager = ({ allProblems }) => {
   }, [currentIndex, gameMode, activeCategory]);
 
  const handleLevelComplete = async (category) => {
-    // 1. Önce State'i güncelle (Arayüzde hemen yeşil olsun)
+    // 1. Önce Arayüzü Güncelle (Yeşil yap, LocalStorage'a yaz)
+    // Bunu UI akıcılığı için yapıyoruz.
     if (!completedLevels.includes(category)) {
       const newProgress = [...completedLevels, category];
       setCompletedLevels(newProgress);
       localStorage.setItem('goProgress', JSON.stringify(newProgress));
-      
-      // 2. Supabase'e Kaydet (KRİTİK KISIM)
-      // State'teki currentUser bazen eski kalabilir, garanti olsun diye tekrar çekiyoruz.
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-          try { 
-            const { error } = await supabase
-                .from('user_progress')
-                .insert([
-                    { 
-                        user_id: user.id, 
-                        topic_id: category // DÜZELTME: SQL'deki sütun adı 'topic_id'
-                    }
-                ]);
-            
-            if (error) {
-                // Eğer hata "duplicate key" ise (zaten çözmüşse) sorun yok, diğerlerini logla
-                if (error.code !== '23505') { 
-                    console.error("Supabase Kayıt Hatası:", error.message);
-                }
-            } else {
-                console.log("İlerleme başarıyla veritabanına işlendi:", category);
-            }
-
-          } catch (err) { 
-              console.error("Beklenmedik Hata:", err); 
-          }
-      }
     }
+
+    // 2. VERİTABANI İŞLEMİ (Artık IF bloğunun dışında!)
+    // Kullanıcı bunu localde çözmüş olsa bile, DB'de yoksa eklemeliyiz.
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (user) {
+        console.log("Veritabanına gönderiliyor:", category); // LOG 1
+        try { 
+          const { error } = await supabase
+              .from('user_progress')
+              .insert([
+                  { 
+                      user_id: user.id, 
+                      topic_id: category 
+                  }
+              ]);
+          
+          if (error) {
+              // Hata kodu 23505: "Unique violation" (Zaten kayıtlı demek). Bu bir hata değil, durumdur.
+              if (error.code === '23505') {
+                  console.log("Bu seviye veritabanında zaten kayıtlı.");
+              } else {
+                  console.error("Supabase CİDDİ Kayıt Hatası:", error); // LOG 2
+                  alert("İlerleme kaydedilemedi! Hata: " + error.message); // Ekrana uyarı verelim
+              }
+          } else {
+              console.log("BAŞARILI! Veritabanına işlendi:", category); // LOG 3
+          }
+
+        } catch (err) { 
+            console.error("Beklenmedik Kod Hatası:", err); 
+        }
+    }
+    
     setGameMode('result');
   };
 
