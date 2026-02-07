@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import GoBoardReact from './GoBoardReact';
 import '../styles/gametree-fixed.css';
-import { supabase } from '../lib/supabase'; 
-// Diğer importlarının altına ekle:
+import { supabase } from '../lib/supabase';
+
+// --- GÜNCELLENMİŞ İKON IMPORTLARI ---
 import { 
   BiBookOpen, BiLink, BiWind, BiShow, BiRun, BiFlag, BiBulb, 
   BiGridAlt, BiCompass, BiCrosshair, BiBarChart, BiBot, BiInfinite, 
-  BiFastForward, BiShield, BiCoinStack
-} from 'react-icons/bi'; // BoxIcons (Minimalist Çizgisel İkonlar)
+  BiFastForward, BiShield, BiTargetLock, BiShapeTriangle
+} from 'react-icons/bi'; 
 
 import { 
   GiLadder, GiSpiderWeb, GiStoneBlock, GiCrossedSwords, GiCastle, 
-  GiParachute, GiScales, GiBlackBelt 
-} from 'react-icons/gi'; // GameIcons (Oyun odaklı semboller)
-// --- 1. VERİ YAPISI (YENİ NODLAR EKLENDİ) ---
-// --- 1. VERİ YAPISI (JSX İKONLU) ---
+  GiParachute, GiScales, GiBlackBelt, GiGavel, GiOpenBook, 
+  GiButterfly, GiExpand, GiLightningBow, GiSpy, GiShatteredGlass,
+  GiDirectionSign, GiDetour
+} from 'react-icons/gi';
+
+// --- 1. VERİ YAPISI ---
 const treeStructure = [
   { 
     title: "20 Kyu - 18 Kyu Başlangıç", 
@@ -30,7 +33,8 @@ const treeStructure = [
       // Dal 2
       { id: 'Yaşam & Ölüm 1', label: 'Yaşam & Ölüm 1', icon: <BiShow />, parent: 'Kurallar' },
       { id: 'Kaçış Yolu', label: 'Kaçış Yolu', icon: <BiRun />, parent: 'Yaşam & Ölüm 1' },
-      { id: 'Oyunu Sona Erdirme', label: 'Oyunu Sona Erdirme', icon: <BiFlag />, parent: 'Yaşam & Ölüm 1' }, 
+      { id: 'Joseki 1', label: 'Joseki 1', icon: <GiOpenBook />, parent: 'Yaşam & Ölüm 1' }, // Coin yerine Kitap
+      { id: 'Oyunu Sona Erdirme', label: 'Oyunu Sona Erdirme', icon: <BiFlag />, parent: 'Joseki 1' }, 
       
       // Dal 3
       { id: 'Tesuji 1', label: 'Tesuji 1', icon: <BiBulb />, parent: 'Kaçış Yolu' },
@@ -44,15 +48,21 @@ const treeStructure = [
       // Kök
       { id: 'Yaşam & Ölüm 2', label: 'Yaşam & Ölüm 2', icon: <BiShow />, parent: null },
       
-      // Dal 1
-      { id: 'Güçlü & Zayıf Şekiller', label: 'Şekiller', icon: <BiGridAlt />, parent: 'Yaşam & Ölüm 2' },
-      { id: 'Güçlü & Zayıf Gruplar', label: 'Gruplar', icon: <GiCastle />, parent: 'Güçlü & Zayıf Şekiller' }, 
-      { id: 'Büyük & Acil Hamleler', label: 'Acil Hamleler', icon: <BiCrosshair />, parent: 'Güçlü & Zayıf Şekiller' }, 
+      { id: 'Tesuji 2', label: 'Tesuji 2', icon: <BiBulb />, parent: 'Yaşam & Ölüm 2' },
+      { id: 'Güçlü & Zayıf Şekiller', label: 'Şekiller', icon: <BiGridAlt />, parent: 'Tesuji 2' },
+      { id: 'Güçlü & Zayıf Gruplar', label: 'Güçlü & Zayıf Gruplar', icon: <GiCastle />, parent: 'Güçlü & Zayıf Şekiller' }, 
+      { id: 'Büyük & Acil Hamleler', label: 'Büyük & Acil Hamleler', icon: <BiCrosshair />, parent: 'Güçlü & Zayıf Şekiller' }, 
+      { id: 'Sente & Gote 1', label: 'Sente & Gote 1', icon: <BiFastForward />, parent: 'Güçlü & Zayıf Gruplar' }, // Castle yerine FastForward
+      { id: 'Tenuki', label: 'Tenuki', icon: <GiDetour />, parent: 'Büyük & Acil Hamleler' }, // Castle yerine Yön değiştirme
+      { id: 'Cezalandırma', label: 'Cezalandırma', icon: <GiGavel />, parent: 'Tenuki' }, // Castle yerine Tokmak (Ceza)
+      
 
       // Dal 2
-      { id: 'Açılış Safhası', label: 'Açılış', icon: <BiBarChart />, parent: 'Yaşam & Ölüm 2' }, 
-      { id: 'Joseki 1', label: 'Joseki 1', icon: <BiCoinStack />, parent: 'Açılış Safhası' }, 
+      { id: 'Açılış Safhası', label: 'Açılış Safhası', icon: <BiBarChart />, parent: 'Yaşam & Ölüm 2' }, 
+      { id: 'Joseki 2', label: 'Joseki 2', icon: <GiOpenBook />, parent: 'Açılış Safhası' }, 
       { id: 'Oyun Yönü 1', label: 'Oyun Yönü 1', icon: <BiCompass />, parent: 'Açılış Safhası' },
+      { id: 'Nefes Yarışı 2', label: 'Nefes Yarışı 2', icon: <BiWind />, parent: 'Joseki 2' }, // Compass yerine Wind
+      { id: 'Miai', label: 'Miai', icon: <GiScales />, parent: 'Nefes Yarışı 2' }, // Compass yerine Terazi (Denge)
       
       // Dal 3
       { id: 'Oyun Ortası 1', label: 'Oyun Ortası 1', icon: <GiCrossedSwords />, parent: 'Oyun Yönü 1' }, 
@@ -68,35 +78,50 @@ const treeStructure = [
       // Dal 1
       { id: 'Oyun Yönü 2', label: 'Oyun Yönü 2', icon: <BiCompass />, parent: 'Yaşam & Ölüm 3' },
       { id: 'Oyun Ortası 2', label: 'Oyun Ortası 2', icon: <GiCrossedSwords />, parent: 'Oyun Yönü 2' }, 
+      { id: 'Moyo', label: 'Moyo', icon: <GiExpand />, parent: 'Oyun Ortası 2' }, // CrossedSwords yerine Genişleme
       { id: 'Oyun Sonu 2', label: 'Oyun Sonu 2', icon: <BiFlag />, parent: 'Oyun Yönü 2' }, 
 
       // Dal 2
-      { id: 'Tesuji 2', label: 'Tesuji 2', icon: <BiBulb />, parent: 'Yaşam & Ölüm 3' },
-      { id: 'Ko', label: 'Ko', icon: <BiInfinite />, parent: 'Tesuji 2' }, 
-      { id: 'Joseki 2', label: 'Joseki 2', icon: <BiCoinStack />, parent: 'Ko' },
+      { id: 'Tesuji 3', label: 'Tesuji 3', icon: <BiBulb />, parent: 'Yaşam & Ölüm 3' },
+      { id: 'Joseki 3', label: 'Joseki 3', icon: <GiOpenBook />, parent: 'Tesuji 3' },
+      { id: 'Ko', label: 'Ko', icon: <BiInfinite />, parent: 'Joseki 3' }, 
+      { id: 'Haengma', label: 'Haengma', icon: <GiButterfly />, parent: 'Ko' }, // Infinite yerine Kelebek (Akışkanlık)
+    
       
       // Dal 3
-      { id: 'Sente & Gote', label: 'Sente & Gote', icon: <BiFastForward />, parent: 'Tesuji 2' },
-      { id: 'İstila & Küçültme', label: 'İstila', icon: <GiParachute />, parent: 'Sente & Gote' }, 
-      { id: 'Saldırı & Savunma', label: 'Saldırı/Savunma', icon: <BiShield />, parent: 'Sente & Gote' }, 
+      { id: 'Sente & Gote 2', label: 'Sente & Gote 2', icon: <BiFastForward />, parent: 'Tesuji 3' },
+      { id: 'İstila & Küçültme', label: 'İstila & Küçültme', icon: <GiParachute />, parent: 'Sente & Gote 2' }, 
+      { id: 'Yosumiru / Yoklama Hamlesi', label: 'Yosumiru / Yoklama Hamlesi', icon: <BiTargetLock />, parent: 'İstila & Küçültme' }, // Parachute yerine Target
+      { id: 'Saldırı & Savunma', label: 'Saldırı/Savunma', icon: <BiShield />, parent: 'Sente & Gote 2' }, 
+      { id: 'Aji 1', label: 'Aji 1', icon: <GiSpy />, parent: 'Saldırı & Savunma' }, // Infinite yerine Casus (Gizli Tat)
+      { id: 'Aji-Keshi', label: 'Aji-Keshi', icon: <GiShatteredGlass />, parent: 'Aji 1' }, // Parachute yerine Kırık Cam (Bozulmuş Tat)
     ]
-  },
-
- { 
-    title: "5 Kyu - 1 Dan Aydınlanma", 
+  },{ 
+    title: "5 Kyu - 1 Dan", 
     levels: [
       // Kök
-      { id: 'Oyun Yönü 2', label: 'Oyun Yönü 2', icon: <BiCompass />, parent: null },
+      { id: 'Yaşam & Ölüm 4', label: 'Yaşam & Ölüm 4', icon: <BiShow />, parent: null },
       
       // Dal 1
-      { id: 'Tesuji 3', label: 'Tesuji 3', icon: <BiBulb />, parent: 'Oyun Yönü 2' },
-      { id: 'Joseki 3', label: 'Joseki 3', icon: <BiCoinStack />, parent: 'Tesuji 3' }, 
-      { id: 'Yaşam & Ölüm 4', label: 'Yaşam & Ölüm 4', icon: <BiShow />, parent: 'Joseki 3' }, 
-      
+      { id: 'Oyun Yönü 3', label: 'Oyun Yönü 3', icon: <BiCompass />, parent: 'Tesuji 4' },
+      { id: 'Oyun Ortası 3', label: 'Oyun Ortası 3', icon: <GiCrossedSwords />, parent: 'Oyun Yönü 3' }, 
+      { id: 'Oyun Sonu 3', label: 'Oyun Sonu 3', icon: <BiFlag />, parent: 'Oyun Yönü 3' }, 
+      { id: 'Pro Kavrayışı', label: 'Pro Kavrayışı', icon: <GiBlackBelt />, parent: 'Oyun Ortası 3' }, // Swords yerine Siyah Kuşak
+
       // Dal 2
-      { id: 'Hamle Değerleri', label: 'Hamle Değeri', icon: <GiScales />, parent: 'Oyun Yönü 2' }, 
-      { id: 'Pro Kavrayışı', label: 'Pro Kavrayışı', icon: <GiBlackBelt />, parent: 'Hamle Değerleri' },
-      { id: 'Yapay Zeka', label: 'Yapay Zeka', icon: <BiBot />, parent: 'Hamle Değerleri' },
+      { id: 'Tesuji 4', label: 'Tesuji 4', icon: <BiBulb />, parent: 'Yaşam & Ölüm 4' },
+      { id: 'Ai', label: 'Ai', icon: <BiBot />, parent: 'Tesuji 3' }, // Bulb yerine Bot
+      { id: 'Joseki 4', label: 'Joseki 4', icon: <GiOpenBook />, parent: 'Yaşam & Ölüm 4' },
+      
+    
+      
+      // Dal 3
+      { id: 'Sente & Gote 3', label: 'Sente & Gote 3', icon: <BiFastForward />, parent: 'Ai' },
+      { id: 'İstila & Küçültme', label: 'İstila & Küçültme', icon: <GiParachute />, parent: 'Sente & Gote 3' }, 
+      { id: 'Saldırı & Savunma', label: 'Saldırı & Savunma', icon: <BiShield />, parent: 'Sente & Gote 3' }, 
+      { id: 'Aji 2', label: 'Aji 2', icon: <GiSpy />, parent: 'Saldırı & Savunma' }, 
+      { id: 'Semeai', label: 'Semeai', icon: <GiCrossedSwords />, parent: 'İstila & Küçültme' }, // Shield yerine Kılıçlar
+      { id: 'Kikashi', label: 'Kikashi', icon: <GiLightningBow />, parent: 'Semeai' }, // Shield yerine Şimşek (Zorlayıcı)
     ]
   },
 ];

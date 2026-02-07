@@ -1050,5 +1050,56 @@ export const problemSet: Problem[] = [
       }
     ]
   }
+},{
+  id: "20",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Snapback",
+  category: "Esir Alma 1",
+  description: "Siyahın 3 taşını bir taşımızı feda ederek nasıl esir alabiliriz?",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"white\"},null,null],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"black\"},null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 5,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 4,
+            y: 5,
+            color: "black",
+            children: [
+              {
+                x: 5,
+                y: 5,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 4,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 5,
+            y: 5,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
 }
 ]
