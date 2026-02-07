@@ -86,7 +86,7 @@ export const problemSet: Problem[] = [
   size: 9,
   labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
   turn: "white",
-  title: "Tanımsız Hamle",
+  title: "Yasak Hamle",
   category: "Kurallar",
   description: "Tahtada yalnızca nefesimiz olduğu noktalara oynayabiliriz. Siyah grubun ortasında beyazın tüm nefeslerinin kapalı olmasından dolayı oraya hamle yapılamaz.",
   initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,{\"color\":\"black\"},null,null,null,null,null],[null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},null,null,null,null],[null,null,null,{\"color\":\"black\"},null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
@@ -201,5 +201,526 @@ export const problemSet: Problem[] = [
   description: "Sınırları belirlenmemiş alan kalmadığında ve oyuncular hamle yapmanın kendilerine fayda sağlamayacağı konusunda hemfikir olduğunda ardarda pas dediklerinde, oyun sonlanır. İki etrafını çevirdiği kesişim noktaları kadar puan kazanır. Ölü taşlar tahtadan kaldırılır ve karşı tarafa esir olarak verilir. Bu hesaplamaların nasıl yapıldığını 'Oyun Sonlandırma' setinde öğrenebilirsiniz. ",
   initialState: "[[null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,null,null],[null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}],[{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"}],[{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null],[null,{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,{\"color\":\"black\"}],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"}],[null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"}]]",
   solution:[]
-}
+},{
+  id: "11",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Atari",
+  category: "Esir Alma 1",
+  description: "Atari, bir taşın veya taş grubunun nefes sayısını 1'e düşürerek esir alma tehditinde bulunmaktır. Beyazlar siyah gruba atari çekebilir mi?",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null],[null,null,null,null,null,{\"color\":\"white\"},null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 3,
+        y: 7,
+        color: "white",
+        children: [],
+        status: "correct"
+      },
+      {
+        x: 4,
+        y: 6,
+        color: "white",
+        children: [],
+        status: "correct"
+      }
+    ]
+  }
+},
+{
+  id: "12",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Atari",
+  category: "Esir Alma 1",
+  description: "Her seferinde atari çekerek siyah taşları esir alabilir misiniz?",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 5,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 4,
+            y: 6,
+            color: "black",
+            children: [
+              {
+                x: 5,
+                y: 6,
+                color: "white",
+                children: [
+                  {
+                    x: 4,
+                    y: 7,
+                    color: "black",
+                    children: [
+                      {
+                        x: 5,
+                        y: 7,
+                        color: "white",
+                        children: [
+                          {
+                            x: 4,
+                            y: 8,
+                            color: "black",
+                            children: [
+                              {
+                                x: 3,
+                                y: 8,
+                                color: "white",
+                                children: [
+                                  {
+                                    x: 5,
+                                    y: 8,
+                                    color: "black",
+                                    children: [
+                                      {
+                                        x: 6,
+                                        y: 8,
+                                        color: "white",
+                                        children: [],
+                                        status: "correct"
+                                      }
+                                    ],
+                                    status: null
+                                  }
+                                ],
+                                status: null
+                              },
+                              {
+                                x: 5,
+                                y: 8,
+                                color: "white",
+                                children: [
+                                  {
+                                    x: 3,
+                                    y: 8,
+                                    color: "black",
+                                    children: [
+                                      {
+                                        x: 2,
+                                        y: 8,
+                                        color: "white",
+                                        children: [],
+                                        status: "correct"
+                                      }
+                                    ],
+                                    status: null
+                                  }
+                                ],
+                                status: null
+                              }
+                            ],
+                            status: null
+                          }
+                        ],
+                        status: null
+                      },
+                      {
+                        x: 4,
+                        y: 8,
+                        color: "white",
+                        children: [
+                          {
+                            x: 5,
+                            y: 7,
+                            color: "black",
+                            children: [
+                              {
+                                x: 6,
+                                y: 7,
+                                color: "white",
+                                children: [
+                                  {
+                                    x: 5,
+                                    y: 8,
+                                    color: "black",
+                                    children: [
+                                      {
+                                        x: 6,
+                                        y: 8,
+                                        color: "white",
+                                        children: [],
+                                        status: "correct"
+                                      }
+                                    ],
+                                    status: null
+                                  }
+                                ],
+                                status: null
+                              },
+                              {
+                                x: 5,
+                                y: 8,
+                                color: "white",
+                                children: [
+                                  {
+                                    x: 6,
+                                    y: 7,
+                                    color: "black",
+                                    children: [],
+                                    status: "wrong"
+                                  }
+                                ],
+                                status: null
+                              }
+                            ],
+                            status: null
+                          }
+                        ],
+                        status: null
+                      }
+                    ],
+                    status: null
+                  }
+                ],
+                status: null
+              },
+              {
+                x: 4,
+                y: 7,
+                color: "white",
+                children: [
+                  {
+                    x: 5,
+                    y: 6,
+                    color: "black",
+                    children: [
+                      {
+                        x: 6,
+                        y: 6,
+                        color: "white",
+                        children: [
+                          {
+                            x: 5,
+                            y: 7,
+                            color: "black",
+                            children: [
+                              {
+                                x: 6,
+                                y: 7,
+                                color: "white",
+                                children: [
+                                  {
+                                    x: 5,
+                                    y: 8,
+                                    color: "black",
+                                    children: [
+                                      {
+                                        x: 4,
+                                        y: 8,
+                                        color: "white",
+                                        children: [
+                                          {
+                                            x: 6,
+                                            y: 8,
+                                            color: "black",
+                                            children: [
+                                              {
+                                                x: 7,
+                                                y: 8,
+                                                color: "white",
+                                                children: [],
+                                                status: "correct"
+                                              }
+                                            ],
+                                            status: null
+                                          }
+                                        ],
+                                        status: null
+                                      },
+                                      {
+                                        x: 6,
+                                        y: 8,
+                                        color: "white",
+                                        children: [
+                                          {
+                                            x: 4,
+                                            y: 8,
+                                            color: "black",
+                                            children: [
+                                              {
+                                                x: 3,
+                                                y: 8,
+                                                color: "white",
+                                                children: [],
+                                                status: "correct"
+                                              }
+                                            ],
+                                            status: null
+                                          }
+                                        ],
+                                        status: null
+                                      }
+                                    ],
+                                    status: null
+                                  }
+                                ],
+                                status: null
+                              },
+                              {
+                                x: 5,
+                                y: 8,
+                                color: "white",
+                                children: [
+                                  {
+                                    x: 6,
+                                    y: 7,
+                                    color: "black",
+                                    children: [
+                                      {
+                                        x: 7,
+                                        y: 7,
+                                        color: "white",
+                                        children: [
+                                          {
+                                            x: 6,
+                                            y: 8,
+                                            color: "black",
+                                            children: [
+                                              {
+                                                x: 7,
+                                                y: 8,
+                                                color: "white",
+                                                children: [],
+                                                status: "correct"
+                                              }
+                                            ],
+                                            status: null
+                                          }
+                                        ],
+                                        status: null
+                                      },
+                                      {
+                                        x: 6,
+                                        y: 8,
+                                        color: "white",
+                                        children: [
+                                          {
+                                            x: 7,
+                                            y: 7,
+                                            color: "black",
+                                            children: [],
+                                            status: "wrong"
+                                          }
+                                        ],
+                                        status: null
+                                      }
+                                    ],
+                                    status: null
+                                  }
+                                ],
+                                status: null
+                              }
+                            ],
+                            status: null
+                          }
+                        ],
+                        status: null
+                      },
+                      {
+                        x: 5,
+                        y: 7,
+                        color: "white",
+                        children: [
+                          {
+                            x: 6,
+                            y: 6,
+                            color: "black",
+                            children: [],
+                            status: "wrong"
+                          }
+                        ],
+                        status: null
+                      }
+                    ],
+                    status: null
+                  }
+                ],
+                status: null
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 4,
+        y: 6,
+        color: "white",
+        children: [
+          {
+            x: 5,
+            y: 5,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},{
+  id: "13",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Esir Alma",
+  category: "Esir Alma 1",
+  description: "Siyahın bir grubu halihazırda ataride, yani bir nefesi var. Kendi taşlarımızı, siyahın taşlarını esir ederek kurtarabiliriz.",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"white\"},null,null],[null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 3,
+        y: 5,
+        color: "white",
+        children: [],
+        status: "correct"
+      },
+      {
+        x: 6,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 6,
+            y: 4,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},
+{
+  id: "prob-1770421721690",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Atari",
+  category: "Esir Alma 1",
+  description: "Beyaz siyahın gruplarını birbirlerinden ayıracak şekilde atari çekmeli, aksi halde siyah 3 taşını kurtarabilir.",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,{\"color\":\"white\"},null,{\"color\":\"white\"},null,{\"color\":\"white\"},{\"color\":\"white\"}],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"white\"}],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"black\"},{\"color\":\"black\"}],[null,null,null,null,{\"color\":\"black\"},{\"color\":\"black\"},{\"color\":\"black\"},null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,{\"color\":\"black\"},null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 4,
+        y: 7,
+        color: "white",
+        children: [
+          {
+            x: 4,
+            y: 8,
+            color: "black",
+            children: [
+              {
+                x: 5,
+                y: 8,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          },
+          {
+            x: 5,
+            y: 7,
+            color: "black",
+            children: [
+              {
+                x: 4,
+                y: 8,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 4,
+        y: 8,
+        color: "white",
+        children: [
+          {
+            x: 4,
+            y: 7,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},
+{
+  id: "14",
+  size: 9,
+  labels: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  turn: "white",
+  title: "Esir Alma",
+  category: "Esir Alma 1",
+  description: "Beyaz grupları ayıran siyah gruplardan birisini esir almaya çalışıyoruz.",
+  initialState: "[[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},null],[null,null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,{\"color\":\"black\"},null,null,{\"color\":\"black\"},{\"color\":\"white\"},null],[null,null,null,null,null,{\"color\":\"white\"},{\"color\":\"white\"},{\"color\":\"black\"},null],[null,null,null,{\"color\":\"black\"},null,null,null,{\"color\":\"black\"},null],[null,null,null,null,null,{\"color\":\"black\"},null,{\"color\":\"black\"},null],[null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null]]",
+  solution: {
+    children: [
+      {
+        x: 2,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 3,
+            y: 5,
+            color: "black",
+            children: [
+              {
+                x: 3,
+                y: 4,
+                color: "white",
+                children: [],
+                status: "correct"
+              }
+            ],
+            status: null
+          }
+        ],
+        status: null
+      },
+      {
+        x: 3,
+        y: 5,
+        color: "white",
+        children: [
+          {
+            x: 2,
+            y: 5,
+            color: "black",
+            children: [],
+            status: "wrong"
+          }
+        ],
+        status: null
+      }
+    ]
+  }
+},
 ]

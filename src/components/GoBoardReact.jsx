@@ -149,7 +149,7 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
       // --- DURUM 1: ANALİZ MODU (Değişiklik yok) ---
       if (!state.hasSolution) {
           // ... (önceki kodun aynısı)
-          if (state.history.length === 0) { showMessage("Başlangıçtasınız", "#e74c3c"); return; }
+          if (state.history.length === 0) { showMessage; return; }
           const prevBoard = state.history.pop();
           state.stones = JSON.parse(prevBoard);
           state.turn = state.turn === 'black' ? 'white' : 'black';
@@ -162,7 +162,6 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
 
       // --- DURUM 2: SORU ÇÖZME (Güncellendi) ---
       if (!state.currentNode || state.currentNode === state.moveTree) {
-          showMessage("Başlangıçtasınız, geri alınamaz.", "#e74c3c");
           return;
       }
 
@@ -624,14 +623,33 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
   return (
     <div className="go-app-react" ref={wrapperRef}>
        {/* Üst Bilgi Barı: Sıra kimde göstergesi */}
-       {(!isTeacher || teacherMode === 'RECORD') && (
-        <div className="top-info-bar">
-          <div className="turn-badge">
-            <div className={`turn-indicator ${turnIndicator}`}></div>
-            <span>{turnIndicator === 'black' ? 'Siyah' : 'Beyaz'}</span>
-          </div>
-        </div>
+      {(!isTeacher || teacherMode === 'RECORD') && (
+  <div className="top-info-bar">
+    <div className="turn-badge">
+      
+      {/* 1. KISIM: Yuvarlak Renk (Sabit: problem.turn neyse o) */}
+      <div className={`turn-indicator ${problem?.turn || 'black'}`}></div>
+      
+      {/* 2. KISIM: Renk Yazısı (Sabit: problem.turn neyse o) */}
+      <span>
+        {problem?.turn === 'white' ? 'Beyaz' : 'Siyah'}
+      </span>
+
+      {/* 3. KISIM: Başlık (Eklediğimiz yer) */}
+      {problem?.title && (
+        <>
+          <span style={{ margin: '0 8px', opacity: 0.4 }}>|</span>
+          <span style={{ fontWeight: 500, opacity: 0.9, color: 'var(--tree-accent, #d97706)' }}>
+            {problem.title}
+          </span>
+        </>
       )}
+      
+    </div>
+  </div>
+)}
+
+      
 
       {/* İpucu: Tahtanın hemen üstünde, minimal */}
       {description && !isTeacher && (
@@ -644,10 +662,7 @@ const GoBoardReact = ({ problem, isTeacher = false, onSolve = null, description 
       <div className="go-wrapper-shadow">
           <div className="go-container">
              <div className="coords-layer">
-                 {/* FORMÜL MANTIĞI:
-                    Başlangıç: %4 (PADDING_RATIO * 100)
-                    Kalan Alan: %92 (100 - 4*2)
-                    Adım Aralığı: 92 / (size - 1)
+                 {/*
                  */}
                  
                  {coordinateLabels.col.map((lbl, i) => (
