@@ -14,15 +14,21 @@ import Layout from '../layouts/Layout.astro';
         <p id="display-email" class="email-text">...</p>
       </div>
 
-      <div class="rank-section">
-        <label for="rank-select" class="rank-label">Go Seviyesi</label>
-        <div class="select-wrapper">
-            <select id="rank-select" class="rank-dropdown">
-                <option value="" disabled selected>Seviyeni Seç</option>
-                </select>
-            <span class="select-arrow">▼</span>
+      <div class="rank-display-section">
+        <div class="rank-badge-container">
+            <span class="rank-title">Mevcut Seviye</span>
+            <div class="rank-value" id="display-rank">20 Kyu</div>
         </div>
-        <p class="rank-hint">Seviyeni güncellediğinde sistem otomatik olarak kaydeder.</p>
+        
+        <div class="xp-container">
+            <div class="xp-info">
+                <span id="current-xp">0 XP</span>
+                <span id="next-rank-info">Sonraki seviyeye devam et</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
+            </div>
+        </div>
       </div>
 
       <div class="profile-info">
@@ -47,11 +53,6 @@ import Layout from '../layouts/Layout.astro';
 <script>
   import { supabase } from '../lib/supabase';
 
-  // Go Seviyeleri Listesi (20 Kyu -> 1 Kyu -> 1 Dan -> 9 Dan)
-const ranks: string[] = [];
-  for (let i = 20; i >= 1; i--) ranks.push(`${i} Kyu`);
-  for (let i = 1; i <= 9; i++) ranks.push(`${i} Dan`);
-
   async function initProfile() {
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -66,7 +67,9 @@ const ranks: string[] = [];
         email: document.getElementById('display-email'),
         avatarInitial: document.getElementById('avatar-initial'),
         infoDate: document.getElementById('info-date'),
-        rankSelect: document.getElementById('rank-select') as HTMLSelectElement
+        displayRank: document.getElementById('display-rank'),
+        currentXp: document.getElementById('current-xp'),
+        xpBar: document.getElementById('xp-bar')
     };
 
     if (els.email) els.email.textContent = user.email || "";
@@ -87,44 +90,26 @@ const ranks: string[] = [];
     if (els.infoDate && profile?.created_at) els.infoDate.textContent = new Date(profile.created_at).toLocaleDateString('tr-TR');
     if (els.avatarInitial) els.avatarInitial.textContent = (displayName[0] || '?').toUpperCase();
 
-    // --- RANK SEÇİCİ MANTIĞI ---
-    if (els.rankSelect) {
-        // 1. Seçenekleri Doldur
-        ranks.forEach(rank => {
-            const option = document.createElement('option');
-            option.value = rank;
-            option.textContent = rank;
-            els.rankSelect.appendChild(option);
-        });
-
-        // 2. Mevcut Rütbeyi Seçili Yap
-        if (profile?.rank) {
-            els.rankSelect.value = profile.rank;
-        } else {
-            // Varsayılan olarak 20 Kyu yap veya boş bırak
-            els.rankSelect.value = "20 Kyu"; 
+    // --- RÜTBE VE XP GÖSTERİMİ ---
+    if (profile) {
+        // Rütbe (Veritabanından ne gelirse o, değiştirilemez)
+        if (els.displayRank) els.displayRank.textContent = profile.rank || "20 Kyu";
+        
+        // XP (Görsel Bar Hesaplama)
+        // Not: Basit bir görselleştirme için modülo kullanıyoruz.
+        // Veritabanındaki mantığa (SQL) göre her seviye ortalama 100-200 XP civarı artıyor.
+        // Burada barı temsili dolduracağız.
+        const totalXP = profile.xp || 0;
+        if (els.currentXp) els.currentXp.textContent = `${totalXP} XP`;
+        
+        // Barın doluluk oranı (Sürekli dönen bir bar yerine, 1000'lik dilimler halinde gösterebiliriz veya sabit)
+        // Basitlik için: Bar her zaman biraz dolu görünsün.
+        if (els.xpBar) {
+            // Sonraki level için kalan (tahmini)
+            const fillPercentage = (totalXP % 100); 
+            // Kullanıcı ilerledikçe barın dolduğunu hissetmesi için basit matematik
+            els.xpBar.style.width = `${Math.max(10, fillPercentage)}%`;
         }
-
-        // 3. Değişiklik Olduğunda Kaydet
-        els.rankSelect.addEventListener('change', async (e) => {
-            const target = e.target as HTMLSelectElement;
-            const newRank = target.value;
-            
-            // Kullanıcıya görsel geri bildirim (Kısa süreli renk değişimi)
-            target.style.borderColor = "#10b981"; // Yeşil
-            
-            const { error: updateError } = await supabase
-                .from('agorasusers')
-                .update({ rank: newRank })
-                .eq('id', user.id);
-
-            if (updateError) {
-                alert("Seviye güncellenirken hata oluştu.");
-                target.style.borderColor = "#ef4444"; // Kırmızı
-            } else {
-                setTimeout(() => { target.style.borderColor = "#e2e8f0"; }, 1000);
-            }
-        });
     }
   }
 
@@ -173,136 +158,59 @@ const ranks: string[] = [];
       font-weight: 600; 
   }
 
-  h1 { 
-      font-size: 1.25rem; 
-      color: #0f172a; 
-      margin-bottom: 0.25rem; 
-      font-weight: 700; 
-  }
+  h1 { font-size: 1.25rem; color: #0f172a; margin-bottom: 0.25rem; font-weight: 700; }
+  .email-text { color: #64748b; font-size: 0.875rem; margin-bottom: 2rem; }
 
-  .email-text { 
-      color: #64748b; 
-      font-size: 0.875rem; 
-      margin-bottom: 2rem; 
-  }
-
-  /* RANK SEÇİCİ (ÖNEMLİ KISIM) */
-  .rank-section {
-      margin-bottom: 2.5rem;
-      text-align: left;
+  /* RANK & XP BÖLÜMÜ (YENİ) */
+  .rank-display-section {
       background: #f8fafc;
       padding: 1.5rem;
       border-radius: 16px;
       border: 1px solid #e2e8f0;
+      margin-bottom: 2rem;
+      text-align: center;
   }
 
-  .rank-label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #334155;
-      margin-bottom: 0.5rem;
-  }
+  .rank-title { display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+  .rank-value { font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; }
 
-  .select-wrapper {
-      position: relative;
-  }
-
-  .rank-dropdown {
+  .xp-container { margin-top: 1rem; }
+  .xp-info { display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; font-weight: 500; }
+  
+  .progress-track {
       width: 100%;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border: 2px solid #e2e8f0;
+      height: 8px;
+      background: #e2e8f0;
       border-radius: 10px;
-      background-color: white;
-      color: #0f172a;
-      cursor: pointer;
-      appearance: none; /* Varsayılan oku gizle */
-      font-weight: 500;
-      transition: all 0.2s;
+      overflow: hidden;
   }
-
-  .rank-dropdown:focus {
-      outline: none;
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-
-  .select-arrow {
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: #64748b;
-      font-size: 0.8rem;
-  }
-
-  .rank-hint {
-      margin-top: 0.5rem;
-      font-size: 0.75rem;
-      color: #94a3b8;
+  
+  .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+      border-radius: 10px;
+      transition: width 0.5s ease;
   }
 
   /* BİLGİ LİSTESİ */
-  .profile-info { 
-      margin-bottom: 2.5rem; 
-      border-top: 1px solid #f1f5f9;
-      padding-top: 1.5rem;
-  }
-
-  .info-item { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center;
-      margin-bottom: 1rem; 
-      font-size: 0.9rem;
-  }
-
+  .profile-info { margin-bottom: 2.5rem; border-top: 1px solid #f1f5f9; padding-top: 1.5rem; }
+  .info-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 0.9rem; }
   .info-item:last-child { margin-bottom: 0; }
-
   .label { color: #64748b; }
   .value { color: #0f172a; font-weight: 500; }
   
-  .active-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-  }
-  .active-status::before {
-      content: '';
-      display: block;
-      width: 8px;
-      height: 8px;
-      background: #10b981;
-      border-radius: 50%;
-  }
+  .active-status { display: inline-flex; align-items: center; gap: 6px; }
+  .active-status::before { content: ''; display: block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; }
 
   /* BUTTON */
-  .btn-danger { 
-      width: 100%; 
-      padding: 0.85rem; 
-      border: none; 
-      border-radius: 12px; 
-      background: #fee2e2; 
-      color: #ef4444; 
-      font-weight: 600; 
-      font-size: 0.9rem;
-      cursor: pointer; 
-      transition: all 0.2s; 
-  }
-
-  .btn-danger:hover { 
-      background: #fecaca; 
-      color: #dc2626;
-  }
+  .btn-danger { width: 100%; padding: 0.85rem; border: none; border-radius: 12px; background: #fee2e2; color: #ef4444; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+  .btn-danger:hover { background: #fecaca; color: #dc2626; }
 
   /* DARK MODE */
   :global(body.dark) .profile-card { background: #1e293b; border-color: #334155; }
-  :global(body.dark) h1, :global(body.dark) .value { color: #f8fafc; }
-  :global(body.dark) .rank-section { background: #0f172a; border-color: #334155; }
-  :global(body.dark) .rank-label { color: #cbd5e1; }
-  :global(body.dark) .rank-dropdown { background: #1e293b; border-color: #334155; color: white; }
+  :global(body.dark) h1, :global(body.dark) .value, :global(body.dark) .rank-value { color: #f8fafc; }
+  :global(body.dark) .rank-display-section { background: #0f172a; border-color: #334155; }
+  :global(body.dark) .rank-title, :global(body.dark) .xp-info { color: #cbd5e1; }
+  :global(body.dark) .progress-track { background: #334155; }
   :global(body.dark) .btn-danger { background: #450a0a; color: #fca5a5; }
-  :global(body.dark) .btn-danger:hover { background: #7f1d1d; }
 </style>

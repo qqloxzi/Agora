@@ -84,7 +84,7 @@ const pricing = [
     <Sectionhead>
       <Fragment slot="title">Kurs Planları</Fragment>
       <Fragment slot="desc">
-        2. Sezon için erken kayıtlar devam ediyor. Her bir kurs için 6 Kişilik kontenjan ve 15 Şubata kadar kayıt süresi:
+        2. Sezon için kayıtlar devam ediyor. Her bir kurs için 6 Kişilik kontenjan. Lütfen bizimle iletişime geçiniz.
       </Fragment>
     </Sectionhead>
 
@@ -94,9 +94,10 @@ const pricing = [
       </p>
     </div>
 
+    {/* DÜZELTME: [&>*]:bg-white kaldırıldı */}
     <div 
       id="plan-kutulari" 
-      class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto max-w-screen-xl mt-8 [&>*]:bg-white"
+      class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto max-w-screen-xl mt-8"
     >
       {pricing.map((item) => <PricingCard plan={item} />)}
     </div>
@@ -107,8 +108,3 @@ const pricing = [
     </div>
   </Container>
 </Layout>
-
-<style is:global>
-  
-
-</style>

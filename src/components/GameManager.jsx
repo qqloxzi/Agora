@@ -191,21 +191,37 @@ const GameManager = ({ allProblems }) => {
   const [currentProblemHasError, setCurrentProblemHasError] = useState(false);
   const [resetKey, setResetKey] = useState(0);
 
-  useEffect(() => {
+ useEffect(() => {
     const initProgress = async () => {
+        // 1. LocalStorage'dan al (Misafirler için)
         const localSaved = localStorage.getItem('goProgress');
         let localData = localSaved ? JSON.parse(localSaved) : [];
-        setCompletedLevels(localData);
+        
+        // 2. Supabase'den al (Üyeler için)
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
             setCurrentUser(user);
-            const { data } = await supabase.from('user_progress').select('category_id').eq('user_id', user.id);
+            
+            // DÜZELTME: 'category_id' yerine 'topic_id' seçiyoruz
+            const { data, error } = await supabase
+                .from('user_progress')
+                .select('topic_id') 
+                .eq('user_id', user.id);
+            
             if (data) {
-                const dbLevels = data.map(item => item.category_id);
+                // Veritabanından gelen topic_id'leri diziye çevir
+                const dbLevels = data.map(item => item.topic_id);
+                // Local ve DB verisini birleştir (Unique yap)
                 const mergedLevels = [...new Set([...localData, ...dbLevels])];
+                
                 setCompletedLevels(mergedLevels);
+                // Güncel halini locale de yedekle
                 localStorage.setItem('goProgress', JSON.stringify(mergedLevels));
             }
+            if (error) console.error("Veri çekme hatası:", error);
+        } else {
+            // Kullanıcı yoksa sadece locali yükle
+            setCompletedLevels(localData);
         }
     };
     initProgress();
@@ -225,13 +241,40 @@ const GameManager = ({ allProblems }) => {
     }
   }, [currentIndex, gameMode, activeCategory]);
 
-  const handleLevelComplete = async (category) => {
+ const handleLevelComplete = async (category) => {
+    // 1. Önce State'i güncelle (Arayüzde hemen yeşil olsun)
     if (!completedLevels.includes(category)) {
       const newProgress = [...completedLevels, category];
       setCompletedLevels(newProgress);
       localStorage.setItem('goProgress', JSON.stringify(newProgress));
-      if (currentUser) {
-          try { await supabase.from('user_progress').insert({ user_id: currentUser.id, category_id: category, completed_at: new Date() }); } catch (err) { console.error(err); }
+      
+      // 2. Supabase'e Kaydet (KRİTİK KISIM)
+      // State'teki currentUser bazen eski kalabilir, garanti olsun diye tekrar çekiyoruz.
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+          try { 
+            const { error } = await supabase
+                .from('user_progress')
+                .insert([
+                    { 
+                        user_id: user.id, 
+                        topic_id: category // DÜZELTME: SQL'deki sütun adı 'topic_id'
+                    }
+                ]);
+            
+            if (error) {
+                // Eğer hata "duplicate key" ise (zaten çözmüşse) sorun yok, diğerlerini logla
+                if (error.code !== '23505') { 
+                    console.error("Supabase Kayıt Hatası:", error.message);
+                }
+            } else {
+                console.log("İlerleme başarıyla veritabanına işlendi:", category);
+            }
+
+          } catch (err) { 
+              console.error("Beklenmedik Hata:", err); 
+          }
       }
     }
     setGameMode('result');
