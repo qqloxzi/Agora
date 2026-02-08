@@ -3,51 +3,148 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Profilim | Agora Go Akademisi">
-  <div class="profile-container">
-    <div class="profile-card">
+  
+  <div class="bg-[#F3F2EF] min-h-screen pb-10 font-sans">
+    
+    <div class="max-w-[1128px] mx-auto pt-6 px-4">
       
-      <div class="profile-header">
-        <div class="avatar-circle">
-           <span id="avatar-initial">?</span>
-        </div>
-        <h1 id="display-username">Yükleniyor...</h1>
-        <p id="display-email" class="email-text">...</p>
-      </div>
-
-      <div class="rank-display-section">
-        <div class="rank-badge-container">
-            <span class="rank-title">Mevcut Seviye</span>
-            <div class="rank-value" id="display-rank">20 Kyu</div>
-        </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-300 overflow-hidden mb-4 relative">
         
-        <div class="xp-container">
-            <div class="xp-info">
-                <span id="current-xp">0 XP</span>
-                <span id="next-rank-info">Sonraki seviyeye devam et</span>
+        <div class="h-48 w-full bg-[#A0B4B7] relative overflow-hidden">
+             <div class="absolute right-0 top-0 h-full w-2/3 bg-[#BCCDCF] rounded-l-full scale-125 translate-x-10 translate-y-4 opacity-80"></div>
+             
+             <div class="absolute top-4 right-4 bg-white p-2 rounded-full cursor-pointer shadow-sm text-gray-600 hover:text-blue-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 8.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4z"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+             </div>
+        </div>
+
+        <div class="px-6 pb-6 relative">
+            
+            <div class="relative -mt-24 mb-4 flex justify-between items-start">
+                <div class="w-40 h-40 rounded-full border-[4px] border-white bg-white overflow-hidden shadow-sm cursor-pointer relative group">
+                    <div id="avatar-container" class="w-full h-full bg-slate-800 flex items-center justify-center text-white text-6xl font-bold">
+                        <span id="avatar-initial">?</span>
+                    </div>
+                </div>
+
+                <button class="mt-4 text-gray-500 hover:bg-gray-100 p-2 rounded-full transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                </button>
             </div>
-            <div class="progress-track">
-                <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
+
+            <div class="flex flex-col md:flex-row justify-between">
+                
+                <div class="max-w-xl">
+                    <h1 id="display-username" class="text-2xl font-bold text-gray-900 leading-tight">Yükleniyor...</h1>
+                    <p class="text-gray-900 text-lg mt-1">Go Oyuncusu & Öğrenci</p>
+                    <p id="display-email" class="text-gray-500 text-sm mt-1">...</p>
+                    
+                    <div class="flex items-center gap-2 mt-2 text-sm text-gray-500 font-medium">
+                        <span>İzmir, Türkiye</span>
+                        <span>•</span>
+                        <a href="#" class="text-blue-600 font-bold hover:underline">İletişim bilgileri</a>
+                    </div>
+                    <div class="mt-1 text-blue-600 font-bold text-sm hover:underline cursor-pointer">500+ bağlantı</div>
+
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <button class="bg-[#0a66c2] hover:bg-[#004182] text-white font-bold py-1.5 px-6 rounded-full transition-colors text-base">
+                            Açık
+                        </button>
+                        <button class="border border-[#0a66c2] text-[#0a66c2] hover:bg-blue-50 font-bold py-1.5 px-6 rounded-full transition-colors text-base">
+                            Bölüm ekle
+                        </button>
+                        <button class="border border-gray-500 text-gray-600 hover:bg-gray-100 font-bold py-1.5 px-6 rounded-full transition-colors text-base">
+                            Profili geliştir
+                        </button>
+                        <button class="border border-gray-500 text-gray-600 hover:bg-gray-100 font-bold py-1.5 px-4 rounded-full transition-colors text-base">
+                            ...
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex flex-col gap-4 mt-2">
+                    <div class="flex items-center gap-3 cursor-pointer hover:underline">
+                        <div class="w-10 h-10 bg-purple-900 rounded flex items-center justify-center text-white font-bold text-xs shrink-0">
+                            AG
+                        </div>
+                        <span class="text-sm font-bold text-gray-900">Agora Go Topluluğu</span>
+                    </div>
+                    <div class="flex items-center gap-3 cursor-pointer hover:underline">
+                        <div class="w-10 h-10 bg-red-700 rounded flex items-center justify-center text-white font-bold text-xs shrink-0">
+                            IZ
+                        </div>
+                        <span class="text-sm font-bold text-gray-900">İzmir Institute of Tech.</span>
+                    </div>
+                </div>
+
             </div>
+
+            <div class="mt-6 bg-[#DCE6F1] border border-[#DCE6F1] rounded-lg p-4 relative">
+                <button class="absolute top-3 right-3 text-gray-600 hover:bg-gray-200 rounded-full p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                
+                <h3 class="font-bold text-gray-900 text-sm mb-1" id="display-username-alert">Profilinizi henüz doğrulamadınız</h3>
+                <p class="text-sm text-gray-700 mb-3">Doğrulanan üyelerin profili, ortalama %60 daha fazla görüntülenir.</p>
+                
+                <button class="border border-gray-600 text-gray-700 font-bold py-1 px-4 rounded-full hover:bg-gray-200 hover:border-gray-800 transition-colors text-sm bg-transparent">
+                    Doğrulayın
+                </button>
+            </div>
+
         </div>
       </div>
 
-      <div class="profile-info">
-        <div class="info-item">
-          <span class="label">Kayıt Tarihi</span>
-          <span id="info-date" class="value">-</span>
-        </div>
-        <div class="info-item">
-          <span class="label">Hesap Durumu</span>
-          <span class="value active-status">Aktif Üye</span>
-        </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-300 p-6 mb-4">
+            <h2 class="text-xl font-bold text-gray-900 mb-1">Analizler</h2>
+            <p class="text-sm text-gray-500 mb-4 flex items-center gap-1">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
+                Sadece siz görebilirsiniz
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <div class="flex gap-3 items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <div>
+                        <div class="font-bold text-gray-900 text-lg" id="display-rank">20 Kyu</div>
+                        <div class="text-sm text-gray-500">Mevcut Seviye</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    <div class="w-full">
+                        <div class="flex justify-between items-baseline">
+                            <div class="font-bold text-gray-900 text-lg" id="current-xp">0 XP</div>
+                        </div>
+                        <div class="w-full h-1.5 bg-gray-200 rounded-full mt-1 overflow-hidden">
+                             <div id="xp-bar" class="h-full bg-green-600 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <div class="text-xs text-gray-500 mt-1">Toplam Deneyim</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <div>
+                        <div class="font-bold text-gray-900 text-lg" id="info-date">-</div>
+                        <div class="text-sm text-gray-500">Katılım Tarihi</div>
+                    </div>
+                </div>
+
+            </div>
       </div>
 
-      <div class="profile-actions">
-        <button id="logout-btn" class="btn-danger">Oturumu Kapat</button>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-300 p-4 text-center mt-4">
+            <button id="logout-btn" class="text-red-600 font-bold hover:bg-red-50 px-4 py-2 rounded transition text-sm">
+                Oturumu Kapat
+            </button>
       </div>
-
+    
     </div>
   </div>
+
 </Layout>
 
 <script>
@@ -64,6 +161,7 @@ import Layout from '../layouts/Layout.astro';
     // DOM Elemanları
     const els = {
         username: document.getElementById('display-username'),
+        usernameAlert: document.getElementById('display-username-alert'), // Yeni eklendi
         email: document.getElementById('display-email'),
         avatarInitial: document.getElementById('avatar-initial'),
         infoDate: document.getElementById('info-date'),
@@ -87,27 +185,23 @@ import Layout from '../layouts/Layout.astro';
     
     // UI Güncelleme
     if (els.username) els.username.textContent = displayName;
+    if (els.usernameAlert) els.usernameAlert.textContent = `${displayName}, profilinizi henüz doğrulamadınız`;
+    
     if (els.infoDate && profile?.created_at) els.infoDate.textContent = new Date(profile.created_at).toLocaleDateString('tr-TR');
     if (els.avatarInitial) els.avatarInitial.textContent = (displayName[0] || '?').toUpperCase();
 
     // --- RÜTBE VE XP GÖSTERİMİ ---
     if (profile) {
-        // Rütbe (Veritabanından ne gelirse o, değiştirilemez)
+        // Rütbe
         if (els.displayRank) els.displayRank.textContent = profile.rank || "20 Kyu";
         
-        // XP (Görsel Bar Hesaplama)
-        // Not: Basit bir görselleştirme için modülo kullanıyoruz.
-        // Veritabanındaki mantığa (SQL) göre her seviye ortalama 100-200 XP civarı artıyor.
-        // Burada barı temsili dolduracağız.
+        // XP
         const totalXP = profile.xp || 0;
         if (els.currentXp) els.currentXp.textContent = `${totalXP} XP`;
         
-        // Barın doluluk oranı (Sürekli dönen bir bar yerine, 1000'lik dilimler halinde gösterebiliriz veya sabit)
-        // Basitlik için: Bar her zaman biraz dolu görünsün.
+        // Barın doluluk oranı
         if (els.xpBar) {
-            // Sonraki level için kalan (tahmini)
             const fillPercentage = (totalXP % 100); 
-            // Kullanıcı ilerledikçe barın dolduğunu hissetmesi için basit matematik
             els.xpBar.style.width = `${Math.max(10, fillPercentage)}%`;
         }
     }
@@ -124,93 +218,3 @@ import Layout from '../layouts/Layout.astro';
 
   initProfile();
 </script>
-
-<style>
-  /* GENEL DÜZEN */
-  .profile-container { 
-      max-width: 480px; 
-      margin: 4rem auto; 
-      padding: 0 1.5rem; 
-      font-family: 'Inter', sans-serif; 
-  }
-
-  .profile-card { 
-      background: white; 
-      padding: 3rem 2rem; 
-      border-radius: 24px; 
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-      border: 1px solid #f1f5f9;
-      text-align: center; 
-  }
-
-  /* HEADER */
-  .avatar-circle { 
-      width: 80px; 
-      height: 80px; 
-      background: #0f172a; 
-      margin: 0 auto 1rem; 
-      border-radius: 50%; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      font-size: 2rem; 
-      color: white; 
-      font-weight: 600; 
-  }
-
-  h1 { font-size: 1.25rem; color: #0f172a; margin-bottom: 0.25rem; font-weight: 700; }
-  .email-text { color: #64748b; font-size: 0.875rem; margin-bottom: 2rem; }
-
-  /* RANK & XP BÖLÜMÜ (YENİ) */
-  .rank-display-section {
-      background: #f8fafc;
-      padding: 1.5rem;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 2rem;
-      text-align: center;
-  }
-
-  .rank-title { display: block; font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-  .rank-value { font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 1rem; }
-
-  .xp-container { margin-top: 1rem; }
-  .xp-info { display: flex; justify-content: space-between; font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem; font-weight: 500; }
-  
-  .progress-track {
-      width: 100%;
-      height: 8px;
-      background: #e2e8f0;
-      border-radius: 10px;
-      overflow: hidden;
-  }
-  
-  .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #2563eb);
-      border-radius: 10px;
-      transition: width 0.5s ease;
-  }
-
-  /* BİLGİ LİSTESİ */
-  .profile-info { margin-bottom: 2.5rem; border-top: 1px solid #f1f5f9; padding-top: 1.5rem; }
-  .info-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 0.9rem; }
-  .info-item:last-child { margin-bottom: 0; }
-  .label { color: #64748b; }
-  .value { color: #0f172a; font-weight: 500; }
-  
-  .active-status { display: inline-flex; align-items: center; gap: 6px; }
-  .active-status::before { content: ''; display: block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; }
-
-  /* BUTTON */
-  .btn-danger { width: 100%; padding: 0.85rem; border: none; border-radius: 12px; background: #fee2e2; color: #ef4444; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
-  .btn-danger:hover { background: #fecaca; color: #dc2626; }
-
-  /* DARK MODE */
-  :global(body.dark) .profile-card { background: #1e293b; border-color: #334155; }
-  :global(body.dark) h1, :global(body.dark) .value, :global(body.dark) .rank-value { color: #f8fafc; }
-  :global(body.dark) .rank-display-section { background: #0f172a; border-color: #334155; }
-  :global(body.dark) .rank-title, :global(body.dark) .xp-info { color: #cbd5e1; }
-  :global(body.dark) .progress-track { background: #334155; }
-  :global(body.dark) .btn-danger { background: #450a0a; color: #fca5a5; }
-</style>

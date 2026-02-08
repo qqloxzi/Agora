@@ -1,75 +1,106 @@
 ---
-import { supabase } from "../../lib/supabase";
-
-
-// Admin Kontrolü (Senin emailin)
-const ADMIN_EMAIL = "alikarakayagg@gmail.com"; 
-const { data: { user } } = await supabase.auth.getUser();
-
-if (!user || user.email !== ADMIN_EMAIL) return Astro.redirect("/");
+// Burası boş kalabilir, kontrolü script içinde yapıyoruz.
 ---
 
 <div class="max-w-2xl mx-auto mt-10 p-8 bg-white border rounded-xl shadow-sm">
-  <h1 class="text-2xl font-bold mb-6 text-gray-800">Yeni Kurs Ekle</h1>
+  <h1 class="text-2xl font-bold mb-6 text-gray-800">Yeni Kurs Ekle (Full + Slug)</h1>
   
   <form id="create-course-form" class="flex flex-col gap-5">
+    <input type="text" name="title" required class="border p-2 rounded" placeholder="Kurs Başlığı" />
+    <input type="url" name="image_url" required class="border p-2 rounded" placeholder="Resim URL (https://...)" />
     
-    <label class="block">
-      <span class="text-gray-700 font-semibold">Kurs Başlığı</span>
-      <input type="text" name="title" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Örn: Go Oyununa Giriş" />
-    </label>
+    <input type="text" name="provider" class="border p-2 rounded" placeholder="Sağlayıcı (Örn: Agora Akademi)" />
+    
+    <div class="grid grid-cols-2 gap-4">
+        <input type="text" name="duration" placeholder="Süre (Örn: 15 Saat)" class="border p-2 rounded" />
+        <select name="level" class="border p-2 rounded">
+            <option value="Başlangıç">Başlangıç</option>
+            <option value="Orta Seviye">Orta Seviye</option>
+            <option value="İleri Seviye">İleri Seviye</option>
+        </select>
+        <input type="text" name="price" placeholder="Fiyat (Örn: 250 ₺)" class="border p-2 rounded" />
+    </div>
 
-    <label class="block">
-      <span class="text-gray-700 font-semibold">Kapak Resmi (URL)</span>
-      <input type="url" name="image_url" required class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="https://ornek.com/resim.jpg" />
-      <p class="text-xs text-gray-500 mt-1">Kare veya yatay bir görsel linki yapıştır.</p>
-    </label>
+    <textarea name="description" required rows="3" class="border p-2 rounded" placeholder="Kısa Açıklama"></textarea>
 
-    <label class="block">
-      <span class="text-gray-700 font-semibold">Sağlayıcı / Eğitmen</span>
-      <input type="text" name="provider" value="Agora Go" class="mt-1 block w-full border border-gray-300 rounded-md p-2" />
-    </label>
-
-    <label class="block">
-      <span class="text-gray-700 font-semibold">Açıklama</span>
-      <textarea name="description" required rows="4" class="mt-1 block w-full border border-gray-300 rounded-md p-2"></textarea>
-    </label>
-
-    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-md transition-colors">
+    <textarea name="outcomes" rows="5" class="border p-2 rounded" placeholder="Bu kursta neler öğrenilecek? (Her satıra bir madde yazın)&#10;- Go Kuralları&#10;- Stratejik Hamleler&#10;- Oyun Sonu"></textarea>
+    
+    <button type="submit" class="bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700">
       Kursu Yayınla
     </button>
   </form>
-  
-  <p id="status-msg" class="mt-4 text-center font-medium"></p>
+  <p id="status-msg" class="mt-4 text-center font-bold"></p>
 </div>
 
 <script>
-  const form = document.getElementById("create-course-form") as HTMLFormElement;
-  
-  // HATA ÇÖZÜMÜ BURADA: Sonuna 'as HTMLParagraphElement' ekledik
-  const msg = document.getElementById("status-msg") as HTMLParagraphElement;
+    import { createClient } from '@supabase/supabase-js';
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    
-    // Güvenlik önlemi: Eğer element bulunamazsa işlem yapma
-    if (!msg || !form) return;
+    const supabase = createClient(
+        import.meta.env.PUBLIC_SUPABASE_URL,
+        import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+    );
 
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData);
+    const ADMIN_EMAIL = "agoragoakademisi@gmail.com"; // BURAYI KENDİ MAİLİNLE DEĞİŞTİR
 
-    const res = await fetch("/api/create-course", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
+    const form = document.getElementById("create-course-form") as HTMLFormElement;
+    const msg = document.getElementById("status-msg") as HTMLElement;
 
-    if (res.ok) {
-      msg.innerText = "✅ Kurs başarıyla oluşturuldu!";
-      msg.className = "mt-4 text-center text-green-600 font-bold";
-      form.reset();
-    } else {
-      msg.innerText = "❌ Hata oluştu.";
-      msg.className = "mt-4 text-center text-red-600 font-bold";
+    if (form && msg) {
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            
+            // 1. Yetki Kontrolü
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user || user.email !== ADMIN_EMAIL) {
+                alert("Yetkisiz işlem! Lütfen giriş yapın veya admin olduğunuzdan emin olun.");
+                return;
+            }
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+
+            // 2. SLUG OLUŞTURUCU (Otomatik URL İsmi)
+            // Başlığı alır, Türkçe karakterleri düzeltir ve tireli hale getirir.
+            const generateSlug = (text: any) => {
+                return text.toString().toLowerCase()
+                    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                    .replace(/\s+/g, '-')           // Boşlukları tire yap
+                    .replace(/[^\w\-]+/g, '')       // Gereksiz karakterleri sil
+                    .replace(/\-\-+/g, '-')         // Çift tireleri tek yap
+                    .replace(/^-+/, '')             // Baştaki tireyi sil
+                    .replace(/-+$/, '');            // Sondaki tireyi sil
+            };
+
+            const slug = generateSlug(data.title);
+
+            // 3. Veritabanına Ekleme
+            // @ts-ignore
+            const { error } = await supabase
+                .from("courses")
+                .insert({
+                    title: data.title,
+                    slug: slug,                 // <-- URL İSMİNİ KAYDEDİYORUZ
+                    description: data.description,
+                    image_url: data.image_url,
+                    provider: data.provider,
+                    teacher_id: user.id,
+                    duration: data.duration,
+                    level: data.level,
+                    outcomes: data.outcomes,
+                    price: data.price
+                });
+
+            if (!error) {
+                msg.innerText = "✅ Kurs başarıyla eklendi! URL: /course-detail?slug=" + slug;
+                msg.style.color = "green";
+                form.reset();
+            } else {
+                msg.innerText = "❌ Hata: " + error.message;
+                msg.style.color = "red";
+                console.error(error);
+            }
+        });
     }
-  });
 </script>
