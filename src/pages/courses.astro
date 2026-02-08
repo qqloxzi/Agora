@@ -1,0 +1,46 @@
+---
+import { supabase } from "../lib/supabase";
+import CourseCard from "../components/coursecard.astro";
+  import Layout from "@layouts/Layout.astro";
+
+const { data: courses, error } = await supabase
+  .from("courses")
+  .select("*")
+  .order("created_at", { ascending: false });
+const { data: { user } } = await supabase.auth.getUser();
+const currentUserId = user?.id;
+---
+<Layout title="Öğretmen Masası">
+
+<html lang="tr">
+  <head>
+    <title>Kurslar | Agora Go Akademisi</title>
+  </head>
+  <body class="bg-[#F5F7F8] font-sans text-gray-800">
+    
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold">Tüm Eğitimler</h1>
+        <span class="text-sm text-gray-500">{courses?.length || 0} kurs mevcut</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        {courses?.map((course) => (
+          <CourseCard 
+            course={course} 
+            currentUserId={currentUserId} 
+          />
+        ))}
+
+        {(!courses || courses.length === 0) && (
+          <div class="col-span-full text-center py-12 text-gray-500">
+            Henüz aktif bir kurs bulunmuyor.
+          </div>
+        )}
+      </div>
+    </div>
+
+  </body>
+</html>
+</Layout>
