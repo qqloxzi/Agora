@@ -4,45 +4,72 @@ interface Props {
     id: string;
     title: string;
     description: string;
-    image_url: string; // Eklendi
-    provider: string;  // Eklendi
-    rating?: number;   // Eklendi (Opsiyonel)
+    image_url: string;
+    provider: string;
+    level?: string;
+    rating?: number;
   };
   currentUserId?: string;
 }
 
 const { course } = Astro.props;
+
+function getKyuRange(level?: string) {
+  if (!level) return "";
+
+  const normalized = level.trim();
+
+  switch (normalized) {
+    case "Temel Taşlar":
+      return "17–12 Kyu";
+    case "Gelişime":
+      return "11–6 Kyu";
+    case "Aydınlanmaya":
+      return "5 Kyu – 1 Dan";
+    default:
+      return "";
+  }
+}
 ---
 
 <a 
   href={`/courses/${course.id}`} 
-  class="block bg-white p-3 rounded-xl border border-gray-200 hover:shadow-lg transition-shadow duration-300 relative group h-full text-left"
+  class="block bg-white dark:bg-gray-800 p-3 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow duration-300 relative group h-full text-left"
 >
   <div class="flex gap-4 h-full">
     
     <div class="shrink-0">
       <img 
-        src={course.image_url || 'https://via.placeholder.com/100'} 
+        src={course.image_url || "https://via.placeholder.com/100"} 
         alt={course.title} 
-        class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg border border-gray-100"
+        class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg border border-gray-100 dark:border-gray-600"
       />
     </div>
 
     <div class="flex flex-col justify-between flex-grow">
       <div>
         <div class="flex items-center gap-2 mb-1">
-          <div class="w-4 h-4 bg-gray-200 rounded-sm overflow-hidden">
-             </div> 
-          <span class="text-xs font-semibold text-gray-500">{course.provider}</span>
+          <div class="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded-sm overflow-hidden"></div> 
+          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">
+            {course.provider}
+          </span>
         </div>
         
-        <h3 class="font-bold text-gray-900 text-sm md:text-base leading-snug mb-1 line-clamp-2 group-hover:underline decoration-blue-600 underline-offset-2">
+        <h3 class="font-bold text-gray-900 dark:text-white text-lg leading-tight mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
           {course.title}
+          {course.level && (
+            <span class="ml-2 inline-block text-xs font-bold bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">
+              {getKyuRange(course.level)}
+            </span>
+          )}
         </h3>
       </div>
 
-      <div class="flex items-center gap-2 text-xs text-gray-600 mt-2">
-        <span class="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-medium">Ders</span>
+      <div class="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
+        <span class="bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-1.5 py-0.5 rounded font-medium">
+          Ders
+        </span>
+
         {course.rating && (
           <span class="flex items-center gap-1 font-bold text-yellow-600">
             ★ {course.rating}
@@ -54,16 +81,18 @@ const { course } = Astro.props;
 </a>
 
 <script>
-  // Client-side logic to handle the click
-  const buttons = document.querySelectorAll('button[id^="btn-"]');
+  const buttons = document.querySelectorAll<HTMLButtonElement>('button[id^="btn-"]');
 
   buttons.forEach((btn) => {
     btn.addEventListener("click", async (e) => {
-      const target = e.currentTarget as HTMLButtonElement;
-      const courseId = target.dataset.courseId;
-      const userId = target.dataset.userId; // Ensure you pass this from the parent or Auth store
+      const target = e.currentTarget as HTMLButtonElement | null;
 
-      if(!userId) {
+      if (!target) return;
+
+      const courseId = target.dataset.courseId;
+      const userId = target.dataset.userId;
+
+      if (!userId) {
         alert("Please login first!");
         return;
       }
@@ -86,7 +115,10 @@ const { course } = Astro.props;
         }
       } catch (err) {
         console.error(err);
+        target.innerText = "Error ❌";
+        target.disabled = false;
       }
     });
   });
 </script>
+

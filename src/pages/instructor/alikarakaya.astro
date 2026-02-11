@@ -5,12 +5,15 @@ const teacher = {
     name: "Ali Karakaya",
     title: "Eğitmen",
     location: "İzmir, Türkiye",
+    // BURAYA FOTOĞRAF YOLUNU EKLİYORUZ
+    // Eğer fotoğrafın public klasörü içindeki 'images' klasöründeyse: "/images/ali-profil.jpg" yazmalısın.
+    // Direkt public içindeyse: "/ali-profil.jpg"
+    avatar: "/ali1.jpg", 
     about: "Go ile daha öncesinde tanışmış olsa da 1 yıldır aktif olarak go oynuyor. Bu dönemde Goizmde aktif rol alıyor ve go ile ilgili öğrendiklerini paylaşmaktan hoşlanıyor.",
     social: {
         youtube: "#",
         email: "info@agorago.com"
     },
-    // GÜNCELLENMİŞ SLUG DEĞERLERİ
     courses: [
         {
             title: "Temel Taşlar",
@@ -31,7 +34,7 @@ const teacher = {
             
             <div class="shrink-0">
                 <img 
-                    src="https://ui-avatars.com/api/?name=Ali+Karakaya&size=200&background=111&color=fff&font-size=0.33" 
+                    src={teacher.avatar} 
                     alt={teacher.name} 
                     class="w-32 h-32 rounded-full object-cover shadow-sm grayscale hover:grayscale-0 transition-all duration-500" 
                 />
