@@ -17,53 +17,72 @@ const teamMembersWithContent = await Promise.all(
     return { ...member, Content };
   })
 );
+
+// 3. İsimleri dosya adına çeviren yardımcı fonksiyon
+// Örnek: "Oğuz Erdoğan" -> "oguzerdogan" (Dosya yapınla eşleşmesi için)
+function generateInstructorLink(name: string) {
+  return "/instructor/" + name
+    .toLowerCase()
+    .replace(/ğ/g, 'g')
+    .replace(/ü/g, 'u')
+    .replace(/ş/g, 's')
+    .replace(/ı/g, 'i')
+    .replace(/ö/g, 'o')
+    .replace(/ç/g, 'c')
+    .replace(/\s+/g, ''); // Boşlukları kaldır
+}
 ---
 
 <Layout title="Hakkımızda - Agora Go Akademisi">
   <Container>
     <Sectionhead>
-      <Fragment slot="title">Agora Go Akademisi</Fragment>
-      <Fragment slot="desc">kısaca...</Fragment>
+      <Fragment slot="title">Hakkımızda</Fragment>
+      <Fragment slot="desc"> Agora Go Akademisi olarak vizyonumuz, her seviyedeki oyuncunun gelişimine katkı sağlamak, go kültürünü yaymak ve oyunun Türkiye'de daha geniş kitlelere ulaşmasını sağlamaktır.
+</Fragment>
     </Sectionhead>
 
     <div class="mt-16 max-w-4xl mx-auto">
-      <div class="bg-slate-50 p-10 rounded-2xl border border-slate-100 text-center hover:shadow-md transition-shadow duration-300">
-        
-        <h2 class="font-bold text-2xl text-slate-800 mb-4">
-          Vizyonumuz
-        </h2>
-        <p class="text-slate-600 leading-relaxed">
-          Go Akademisi olarak vizyonumuz; her seviyedeki oyuncunun gelişimine katkı sağlamak, go kültürünü yaymak ve oyunun Türkiye'de daha geniş kitlelere ulaşmasını sağlamaktır.
       
-      </div>
     </div>
 
     <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-16">
       {
         teamMembersWithContent.map((item) => (
-          <div class="group">
-            <div class="w-full aspect-square overflow-hidden rounded-md bg-slate-100">  
+          /* KART LİNK HALİNE GETİRİLDİ */
+          <a 
+            href={generateInstructorLink(item.data.name)} 
+            class="group block hover:-translate-y-1 transition-transform duration-300"
+          >
+            <div class="w-full aspect-square overflow-hidden rounded-md bg-slate-100 dark:bg-slate-800 relative">  
               <Picture
                 src={item.data.avatar.src}
                 alt={item.data.avatar.alt}
                 sizes="(max-width: 800px) 100vw, 400px"
                 width={400}
                 height={400}
-                class="w-full h-full object-cover object-center transition duration-300 group-hover:scale-105"
+                class="w-full h-full object-cover object-center transition duration-500 group-hover:scale-105"
               />
+              {/* Hover İpucu (Opsiyonel) */}
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                  <span class="opacity-0 group-hover:opacity-100 bg-white/90 dark:bg-gray-800 text-gray-800 dark:text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                    Profili İncele →
+                  </span>
+              </div>
             </div>
 
             <div class="mt-5 text-center">
-              <h2 class="text-lg font-bold text-gray-800">{item.data.name}</h2>
-              <h3 class="text-sm font-medium text-slate-500 mb-4">
+              <h2 class="text-lg font-bold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                {item.data.name}
+              </h2>
+              <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-4">
                 {item.data.title}
               </h3>
               
-              <div class="text-slate-600 text-sm leading-relaxed px-2">
+              <div class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed px-2">
                 <item.Content />
               </div>
             </div>
-          </div>
+          </a>
         ))
       }
     </div>

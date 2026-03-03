@@ -2,48 +2,65 @@
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Kurs Detayı | Agora Go">
+<Layout title="Lig Detayı | Agora Go">
     
     <div id="loader" class="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
         <div class="flex flex-col items-center gap-4">
             <div class="w-12 h-12 border-4 border-gray-800 border-t-transparent rounded-full animate-spin"></div>
-            <span class="text-gray-600 dark:text-gray-400 font-medium">Kurs bilgileri yükleniyor...</span>
+            <span class="text-gray-600 dark:text-gray-400 font-medium">Lig bilgileri yükleniyor...</span>
         </div>
     </div>
 
-    <div id="content" class="hidden min-h-screen pb-20 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans"> 
+    <div id="content" class="hidden min-h-screen pb-20 bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-200 font-sans"> 
         
         <div class="bg-white dark:bg-gray-800 pt-16 pb-20 border-b border-gray-200 dark:border-gray-700">
             <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-12 items-start">
                 
                 <div class="flex-1">
                     <div class="flex items-center gap-2 text-sm font-medium mb-6 text-gray-500">
-                        <a href="/courses" class="hover:text-gray-900 dark:hover:text-white transition-colors">← Tüm Kurslara Dön</a>
+                        <a href="/courses" class="hover:text-gray-900 dark:hover:text-white transition-colors">← Tüm Liglere Dön</a>
                         <span>/</span>
-                        <span class="text-gray-900 dark:text-white font-semibold">Kurs Detayı</span>
+                        <span class="text-gray-900 dark:text-white font-semibold">Lig Detayı</span>
                     </div>
 
-                    <h1 id="c-title" class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight tracking-tight"></h1>
+                    <div class="flex flex-wrap items-center gap-4 mb-4">
+    <h1 id="c-title" class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight tracking-tight"></h1>
+    
+    <span id="c-level-tag" class="bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800 text-sm font-bold px-3 py-1 rounded-full">
+    </span>
+</div>
                     
                     <p id="c-desc" class="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl leading-relaxed font-light"></p>
 
-                    <div class="flex items-center gap-4 mb-8 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700 inline-flex">
-                        <img id="c-provider-avatar" class="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-600" src="" alt="Provider Avatar">
+                    <div class="flex flex-wrap gap-4 mb-8">
                         
-                        <div class="text-sm flex flex-col">
-                            <span class="text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">Eğitmen</span>
-                            <a id="c-provider" href="#" class="font-bold text-gray-900 dark:text-white hover:text-blue-700 transition-colors"></a>
+                        <div class="flex items-center gap-3 p-3 pr-6 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700">
+                            <img id="c-provider-avatar" class="w-10 h-10 rounded-full border border-gray-200 dark:border-gray-600" src="" alt="Provider Avatar">
+                            <div class="text-sm flex flex-col">
+                                <span class="text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">Eğitmen</span>
+                                <a id="c-provider" href="#" class="font-bold text-gray-900 dark:text-white hover:text-blue-700 transition-colors"></a>
+                            </div>
                         </div>
+
+                        <div class="flex items-center gap-3 p-3 pr-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+                            <div class="w-10 h-10 flex items-center justify-center bg-blue-100 dark:bg-blue-800 rounded-full text-blue-600 dark:text-blue-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div class="text-sm flex flex-col">
+                                <span class="text-blue-500 dark:text-blue-400 text-xs uppercase tracking-wide font-semibold">Tarih Aralığı</span>
+                                <span id="c-date-range" class="font-bold text-gray-900 dark:text-white">...</span>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-5 items-start sm:items-center">
                         <button id="join-btn" class="bg-[#0f172a] hover:bg-[#1e293b] text-white text-base font-semibold py-3 px-8 rounded-md transition-colors dark:bg-blue-600 dark:hover:bg-blue-700">
                             Ücretsiz Kaydolun
                         </button>
-                        <div class="flex items-center gap-2 text-sm border-l pl-4 border-gray-300 dark:border-gray-600">
-                            <span class="font-bold text-gray-900 dark:text-white" id="c-students">--</span>
-                            <span class="text-gray-500 dark:text-gray-400">öğrenci kayıtlı</span>
-                        </div>
+                        
                     </div>
                     <p id="status-msg" class="text-sm font-medium mt-3 text-blue-700 dark:text-blue-400"></p>
                 </div>
@@ -55,16 +72,15 @@ import Layout from "../layouts/Layout.astro";
         </div>
 
         <div class="max-w-6xl mx-auto px-6 -mt-10 relative z-10">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 grid grid-cols-2 md:grid-cols-4 gap-6 divide-x divide-gray-100 dark:divide-gray-700">
-                
+<div class="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 p-6 grid grid-cols-2 md:grid-cols-4 gap-6 divide-x divide-gray-100 dark:divide-gray-800">                
                 <div class="flex flex-col gap-1 pl-4">
                     <span class="text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider">Eğitmen</span>
-                    <span id="c-provider-stat" class="font-medium text-gray-900 dark:text-white truncate">...</span>
+                    <span id="c-provider-stat" class="font-medium text-gray-900 dark:text-white">...</span>
                 </div>
 
                 <div class="flex flex-col gap-1 pl-6">
-                    <span class="text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider">Ücret</span>
-                    <span id="c-price" class="font-bold text-gray-900 dark:text-white text-lg">...</span>
+                    <span class="text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider">Durum</span>
+                    <span id="c-status" class="font-medium text-gray-900 dark:text-white text-lg">...</span>
                 </div>
 
                 <div class="flex flex-col gap-1 pl-6">
@@ -105,14 +121,17 @@ import Layout from "../layouts/Layout.astro";
     const content = document.getElementById('content') as HTMLElement;
     
     const cTitle = document.getElementById('c-title') as HTMLElement;
+    const cLevelTag = document.getElementById('c-level-tag') as HTMLElement;
+
     const cDesc = document.getElementById('c-desc') as HTMLElement;
     const cProvider = document.getElementById('c-provider') as HTMLAnchorElement; 
     const cProviderAvatar = document.getElementById('c-provider-avatar') as HTMLImageElement;
+    const cDateRange = document.getElementById('c-date-range') as HTMLElement; 
     const cImg = document.getElementById('c-img') as HTMLImageElement;
     const joinBtn = document.getElementById('join-btn') as HTMLButtonElement;
     
     const cProviderStat = document.getElementById('c-provider-stat') as HTMLElement;
-    const cPrice = document.getElementById('c-price') as HTMLElement; 
+    const cStatus = document.getElementById('c-status') as HTMLElement; // GÜNCELLEME: Seçici
     const cLevel = document.getElementById('c-level') as HTMLElement;
     const cDuration = document.getElementById('c-duration') as HTMLElement;
     const cStudents = document.getElementById('c-students') as HTMLElement;
@@ -121,17 +140,17 @@ import Layout from "../layouts/Layout.astro";
 
     const supabase = createClient(
         import.meta.env.PUBLIC_SUPABASE_URL,
-        import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+        import.meta.env.PUBLIC_SUPABASE_ANON_KEY        
     );
 
     const params = new URLSearchParams(window.location.search);
     const courseSlug = params.get('slug'); 
 
-    async function init() {
+   async function init() {
         if (!loader || !content || !cTitle || !joinBtn) return;
 
         if (!courseSlug) {
-            alert("Kurs URL hatası. Listeye yönlendiriliyorsunuz.");
+            alert("Lig URL hatası. Listeye yönlendiriliyorsunuz.");
             window.location.href = "/courses";
             return;
         }
@@ -143,14 +162,36 @@ import Layout from "../layouts/Layout.astro";
             .single();
 
         if (error || !course) {
-            loader.innerHTML = "<p class='text-red-500 font-bold'>Kurs bulunamadı.</p>";
+            loader.innerHTML = "<p class='text-red-500 font-bold'>Lig bulunamadı.</p>";
             return;
         }
 
         document.title = `${course.title} | Agora`;
         cTitle.innerText = course.title;
         if (cDesc) cDesc.innerText = course.description;
+        if (cLevelTag) cLevelTag.innerText = course.level || "Başlangıç";
         
+        // --- TARİH FORMATLAMA ---
+        if (cDateRange) {
+            if (course.course_start) {
+                const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
+                const startDate = new Date(course.course_start).toLocaleDateString('tr-TR', options);
+                
+                let dateText = startDate;
+                if (course.course_end) {
+                    const endDate = new Date(course.course_end).toLocaleDateString('tr-TR', options);
+                    dateText += ` - ${endDate}`;
+                }
+                cDateRange.innerText = dateText;
+            } else {
+                cDateRange.innerText = "Yakında Açıklanacak";
+            }
+        }
+        
+        if (cStatus) {
+            cStatus.innerText = course.status || "Kayıtlar Açık";
+        }
+
         const providerName = course.provider || "Agora Academy";
         if (cProvider) cProvider.innerText = providerName;
 
@@ -175,7 +216,6 @@ import Layout from "../layouts/Layout.astro";
         }
         
         if(cProviderStat) cProviderStat.innerText = providerName;
-        if(cPrice) cPrice.innerText = course.price || "Ücretsiz";
         if(cLevel) cLevel.innerText = course.level || "Başlangıç";
         if(cDuration) cDuration.innerText = course.duration || "Esnek Süre";
         if(cStudents && course.students_count) cStudents.innerText = course.students_count;
@@ -190,11 +230,9 @@ import Layout from "../layouts/Layout.astro";
                     cleanItem = cleanItem.replace(/^\d+-\s*/, '');
 
                     if(cleanItem !== "" && cleanItem.length > 3) {
-                        // Tasarım güncellemesi: Daha sade liste elemanları
                         const li = `
-                            <div class="flex gap-3 items-start p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                <span class="leading-relaxed text-gray-800 dark:text-gray-300 text-sm">${cleanItem}</span>
+<div class="flex gap-4 items-center p-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all">                                <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="leading-relaxed text-gray-800 dark:text-gray-200 text-base font-medium">${cleanItem}</span>
                             </div>
                         `;
                         cOutcomesList.innerHTML += li;
@@ -203,6 +241,13 @@ import Layout from "../layouts/Layout.astro";
             } else {
                 cOutcomesList.innerHTML = "<p class='text-gray-500 italic'>Detaylı kazanım bilgisi eklenmemiş.</p>";
             }
+        }
+
+        // --- BUTON METNİ GÜNCELLEME ---
+        // Eğer shopier_link varsa buton metnini "Kayıt Ol" yapıyoruz. 
+        // Yoksa "Ücretsiz Kaydolun" olarak kalabilir veya aşağıda olduğu gibi HTML'den geleni kullanır.
+        if (course.shopier_link) {
+             joinBtn.innerText = "Kayıt Ol";
         }
 
         loader.classList.add('hidden');
@@ -224,8 +269,16 @@ import Layout from "../layouts/Layout.astro";
         }
 
         joinBtn.addEventListener('click', async () => {
+            
+            
+            if (course.shopier_link) {
+                window.location.href = course.shopier_link;
+                return; // Fonksiyondan çık, alttaki kodları çalıştırma.
+            }
+
+            // 2. Shopier linki YOKSA (Ücretsizse) eski kayıt akışını çalıştır.
             if (!user) {
-                alert("Kursa katılmak için lütfen giriş yapın.");
+                alert("Lige katılmak için lütfen giriş yapın.");
                 window.location.href = "/login";
                 return;
             }
@@ -256,14 +309,13 @@ import Layout from "../layouts/Layout.astro";
     function setButtonJoined() {
         if (joinBtn && statusMsg) {
             joinBtn.innerText = "Derse Git →";
-            // Buton rengi de daha kurumsal bir yeşil yapıldı
             joinBtn.className = "bg-emerald-600 hover:bg-emerald-700 text-white text-base font-semibold py-3 px-8 rounded-md shadow-sm transition-all";
             
             joinBtn.onclick = () => {
                 alert("Ders içeriği yakında eklenecek!");
             };
 
-            statusMsg.innerText = "Bu kurs kütüphanenizde mevcut.";
+            statusMsg.innerText = "Bu lig kütüphanenizde mevcut.";
             statusMsg.className = "text-sm font-medium mt-3 text-emerald-700 dark:text-emerald-400 flex items-center gap-2 before:content-['✓']";
         }
     }

@@ -1,24 +1,40 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { createClient } from '@supabase/supabase-js';
 
+// 1. SUPABASE BAĞLANTISI
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// 2. VERİLERİ ÇEKME (Server-Side Fetching)
+// "Oğuz Erdoğan" ismine sahip (provider) kursları çekiyoruz.
+let { data: courses, error } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('provider', 'Oğuz Erdoğan') // Sadece Oğuz Erdoğan'ın kurslarını getir
+    .order('created_at', { ascending: false });
+
+// Hata olursa veya kurs yoksa boş dizi ata
+if (error || !courses) {
+    console.error("Kurslar çekilemedi:", error);
+    courses = [];
+}
+
+// 3. ÖĞRETMEN BİLGİLERİ
 const teacher = {
     name: "Oğuz Erdoğan",
     title: "Eğitmen",
     location: "İzmir, Türkiye",
+    // Profil fotoğrafı (URL veya yerel dosya yolu)
+avatar: "/oguzyeni.JPG", 
     about: "3 yıldır go oyunuyor. Hem Goizm’de hem de İytego’da başkanlık yapmış ve hâlâ İytego’da haftalık buluşmalarda dersler veriyor.",
     social: {
         youtube: "#",
         email: "info@agorago.com"
     },
-    // GÜNCELLENMİŞ SLUG DEĞERLERİ
-    courses: [
-        {
-            title: "Gelişim",
-            category: "Orta Seviye",
-            image: "https://images.unsplash.com/photo-1583863499278-f3162705531d?q=80&w=600&auto=format&fit=crop",
-            slug: "gelisim" 
-        },
-    ]
+    // Veritabanından gelen kursları buraya atıyoruz
+    courses: courses 
 };
 ---
 
@@ -26,14 +42,16 @@ const teacher = {
   
   <div class="bg-white dark:bg-gray-900 min-h-screen font-sans text-gray-800 dark:text-gray-200 pb-20 transition-colors duration-300">
     
+    {/* ÜST BİLGİ ALANI */}
     <div class="max-w-3xl mx-auto px-6 pt-24 pb-12 text-center md:text-left border-b border-gray-100 dark:border-gray-800">
         <div class="flex flex-col md:flex-row items-center gap-8">
             
             <div class="shrink-0">
+                {/* Profil Fotoğrafı: Grayscale kaldırıldı, her zaman renkli */}
                 <img 
-                    src="https://ui-avatars.com/api/?name=Oguz+Erdogan&size=200&background=111&color=fff&font-size=0.33" 
+                    src={teacher.avatar} 
                     alt={teacher.name} 
-                    class="w-32 h-32 rounded-full object-cover shadow-sm grayscale hover:grayscale-0 transition-all duration-500" 
+                    class="w-32 h-32 rounded-full object-cover shadow-sm transition-all duration-500" 
                 />
             </div>
 
@@ -56,6 +74,7 @@ const teacher = {
         </div>
     </div>
 
+    {/* İÇERİK ALANI */}
     <div class="max-w-3xl mx-auto px-6 py-12">
         
         <section class="mb-16">
@@ -69,28 +88,37 @@ const teacher = {
             <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-8">Eğitimler</h2>
             
             <div class="space-y-8">
-                {teacher.courses.map(course => (
-                    <a href={`/course-detail?slug=${course.slug}`} class="block group">
-                        <div class="flex flex-col md:flex-row gap-6 items-start p-4 -mx-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                            
-                            <div class="w-full md:w-48 h-32 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-700">
-                                <img src={course.image} alt={course.title} class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
-                            </div>
-
-                            <div class="flex-1 py-1">
-                                <div class="text-xs font-bold text-blue-600 dark:text-blue-400 mb-2 uppercase tracking-wide">{course.category}</div>
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors mb-2">
-                                    {course.title}
-                                </h3>
-                                <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
-                                    <span>İncele</span>
-                                    <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                {teacher.courses.length > 0 ? (
+                    teacher.courses.map(course => (
+                        <a href={`/course-detail?slug=${course.slug}`} class="block group">
+                            <div class="flex flex-col md:flex-row gap-6 items-start p-4 -mx-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                                
+                                <div class="w-full md:w-48 h-32 shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-700">
+                                    {/* Kurs Fotoğrafı: Grayscale kaldırıldı, DB'den gelen image_url kullanılıyor */}
+                                    <img 
+                                        src={course.image_url} 
+                                        alt={course.title} 
+                                        class="w-full h-full object-cover transition-all duration-500" 
+                                    />
                                 </div>
-                            </div>
 
-                        </div>
-                    </a>
-                ))}
+                                <div class="flex-1 py-1">
+                                    <div class="text-xs font-bold text-blue-600 dark:text-blue-400 mb-2 uppercase tracking-wide">{course.level || "Genel"}</div>
+                                    <h3 class="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors mb-2">
+                                        {course.title}
+                                    </h3>
+                                    <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                                        <span>İncele</span>
+                                        <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </a>
+                    ))
+                ) : (
+                    <p class="text-gray-500 dark:text-gray-400 italic">Bu eğitmene ait henüz aktif bir kurs bulunamadı.</p>
+                )}
             </div>
         </section>
 
