@@ -19,7 +19,6 @@ const teamMembersWithContent = await Promise.all(
 );
 
 // 3. İsimleri dosya adına çeviren yardımcı fonksiyon
-// Örnek: "Oğuz Erdoğan" -> "oguzerdogan" (Dosya yapınla eşleşmesi için)
 function generateInstructorLink(name: string) {
   return "/instructor/" + name
     .toLowerCase()
@@ -29,7 +28,7 @@ function generateInstructorLink(name: string) {
     .replace(/ı/g, 'i')
     .replace(/ö/g, 'o')
     .replace(/ç/g, 'c')
-    .replace(/\s+/g, ''); // Boşlukları kaldır
+    .replace(/\s+/g, ''); 
 }
 ---
 
@@ -37,8 +36,11 @@ function generateInstructorLink(name: string) {
   <Container>
     <Sectionhead>
       <Fragment slot="title">Hakkımızda</Fragment>
-      <Fragment slot="desc"> Agora Go Akademisi olarak vizyonumuz, her seviyedeki oyuncunun gelişimine katkı sağlamak, go kültürünü yaymak ve oyunun Türkiye'de daha geniş kitlelere ulaşmasını sağlamaktır.
-</Fragment>
+      <Fragment slot="desc">
+        <p class="text-gray-600 dark:text-gray-300">
+          Agora Go Akademisi olarak vizyonumuz, her seviyedeki oyuncunun gelişimine katkı sağlamak, go kültürünü yaymak ve oyunun Türkiye'de daha geniş kitlelere ulaşmasını sağlamaktır.
+        </p>
+      </Fragment>
     </Sectionhead>
 
     <div class="mt-16 max-w-4xl mx-auto">
@@ -48,7 +50,6 @@ function generateInstructorLink(name: string) {
     <div class="grid md:grid-cols-3 gap-10 mx-auto max-w-4xl mt-16">
       {
         teamMembersWithContent.map((item) => (
-          /* KART LİNK HALİNE GETİRİLDİ */
           <a 
             href={generateInstructorLink(item.data.name)} 
             class="group block hover:-translate-y-1 transition-transform duration-300"
@@ -62,7 +63,6 @@ function generateInstructorLink(name: string) {
                 height={400}
                 class="w-full h-full object-cover object-center transition duration-500 group-hover:scale-105"
               />
-              {/* Hover İpucu (Opsiyonel) */}
               <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
                   <span class="opacity-0 group-hover:opacity-100 bg-white/90 dark:bg-gray-800 text-gray-800 dark:text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
                     Profili İncele →
@@ -71,14 +71,17 @@ function generateInstructorLink(name: string) {
             </div>
 
             <div class="mt-5 text-center">
-              <h2 class="text-lg font-bold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              <h2 class="text-xl font-bold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                 {item.data.name}
               </h2>
-              <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-4">
-                {item.data.title}
-              </h3>
               
-              <div class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed px-2">
+              {/* Seviyeler (4 Dan vb.) daha büyük ve belirgin */}
+              <p class="text-lg font-bold text-blue-600 dark:text-blue-400 mt-2 mb-4">
+                {item.data.title}
+              </p>
+              
+              {/* Açıklama alanı: markdown içindeki başlık/kalınlık ezildi, eşit boyuta getirildi */}
+              <div class="text-gray-700 dark:text-gray-300 text-base leading-relaxed px-2 [&>*]:text-base [&>*]:font-normal">
                 <item.Content />
               </div>
             </div>
