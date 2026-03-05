@@ -1,19 +1,28 @@
 ---
 import Container from "@components/container.astro";
-import Features from "@components/features.astro";
-import Hero from "@components/hero.astro";
-import Counter from "@components/counter.astro";
 import Layout from "@layouts/Layout.astro";
 import Ligler from "@components/ligler.astro";
 import Faq from "@components/faq.astro";
-
 ---
 
 <Layout title="Ana Sayfa- Agora Go Akademisi">
-  
-<Container>
-<Ligler />
-<Container>
- <Hero />
-<Faq />
+
+  <Container>
+    
+    <section class="w-full py-24 flex items-center justify-center text-center">
+      <div class="max-w-4xl w-full mx-auto flex flex-col items-center">
+        <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6">
+          Çevrimiçi <span class="text-blue-600 dark:text-blue-500">Go</span><br />
+          <span class="text-indigo-500 dark:text-indigo-400">Eğitim</span> Platformu
+        </h1>
+        <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed font-medium mx-auto">
+          Stratejik derinliğinizi artırın. Temel Taşlar, Gelişim ve Aydınlanma liglerinde, uzman eğitmenlerle Go dünyasının inceliklerini keşfedin.
+        </p>
+      </div>
+    </section>
+    <Ligler />
+    <Faq />
+    
+  </Container>
+
 </Layout>

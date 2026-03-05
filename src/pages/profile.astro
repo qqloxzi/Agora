@@ -30,34 +30,29 @@ import Layout from '../layouts/Layout.astro';
     <div class="max-w-3xl mx-auto px-6 py-12">
         
         <section class="mb-16">
-            <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-8">İstatistikler</h2>
+            <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-8 text-center">İlerleme Durumu</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <div class="flex flex-col items-center md:items-start p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
-                    <span class="text-4xl font-bold text-gray-900 dark:text-white mb-1 font-serif" id="display-rank">20 Kyu</span>
-                    <span class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide">Mevcut Seviye</span>
-                </div>
+            <div class="max-w-xl mx-auto flex flex-col items-center p-8 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600"></div>
 
-                <div class="flex flex-col items-center md:items-start p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-gray-700 w-full">
-                    <span class="text-4xl font-bold text-gray-900 dark:text-white mb-1 font-serif" id="current-xp">0 XP</span>
-                    <span class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">Toplam Deneyim</span>
-                    <div class="w-full h-1 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                        <div id="xp-bar" class="h-full bg-gray-800 dark:bg-blue-500 rounded-full" style="width: 0%"></div>
+                <span class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 mt-2">Mevcut Seviye</span>
+                <span class="text-5xl font-extrabold text-gray-900 dark:text-white mb-8 font-serif tracking-tight" id="display-rank">20 Kyu</span>
+                
+                <div class="w-full relative px-2">
+                    <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase mb-3">
+                        <span>Başlangıç (30 Kyu)</span>
+                        <span>Usta (1 Dan)</span>
+                    </div>
+                    <div class="h-3 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
+                        <div id="rank-spectrum" class="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-1000 ease-out" style="width: 0%"></div>
                     </div>
                 </div>
-
-                <div class="flex flex-col items-center md:items-start p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-gray-700">
-                    <span class="text-4xl font-bold text-gray-900 dark:text-white mb-1 font-serif" id="info-date">-</span>
-                    <span class="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide">Katılım Tarihi</span>
-                </div>
-
             </div>
         </section>
 
         <section class="mb-16">
-            <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">Hakkında</h2>
-            <div class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-serif">
+            <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6 text-center md:text-left">Hakkında</h2>
+            <div class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed font-serif text-center md:text-left">
                 Go oyunu tutkunu. Agora Go Akademisi'nde strateji ve taktik üzerine çalışıyor. 
                 Hedefi Dan seviyesine ulaşmak ve turnuvalarda başarı elde etmek.
             </div>
@@ -93,10 +88,8 @@ import Layout from '../layouts/Layout.astro';
         username: document.getElementById('display-username'),
         email: document.getElementById('display-email'),
         avatarInitial: document.getElementById('avatar-initial'),
-        infoDate: document.getElementById('info-date'),
         displayRank: document.getElementById('display-rank'),
-        currentXp: document.getElementById('current-xp'),
-        xpBar: document.getElementById('xp-bar')
+        rankSpectrum: document.getElementById('rank-spectrum')
     };
 
     if (els.email) els.email.textContent = user.email || "";
@@ -114,22 +107,28 @@ import Layout from '../layouts/Layout.astro';
     
     // UI Güncelleme
     if (els.username) els.username.textContent = displayName;
-    if (els.infoDate && profile?.created_at) els.infoDate.textContent = new Date(profile.created_at).toLocaleDateString('tr-TR');
     if (els.avatarInitial) els.avatarInitial.textContent = (displayName[0] || '?').toUpperCase();
 
-    // --- RÜTBE VE XP GÖSTERİMİ ---
-    if (profile) {
-        // Rütbe
-        if (els.displayRank) els.displayRank.textContent = profile.rank || "20 Kyu";
+    // --- RÜTBE VE SPEKTRUM GÖSTERİMİ ---
+    if (profile && els.displayRank) {
+        const rankText = profile.rank || "30 Kyu";
+        els.displayRank.textContent = rankText;
         
-        // XP
-        const totalXP = profile.xp || 0;
-        if (els.currentXp) els.currentXp.textContent = `${totalXP} XP`;
-        
-        // Barın doluluk oranı
-        if (els.xpBar) {
-            const fillPercentage = (totalXP % 100); 
-            els.xpBar.style.width = `${Math.max(10, fillPercentage)}%`;
+        // Kyu değerini parse edip spektrum genişliğini ayarlama (Örn: 30 Kyu = 0%, 1 Dan = 100%)
+        if (els.rankSpectrum) {
+            let percentage = 0;
+            const rankMatch = rankText.match(/(\d+)\s*Kyu/i);
+            
+            if (rankMatch) {
+                const kyuValue = parseInt(rankMatch[1], 10);
+                // 30 Kyu -> 0%, 1 Kyu -> ~96%
+                percentage = Math.max(0, ((30 - kyuValue) / 30) * 100);
+            } else if (rankText.toLowerCase().includes('dan')) {
+                // Dan seviyesi ise bar full dolsun
+                percentage = 100;
+            }
+            
+            els.rankSpectrum.style.width = `${percentage}%`;
         }
     }
   }
