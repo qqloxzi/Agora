@@ -8,22 +8,22 @@ import Layout from "../layouts/Layout.astro";
         
         <div class="max-w-[1400px] mx-auto px-6">
             
-            {/* BAŞLIK ALANI */}
+            <!-- BAŞLIK ALANI -->
             <div class="text-center max-w-3xl mx-auto mb-12">
                 <span class="text-blue-600 dark:text-blue-400 font-bold tracking-wider uppercase text-sm mb-2 block">Agora Go Akademisi</span>
                 <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Eğitim Programları</h1>
             </div>
 
-           {/* 2. SEZON DUYURU ALANI - ELITE & PROFESSIONAL TASARIM */}
+           <!-- 2. SEZON DUYURU ALANI -->
             <div class="mb-20 mt-8 relative">
                 
-                {/* Üst ve Alt Dekoratif Çizgiler */}
+                <!-- Üst ve Alt Dekoratif Çizgiler -->
                 <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gray-900 dark:bg-white rounded-full opacity-10"></div>
                 <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-24 h-1 bg-gray-900 dark:bg-white rounded-full opacity-10"></div>
 
                 <div class="py-12 px-4 text-center">
                     
-                    {/* Üst Başlık (Badge) */}
+                    <!-- Üst Başlık (Badge) -->
                     <div class="flex justify-center mb-6">
                         <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-transparent text-xs font-bold tracking-[0.2em] uppercase text-gray-900 dark:text-white">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -31,17 +31,17 @@ import Layout from "../layouts/Layout.astro";
                         </span>
                     </div>
 
-                    {/* Ana Başlık */}
+                    <!-- Ana Başlık -->
                     <h2 class="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">
                         2. Sezona hazır mısınız?
                     </h2>
                     
-                    {/* Tarih */}
+                    <!-- Tarih -->
                     <p class="text-xl text-gray-500 dark:text-gray-400 font-light mb-10">
                         Başlangıç: <strong class="text-gray-900 dark:text-white font-semibold">13 Nisan 2026</strong>
                     </p>
 
-                    {/* Özellikler Grid'i (Professional Look) */}
+                    <!-- Özellikler Grid'i -->
                     <div class="max-w-4xl mx-auto grid md:grid-cols-3 gap-8 mb-10 border-t border-b border-gray-100 dark:border-gray-800 py-10">
                         
                         <div class="flex flex-col items-center gap-3">
@@ -70,7 +70,7 @@ import Layout from "../layouts/Layout.astro";
 
                     </div>
 
-                    {/* Kontenjan Uyarısı */}
+                    <!-- Kontenjan Uyarısı -->
                     <div class="text-center">
                         <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
                             *Liglerin verimli ve anlamlı olabilmesi adına kontenjan <span class="text-red-600 dark:text-red-400 font-bold underline decoration-2 underline-offset-4">8 kişi</span> ile sınırlıdır.
@@ -80,15 +80,13 @@ import Layout from "../layouts/Layout.astro";
                 </div>
             </div>
 
-            {/* YÜKLENİYOR SİMGESİ */}
+            <!-- YÜKLENİYOR SİMGESİ -->
             <div id="loading" class="flex flex-col items-center justify-center py-20">
                 <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
                 <span class="text-gray-500 dark:text-gray-400 font-medium text-lg">Ligler listeleniyor...</span>
             </div>
 
-            {/* DÜZELTME: 'grid' yerine 'flex' kullanıldı.
-                Bu sayede kart sayısı az olsa bile ekranın tam ortasında duracaklar.
-            */}
+            <!-- Kurs kartları flex ile ortalanır -->
             <div id="course-grid" class="flex flex-wrap justify-center gap-8 hidden w-full">
             </div>
         </div>

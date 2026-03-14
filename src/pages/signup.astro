@@ -3,199 +3,58 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Giriş Yap / Kayıt Ol">
-  <div class="auth-container">
-    <div class="auth-box">
-      <h1>Agora'ya Hoşgeldiniz</h1>
-      <p class="subtitle">İlerlemenizi kaydetmek için giriş yapabilirsiniz.</p>
+  <main class="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-16">
+    <section class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm px-6 py-8 flex flex-col gap-6">
+      <div class="flex flex-col items-start gap-2 text-left">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+          Agora Go Akademisi
+        </p>
+        <h1 class="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
+          Tek adımla giriş yap
+        </h1>
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+          E-posta ve şifre yok. Sadece Google hesabınla giriş yap ve ilerlemen otomatik kaydedilsin.
+        </p>
+      </div>
 
-      <button id="google-btn" class="google-btn">
-        <svg class="google-icon" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-          <g transform="matrix(1, 0, 0, 1, 27.009001, -39.23856)">
-            <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z" />
-            <path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z" />
-            <path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z" />
-            <path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.424 44.599 -10.174 45.789 L -6.704 42.319 C -8.804 40.359 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z" />
-          </g>
-        </svg>
-        Google ile Devam Et
+      <button
+        id="google-btn"
+        class="inline-flex w-full items-center justify-center gap-3 rounded-lg bg-slate-900 text-white px-4 py-2.5 text-sm font-medium shadow-sm hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 disabled:opacity-60"
+      >
+        <span class="inline-flex h-5 w-5 items-center justify-center rounded-sm bg-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#EA4335" d="M11.99 13.19v-2.72h9.18c.09.49.14 1.06.14 1.72 0 2.14-.59 4.8-2.5 6.71-1.83 1.94-4.17 2.97-7.32 2.97-5.78 0-10.48-4.7-10.48-10.47S5.71.81 11.49.81c3.11 0 5.38 1.22 7.05 2.81l-1.99 1.98c-1.2-1.12-2.81-1.98-5.06-1.98-4.06 0-7.25 3.35-7.25 7.49s3.19 7.48 7.25 7.48c2.64 0 4.14-1.06 5.1-2.02.78-.78 1.29-1.9 1.49-3.44z" />
+          </svg>
+        </span>
+        <span>Google ile Devam Et</span>
       </button>
 
-      <div class="divider"><span>veya e-posta ile</span></div>
+      <p id="error-msg" class="min-h-[1.25rem] text-xs text-center text-red-500"></p>
 
-      <form id="auth-form">
-        <div class="input-group">
-          <input type="email" id="email" placeholder="E-posta Adresi" required />
-        </div>
-        <div class="input-group">
-          <input type="password" id="password" placeholder="Şifre" required />
-        </div>
-        
-        <div class="error-message" id="error-msg"></div>
-
-        <button type="submit" class="submit-btn" id="login-btn">Giriş Yap</button>
-        <button type="button" class="secondary-btn" id="signup-btn">Hesap Oluştur</button>
-      </form>
-    </div>
-  </div>
+      <p class="text-[11px] text-slate-500 dark:text-slate-500 text-center">
+        İlk kez giriş yapıyorsan, Google hesabınla otomatik olarak bir profil oluşturulur.
+      </p>
+    </section>
+  </main>
 </Layout>
 
 <script>
   import { supabase } from "../lib/supabase";
 
-  // HTML Elemanlarını Seç ve Türlerini Belirt (TypeScript Casting)
-  const form = document.getElementById("auth-form") as HTMLFormElement;
-  const emailInput = document.getElementById("email") as HTMLInputElement;
-  const passwordInput = document.getElementById("password") as HTMLInputElement;
-  const loginBtn = document.getElementById("login-btn") as HTMLButtonElement;
-  const signupBtn = document.getElementById("signup-btn") as HTMLButtonElement;
-  const googleBtn = document.getElementById("google-btn") as HTMLButtonElement;
-  const errorMsg = document.getElementById("error-msg") as HTMLDivElement;
+  const googleBtn = document.getElementById("google-btn") as HTMLButtonElement | null;
+  const errorMsg = document.getElementById("error-msg") as HTMLParagraphElement | null;
 
-  // --- YARDIMCI FONKSİYONLAR ---
-  function showError(msg: string, type = "error") {
-    if (!errorMsg) return;
-    errorMsg.textContent = msg;
-    errorMsg.style.color = type === "error" ? "#e74c3c" : "#2ecc71";
-    errorMsg.style.display = "block";
-  }
-
-  function clearError() {
-    if (!errorMsg) return;
-    errorMsg.style.display = "none";
-  }
-
-  function setLoading(isLoading: boolean) {
-    if (!loginBtn || !signupBtn) return;
-    if (isLoading) {
-      loginBtn.textContent = "İşleniyor...";
-      loginBtn.disabled = true;
-      signupBtn.disabled = true;
-    } else {
-      loginBtn.textContent = "Giriş Yap";
-      loginBtn.disabled = false;
-      signupBtn.disabled = false;
-    }
-  }
-
-  // --- ANA MANTIK ---
-  // Tüm elemanların sayfada olduğundan eminsek işlemleri yap
-  if (form && emailInput && passwordInput && loginBtn && signupBtn && googleBtn && errorMsg) {
-
-    // 1. GOOGLE GİRİŞİ
+  if (googleBtn) {
     googleBtn.addEventListener("click", async () => {
+      if (errorMsg) errorMsg.textContent = "";
       const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          // Giriş sonrası nereye dönecek?
-          redirectTo: window.location.origin + '/goagaci',
-        },
-      });
-      if (error) showError(error.message);
-    });
-
-    // 2. E-POSTA GİRİŞİ (LOGIN)
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      clearError();
-      setLoading(true);
-
-      const email = emailInput.value;
-      const password = passwordInput.value;
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        provider: "google",
+        options: { redirectTo: window.location.origin + "/goagaci" },
       });
 
-      if (error) {
-        showError("Giriş başarısız: " + error.message);
-        setLoading(false);
-      } else {
-        window.location.href = "/goagaci";
+      if (error && errorMsg) {
+        errorMsg.textContent = "Giriş başarısız: " + error.message;
       }
     });
-
-    // 3. KAYIT OLMA (SIGN UP)
-    signupBtn.addEventListener("click", async () => {
-      clearError();
-      const email = emailInput.value;
-      const password = passwordInput.value;
-
-      if (!email || !password) {
-        showError("Lütfen e-posta ve şifre giriniz.");
-        return;
-      }
-
-      setLoading(true);
-
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (error) {
-        showError(error.message);
-      } else {
-        showError("Kayıt başarılı! Lütfen e-posta kutunuzu onaylayın.", "success");
-      }
-      setLoading(false);
-    });
-
-  } // if bloğu sonu
+  }
 </script>
-
-<style>
-  .auth-container {
-    display: flex; justify-content: center; align-items: center;
-    min-height: 80vh; padding: 20px;
-  }
-  .auth-box {
-    background: white; padding: 40px; border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    width: 100%; max-width: 400px; text-align: center;
-  }
-  h1 { color: #2c3e50; margin-bottom: 10px; font-size: 1.8rem; }
-  .subtitle { color: #7f8c8d; margin-bottom: 30px; }
-  
-  .input-group { margin-bottom: 15px; }
-  input {
-    width: 100%; padding: 12px; border: 2px solid #ecf0f1;
-    border-radius: 8px; font-size: 1rem; outline: none; transition: 0.3s;
-  }
-  input:focus { border-color: #3498db; }
-
-  .submit-btn {
-    width: 100%; background: #2c3e50; color: white; padding: 12px;
-    border: none; border-radius: 8px; font-size: 1rem; cursor: pointer;
-    font-weight: bold; margin-bottom: 10px; transition: 0.2s;
-  }
-  .submit-btn:hover { background: #34495e; }
-
-  .secondary-btn {
-    background: transparent; border: none; color: #3498db;
-    cursor: pointer; font-weight: 600;
-  }
-  
-  .google-btn {
-    width: 100%; background: white; border: 2px solid #ecf0f1;
-    border-radius: 8px; padding: 10px; display: flex; align-items: center;
-    justify-content: center; gap: 10px; cursor: pointer; font-weight: 600;
-    color: #555; margin-bottom: 20px; transition: 0.2s;
-  }
-  .google-btn:hover { background: #f9f9f9; border-color: #bdc3c7; }
-
-  .divider { 
-    display: flex; align-items: center; color: #bdc3c7; margin: 20px 0; font-size: 0.9rem; 
-  }
-  .divider::before, .divider::after {
-    content: ""; flex: 1; height: 1px; background: #ecf0f1;
-  }
-  .divider span { padding: 0 10px; }
-  
-  .error-message { margin-bottom: 15px; font-size: 0.9rem; display: none; }
-  
-  /* Dark Mode support if needed */
-  :global(body.dark) .auth-box { background: #2c3e50; }
-  :global(body.dark) h1 { color: white; }
-  :global(body.dark) input { background: #34495e; border-color: #465b6e; color: white; }
-</style>
